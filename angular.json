@@ -61,7 +61,8 @@
               "buildTarget": "chess-manager-front:build:production"
             },
             "development": {
-              "buildTarget": "chess-manager-front:build:development"
+              "buildTarget": "chess-manager-front:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
