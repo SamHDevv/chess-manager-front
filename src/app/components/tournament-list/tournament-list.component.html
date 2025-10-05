@@ -57,7 +57,11 @@
           </div>
           
           <div class="tournament-info">
-            <h3>{{ tournament.name }}</h3>
+            <h3>
+              <a [routerLink]="['/tournaments', tournament.id]" class="tournament-title-link">
+                {{ tournament.name }}
+              </a>
+            </h3>
             
             @if (tournament.description) {
               <p class="tournament-description">{{ tournament.description }}</p>
@@ -82,15 +86,15 @@
 
             <div class="tournament-actions">
               @if (tournament.status === 'upcoming') {
-                <button class="btn btn-primary">
-                  Inscribirse
+                <button class="btn btn-primary" [routerLink]="['/tournaments', tournament.id]">
+                  Ver detalles
                 </button>
               } @else if (tournament.status === 'ongoing') {
-                <button class="btn btn-secondary" [routerLink]="['/tournament', tournament.id]">
+                <button class="btn btn-secondary" [routerLink]="['/tournaments', tournament.id]">
                   Ver partidas
                 </button>
               } @else {
-                <button class="btn btn-outline" [routerLink]="['/tournament', tournament.id, 'ranking']">
+                <button class="btn btn-outline" [routerLink]="['/tournaments', tournament.id]">
                   Ver resultados
                 </button>
               }
