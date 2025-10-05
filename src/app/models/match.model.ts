@@ -5,9 +5,9 @@ export interface Match {
   blackPlayerId: number;
   result: MatchResult;
   round: number;
-  tournament?: any; // Relación opcional
-  whitePlayer?: any; // Relación opcional
-  blackPlayer?: any; // Relación opcional
+  tournament?: any; 
+  whitePlayer?: any;
+  blackPlayer?: any;
 }
 
 export enum MatchResult {
