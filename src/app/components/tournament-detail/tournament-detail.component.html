@@ -1,0 +1,216 @@
+<div class="tournament-detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando detalles del torneo...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="error-state">
+      <div class="error-icon">⚠️</div>
+      <h3>Error al cargar el torneo</h3>
+      <p>{{ error() }}</p>
+      <button class="btn btn-primary" (click)="onBackToList()">
+        Volver a la lista
+      </button>
+    </div>
+  }
+
+  <!-- Tournament Details -->
+  @if (!loading() && !error() && tournament()) {
+    <div class="tournament-header">
+      <button class="back-button" (click)="onBackToList()">
+        ← Volver a torneos
+      </button>
+      
+      <div class="tournament-status-badge" [class]="getStatusClass(tournament()!.status)">
+        {{ getStatusLabel(tournament()!.status) }}
+      </div>
+    </div>
+
+    <div class="tournament-content">
+      <!-- Main Tournament Info -->
+      <div class="tournament-main-info">
+        <div class="tournament-hero">
+          <div class="tournament-image">
+            <div class="placeholder-image">♔</div>
+          </div>
+          
+          <div class="tournament-info">
+            <h1>{{ tournament()!.name }}</h1>
+            
+            @if (tournament()!.description) {
+              <p class="tournament-description">{{ tournament()!.description }}</p>
+            }
+            
+            <div class="tournament-details">
+              <div class="detail-row">
+                <div class="detail-item">
+                  <span class="label">📅 Fecha de inicio:</span>
+                  <span class="value">{{ formatDate(tournament()!.startDate) }}</span>
+                </div>
+                <div class="detail-item">
+                  <span class="label">🏁 Fecha de fin:</span>
+                  <span class="value">{{ formatDate(tournament()!.endDate) }}</span>
+                </div>
+              </div>
+              
+              <div class="detail-row">
+                <div class="detail-item">
+                  <span class="label">📍 Ubicación:</span>
+                  <span class="value">{{ tournament()!.location }}</span>
+                </div>
+                @if (tournament()!.maxParticipants) {
+                  <div class="detail-item">
+                    <span class="label">👥 Participantes:</span>
+                    <span class="value">{{ participants().length }} / {{ tournament()!.maxParticipants }}</span>
+                  </div>
+                }
+              </div>
+
+              @if (tournament()!.registrationDeadline) {
+                <div class="detail-row">
+                  <div class="detail-item">
+                    <span class="label">⏰ Límite de inscripción:</span>
+                    <span class="value" [class.expired]="isRegistrationClosed()">
+                      {{ tournament()!.registrationDeadline ? formatDate(tournament()!.registrationDeadline!) : 'No definido' }}
+                    </span>
+                  </div>
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="tournament-actions">
+          @if (tournament()!.status === 'upcoming') {
+            @if (canInscribe()) {
+              @if (!userInscribed()) {
+                <button 
+                  class="btn btn-primary btn-large" 
+                  (click)="onInscribe()"
+                  [disabled]="inscriptionLoading()">
+                  @if (inscriptionLoading()) {
+                    <span class="spinner-small"></span>
+                  }
+                  Inscribirse en el torneo
+                </button>
+                
+                @if (spotsLeft() !== null && spotsLeft()! <= 5) {
+                  <div class="spots-warning">
+                    ⚠️ Solo quedan {{ spotsLeft() }} plazas disponibles
+                  </div>
+                }
+              } @else {
+                <button 
+                  class="btn btn-danger btn-large" 
+                  (click)="onCancelInscription()"
+                  [disabled]="inscriptionLoading()">
+                  @if (inscriptionLoading()) {
+                    <span class="spinner-small"></span>
+                  }
+                  Cancelar inscripción
+                </button>
+                <div class="success-message">
+                  ✅ Estás inscrito en este torneo
+                </div>
+              }
+            } @else {
+              @if (isRegistrationClosed()) {
+                <div class="info-message">
+                  ⏰ El período de inscripción ha cerrado
+                </div>
+              } @else if (tournament()!.maxParticipants && participants().length >= tournament()!.maxParticipants!) {
+                <div class="info-message">
+                  👥 El torneo ha alcanzado el máximo de participantes
+                </div>
+              } @else {
+                <div class="info-message">
+                  ℹ️ No es posible inscribirse en este momento
+                </div>
+              }
+            }
+          } @else if (tournament()!.status === 'ongoing') {
+            <button class="btn btn-secondary btn-large" (click)="onViewMatches()">
+              Ver partidas y clasificación
+            </button>
+          } @else if (tournament()!.status === 'finished') {
+            <button class="btn btn-outline btn-large" (click)="onViewMatches()">
+              Ver resultados finales
+            </button>
+          }
+        </div>
+      </div>
+
+      <!-- Sidebar with participants -->
+      <div class="tournament-sidebar">
+        <div class="participants-section">
+          <h3>Participantes ({{ participants().length }})</h3>
+          
+          @if (participants().length > 0) {
+            <div class="participants-list">
+              @for (participant of participants(); track participant.id) {
+                <div class="participant-card">
+                  <div class="participant-avatar">
+                    {{ participant.name.charAt(0).toUpperCase() }}
+                  </div>
+                  <div class="participant-info">
+                    <span class="participant-name">{{ participant.name }}</span>
+                    <span class="participant-email">{{ participant.email }}</span>
+                  </div>
+                </div>
+              }
+            </div>
+          } @else {
+            <div class="empty-participants">
+              <div class="empty-icon">👥</div>
+              <p>Aún no hay participantes inscritos</p>
+              @if (tournament()!.status === 'upcoming') {
+                <p class="empty-subtitle">¡Sé el primero en inscribirte!</p>
+              }
+            </div>
+          }
+
+          @if (tournament()!.maxParticipants) {
+            <div class="capacity-indicator">
+              <div class="capacity-bar">
+                <div 
+                  class="capacity-fill" 
+                  [style.width.%]="(participants().length / tournament()!.maxParticipants!) * 100">
+                </div>
+              </div>
+              <span class="capacity-text">
+                {{ participants().length }} / {{ tournament()!.maxParticipants }} participantes
+              </span>
+            </div>
+          }
+        </div>
+
+        @if (tournament()!.status !== 'upcoming') {
+          <div class="tournament-info-section">
+            <h3>Información del torneo</h3>
+            <div class="info-stats">
+              @if (tournament()!.status === 'ongoing') {
+                <div class="stat-item">
+                  <span class="stat-label">Estado:</span>
+                  <span class="stat-value ongoing">En progreso</span>
+                </div>
+              }
+              
+              @if (tournament()!.status === 'finished') {
+                <div class="stat-item">
+                  <span class="stat-label">Estado:</span>
+                  <span class="stat-value finished">Finalizado</span>
+                </div>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+</div>
