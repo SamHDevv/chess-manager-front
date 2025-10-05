@@ -3,7 +3,7 @@
 
 .app-header {
   background: white;
-  border-bottom: 1px solid #E5E7EB;
+  border-bottom: 0.0625rem solid #E5E7EB;
   position: sticky;
   top: 0;
   z-index: 100;
@@ -11,42 +11,53 @@
 }
 
 .header-content {
-  max-width: 1472px;
+  width: 100%; 
+  max-width: none; 
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0 2rem;
-  height: 64px;
+  padding: 0 clamp(1rem, 4vw, 2rem);
+  height: 4rem; // 64px
+  
+  @media (max-width: 768px) {
+    height: 3.5rem;
+    padding: 0 1rem;
+  }
 }
 
-// Left Section: Logo + Navigation
+// Left Section:
 .header-left {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: clamp(1rem, 3vw, 2rem);
 }
 
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
 }
 
 .logo-icon {
-  width: 32px;
-  height: 32px;
+  width: 2rem; 
+  height: 2rem; 
   display: flex;
   align-items: center;
   justify-content: center;
+  
+  @media (max-width: 768px) {
+    width: 1.75rem;
+    height: 1.75rem;
+  }
 }
 
 .app-title {
   margin: 0;
   font-family: 'Work Sans', sans-serif;
   font-weight: 700;
-  font-size: 20px;
-  line-height: 28px;
+  font-size: 1.25rem;
+  line-height: 1.4;
   color: #111827;
   text-decoration: none;
   cursor: pointer;
@@ -55,23 +66,36 @@
   &:hover {
     color: #137FEC;
   }
+  
+  @media (max-width: 768px) {
+    font-size: 1.125rem;
+  }
 }
 
 .nav {
   display: flex;
   align-items: center;
-  gap: 24px;
-  margin-left: 32px;
+  gap: 1.5rem;
+  margin-left: 2rem;
+
+  @media (max-width: 968px) {
+    gap: 1rem;
+    margin-left: 1.5rem;
+  }
+  
+  @media (max-width: 768px) {
+    display: none; // Hide nav on mobile
+  }
 }
 
 .nav-link {
   font-family: 'Work Sans', sans-serif;
   font-weight: 500;
-  font-size: 14px;
-  line-height: 20px;
+  font-size: 0.875rem; // 14px
+  line-height: 1.25;
   color: #4B5563;
   text-decoration: none;
-  padding: 0;
+  padding: 0.5rem 0;
   transition: color 0.3s ease;
   position: relative;
 
@@ -84,17 +108,35 @@
   }
 }
 
-// Right Section: Search + User Actions
+// Right Section: Profile
 .header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
+  
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
 }
 
 .search-container {
   position: relative;
-  width: 256px;
-  height: 38px;
+  width: 16rem;
+  height: 2.375rem;
+  
+  @media (max-width: 1200px) {
+    width: 12.5rem;
+  }
+  
+  @media (max-width: 968px) {
+    width: 11.25rem;
+  }
+  
+  @media (max-width: 768px) {
+    order: 3;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
 }
 
 .search-input {
@@ -109,12 +151,12 @@
   height: 100%;
   background: #F6F7F8;
   border: 1px solid #D1D5DB;
-  border-radius: 8px;
-  padding: 11px 17px 11px 41px;
+  border-radius: 0.5rem;
+  padding: var(--space-1) var(--space-2) var(--space-1) var(--space-5);
   font-family: 'Work Sans', sans-serif;
   font-weight: 400;
-  font-size: 14px;
-  line-height: 16px;
+  font-size: 0.875rem;
+  line-height: 1.25;
   color: #111827;
   outline: none;
   transition: all 0.3s ease;
@@ -126,32 +168,36 @@
   &:focus {
     border-color: #137FEC;
     background: white;
-    box-shadow: 0 0 0 3px rgba(19, 127, 236, 0.1);
+    box-shadow: 0 0 0 0.1875rem rgba(19, 127, 236, 0.1); // 3px
   }
 }
 
 .search-icon {
   position: absolute;
-  left: 12px;
+  left: 0.75rem;
   top: 50%;
   transform: translateY(-50%);
-  width: 20px;
-  height: 20px;
+  width: 1.25rem;
+  height: 1.25rem;
   z-index: 1;
 }
 
 .user-actions {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 1rem;
+  
+  @media (max-width: 768px) {
+    gap: 0.75rem;
+  }
 }
 
 .notification-btn {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   background: none;
   border: none;
   border-radius: 50%;
@@ -163,14 +209,24 @@
   }
 
   svg {
-    width: 20px;
-    height: 20px;
+    width: 1.25rem;
+    height: 1.25rem;
+  }
+  
+  @media (max-width: 768px) {
+    width: 2.25rem;
+    height: 2.25rem;
+
+    svg {
+      width: 1.125rem;
+      height: 1.125rem;
+    }
   }
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;
@@ -178,6 +234,11 @@
 
   &:hover {
     transform: scale(1.05);
+  }
+  
+  @media (max-width: 768px) {
+    width: 2.25rem;
+    height: 2.25rem;
   }
 }
 
@@ -188,32 +249,8 @@
 }
 
 // Responsive Design
-@media (max-width: 1200px) {
-  .header-content {
-    padding: 0 1.5rem;
-  }
-  
-  .search-container {
-    width: 200px;
-  }
-}
-
-@media (max-width: 968px) {
-  .nav {
-    gap: 16px;
-    margin-left: 24px;
-  }
-  
-  .search-container {
-    width: 180px;
-  }
-}
-
 @media (max-width: 768px) {
   .header-content {
-    padding: 0 1rem;
-    height: auto;
-    min-height: 64px;
     flex-wrap: wrap;
     gap: 1rem;
   }
@@ -221,29 +258,10 @@
   .header-left {
     gap: 1rem;
   }
-
-  .nav {
-    display: none; // Hide nav on mobile, can implement hamburger menu later
-  }
-
-  .search-container {
-    order: 3;
-    width: 100%;
-    margin-top: 0.5rem;
-  }
-
-  .header-right {
-    gap: 12px;
-  }
 }
 
 @media (max-width: 480px) {
-  .app-title {
-    font-size: 18px;
-  }
-  
-  .logo-icon {
-    width: 28px;
-    height: 28px;
+  .header-content {
+    padding: 0 0.75rem;
   }
 }
