@@ -1,0 +1,323 @@
+// Import Inter font
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.matches-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0 2rem;
+  box-sizing: border-box;
+  
+  @media (min-width: 768px) {
+    padding: 0 4rem;
+  }
+  
+  @media (min-width: 1200px) {
+    padding: 0 8rem;
+  }
+  
+  @media (min-width: 1600px) {
+    padding: 0 12rem;
+  }
+}
+
+.main-content {
+  max-width: 96rem; // 1536px equivalent
+  margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  
+  @media (min-width: 768px) {
+    padding: 2rem 2rem 8rem;
+  }
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  
+  @media (min-width: 768px) {
+    margin-bottom: 2rem;
+  }
+}
+
+.heading-container {
+  margin-bottom: 0.5rem;
+}
+
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: #0F172A;
+  margin: 0;
+  
+  @media (min-width: 768px) {
+    font-size: 1.875rem; // 30px
+  }
+}
+
+.description-container {
+  max-width: 42rem; // 672px equivalent
+}
+
+.description-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #64748B;
+  margin: 0;
+  
+  @media (min-width: 768px) {
+    font-size: 1rem; // 16px
+    line-height: 1.5;
+  }
+}
+
+.rounds-container {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+  
+  @media (min-width: 768px) {
+    gap: 3rem;
+  }
+}
+
+.round-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.round-header {
+  padding-bottom: 0.5rem;
+}
+
+.round-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600;
+  font-size: 1.25rem;
+  line-height: 1.3;
+  color: #0F172A;
+  margin: 0;
+  
+  @media (min-width: 768px) {
+    font-size: 1.5rem; // 24px
+  }
+}
+
+.table-wrapper {
+  background: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+}
+
+.matches-table {
+  width: 100%;
+  overflow-x: auto;
+  min-width: 50rem; // Minimum width for table content
+  
+  @media (min-width: 768px) {
+    min-width: 60rem;
+  }
+  
+  @media (min-width: 1200px) {
+    min-width: 70rem;
+    overflow-x: visible;
+  }
+}
+
+.table-header {
+  background: #F8FAFC;
+  width: 100%;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 
+    minmax(4rem, 6rem)     /* Mesa */
+    minmax(12rem, 1fr)     /* Jugador Blancas */
+    minmax(12rem, 1fr)     /* Jugador Negras */
+    minmax(8rem, 10rem)    /* Resultado */
+    minmax(8rem, 12rem);   /* Estado */
+  align-items: center;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 
+      6rem               /* Mesa */
+      1fr                /* Jugador Blancas */
+      1fr                /* Jugador Negras */
+      10rem              /* Resultado */
+      12rem;             /* Estado */
+  }
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: 
+      8rem               /* Mesa */
+      1fr                /* Jugador Blancas */
+      1fr                /* Jugador Negras */
+      12rem              /* Resultado */
+      14rem;             /* Estado */
+  }
+}
+
+.header-cell {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  
+  &.result-col,
+  &.status-col {
+    justify-content: center;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.header-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+  text-transform: uppercase;
+  color: #64748B;
+  letter-spacing: 0.025em;
+}
+
+.table-body {
+  width: 100%;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 
+    minmax(4rem, 6rem)     /* Mesa */
+    minmax(12rem, 1fr)     /* Jugador Blancas */
+    minmax(12rem, 1fr)     /* Jugador Negras */
+    minmax(8rem, 10rem)    /* Resultado */
+    minmax(8rem, 12rem);   /* Estado */
+  align-items: center;
+  border-top: 1px solid #E2E8F0;
+  
+  &:first-child {
+    border-top: none;
+  }
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 
+      6rem               /* Mesa */
+      1fr                /* Jugador Blancas */
+      1fr                /* Jugador Negras */
+      10rem              /* Resultado */
+      12rem;             /* Estado */
+  }
+  
+  @media (min-width: 1200px) {
+    grid-template-columns: 
+      8rem               /* Mesa */
+      1fr                /* Jugador Blancas */
+      1fr                /* Jugador Negras */
+      12rem              /* Resultado */
+      14rem;             /* Estado */
+  }
+}
+
+.data-cell {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  
+  &.result-col,
+  &.status-col {
+    justify-content: center;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.cell-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  color: #0F172A;
+  
+  .data-cell.mesa-col & {
+    font-weight: 500;
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  white-space: nowrap;
+
+  &.status-completed {
+    background: #CCFBF1;
+    
+    .status-text {
+      color: #0F766E;
+    }
+  }
+
+  &.status-pending {
+    background: #FEF3C7;
+    
+    .status-text {
+      color: #B45309;
+    }
+  }
+
+  &.status-in-progress {
+    background: #DBEAFE;
+    
+    .status-text {
+      color: #1D4ED8;
+    }
+  }
+}
+
+.status-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+}
+
+// Loading and Error States
+.loading-state, 
+.error-state, 
+.empty-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  
+  p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #64748B;
+    margin: 0;
+  }
+}
+
+.error-state p {
+  color: #DC2626;
+}

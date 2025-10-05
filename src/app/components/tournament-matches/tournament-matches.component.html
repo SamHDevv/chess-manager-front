@@ -1,0 +1,88 @@
+<div class="matches-container">
+  <div class="main-content">
+    <div class="header-container">
+      <div class="heading-container">
+        <h2 class="page-title">Vista de Partidas del Torneo</h2>
+      </div>
+      <div class="description-container">
+        <p class="description-text">
+          Visualiza los emparejamientos y resultados de cada ronda. El sistema suizo asegura que cada jugador se enfrente a oponentes con una puntuación similar.
+        </p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <p>Cargando partidas...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-state">
+        <p>{{ error() }}</p>
+      </div>
+    } @else {
+      <div class="rounds-container">
+        @for (roundData of roundsData(); track roundData.roundNumber) {
+          <div class="round-container">
+            <div class="round-header">
+              <h3 class="round-title">Ronda {{ roundData.roundNumber }}</h3>
+            </div>
+            
+            <div class="table-wrapper">
+              <div class="matches-table">
+                <!-- Table Header -->
+                <div class="table-header">
+                  <div class="header-row">
+                    <div class="header-cell mesa-col">
+                      <span class="header-text">Mesa</span>
+                    </div>
+                    <div class="header-cell player-white-col">
+                      <span class="header-text">Jugador Blancas</span>
+                    </div>
+                    <div class="header-cell player-black-col">
+                      <span class="header-text">Jugador Negras</span>
+                    </div>
+                    <div class="header-cell result-col">
+                      <span class="header-text">Resultado</span>
+                    </div>
+                    <div class="header-cell status-col">
+                      <span class="header-text">Estado</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Table Body -->
+                <div class="table-body">
+                  @for (match of roundData.matches; track match.id) {
+                    <div class="table-row">
+                      <div class="data-cell mesa-col">
+                        <span class="cell-text">{{ $index + 1 }}</span>
+                      </div>
+                      <div class="data-cell player-white-col">
+                        <span class="cell-text">{{ match.whitePlayerName || 'Player ' + match.whitePlayerId }}</span>
+                      </div>
+                      <div class="data-cell player-black-col">
+                        <span class="cell-text">{{ match.blackPlayerName || 'Player ' + match.blackPlayerId }}</span>
+                      </div>
+                      <div class="data-cell result-col result-centered">
+                        <span class="cell-text">{{ getMatchResult(match) }}</span>
+                      </div>
+                      <div class="data-cell status-col status-centered">
+                        <div class="status-badge" [class]="getStatusClass(getMatchStatus(match))">
+                          <span class="status-text">{{ getStatusText(getMatchStatus(match)) }}</span>
+                        </div>
+                      </div>
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          </div>
+        } @empty {
+          <div class="empty-state">
+            <p>No hay partidas disponibles para este torneo.</p>
+          </div>
+        }
+      </div>
+    }
+  </div>
+</div>
