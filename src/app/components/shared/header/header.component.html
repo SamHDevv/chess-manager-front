@@ -1,0 +1,47 @@
+<header class="app-header">
+  <div class="header-content">
+    <h1 class="app-title" routerLink="/tournaments">{{ title() }}</h1>
+    
+    <nav class="nav" *ngIf="navigation().length > 0">
+      @for (item of navigation(); track item.route) {
+        @if (item.visible !== false) {
+          <a 
+            [routerLink]="item.route" 
+            routerLinkActive="active"
+            class="nav-link">
+            @if (item.icon) {
+              <span class="nav-icon">{{ item.icon }}</span>
+            }
+            {{ item.label }}
+          </a>
+        }
+      }
+    </nav>
+
+    <!-- User Menu -->
+    @if (showUserMenu()) {
+      <div class="user-menu">
+        @if (currentUser()) {
+          <div class="user-info">
+            <span class="user-name">{{ currentUser() }}</span>
+            <div class="user-dropdown">
+              <button class="user-button" (click)="onUserMenuClick()">
+                👤
+              </button>
+              <div class="dropdown-menu">
+                <a href="#" class="dropdown-item">Perfil</a>
+                <a href="#" class="dropdown-item">Configuración</a>
+                <hr class="dropdown-divider">
+                <button class="dropdown-item logout-btn" (click)="onLogout()">
+                  Cerrar sesión
+                </button>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <a routerLink="/login" class="login-link">Iniciar sesión</a>
+        }
+      </div>
+    }
+  </div>
+</header>
