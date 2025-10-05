@@ -1,0 +1,111 @@
+<div class="tournament-list-container">
+  <header class="page-header">
+    <h1>Lista de torneos</h1>
+    <p>Explora y regístrate en los torneos de ajedrez</p>
+  </header>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <p>Cargando torneos...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error()) {
+    <div class="error-state">
+      <p>Error al cargar torneos: {{ error() }}</p>
+      <button (click)="loadTournaments()" class="retry-button">
+        Reintentar
+      </button>
+    </div>
+  }
+
+  <!-- Success State -->
+  @if (!loading() && !error() && tournaments().length > 0) {
+    <!-- Filters -->
+    <div class="filters">
+      <button 
+        class="filter-button"
+        [class.active]="selectedFilter() === 'all'"
+        (click)="setFilter('all')">
+        Todos ({{ tournaments().length }})
+      </button>
+      <button 
+        class="filter-button"
+        [class.active]="selectedFilter() === 'upcoming'"
+        (click)="setFilter('upcoming')">
+        Próximos ({{ upcomingTournaments().length }})
+      </button>
+      <button 
+        class="filter-button"
+        [class.active]="selectedFilter() === 'ongoing'"
+        (click)="setFilter('ongoing')">
+        En curso ({{ ongoingTournaments().length }})
+      </button>
+    </div>
+
+    <!-- Tournament Grid -->
+    <div class="tournaments-grid">
+      @for (tournament of filteredTournaments(); track tournament.id) {
+        <div class="tournament-card">
+          <div class="tournament-image">
+            <div class="placeholder-image">♔</div>
+            <div class="tournament-status" [attr.data-status]="tournament.status">
+              {{ getStatusLabel(tournament.status) }}
+            </div>
+          </div>
+          
+          <div class="tournament-info">
+            <h3>{{ tournament.name }}</h3>
+            
+            @if (tournament.description) {
+              <p class="tournament-description">{{ tournament.description }}</p>
+            }
+            
+            <div class="tournament-details">
+              <div class="detail-item">
+                <span class="label">📅 Inicio:</span>
+                <span>{{ formatDate(tournament.startDate) }}</span>
+              </div>
+              <div class="detail-item">
+                <span class="label">📍 Lugar:</span>
+                <span>{{ tournament.location }}</span>
+              </div>
+              @if (tournament.maxParticipants) {
+                <div class="detail-item">
+                  <span class="label">👥 Máximo:</span>
+                  <span>{{ tournament.maxParticipants }} jugadores</span>
+                </div>
+              }
+            </div>
+
+            <div class="tournament-actions">
+              @if (tournament.status === 'upcoming') {
+                <button class="btn btn-primary">
+                  Inscribirse
+                </button>
+              } @else if (tournament.status === 'ongoing') {
+                <button class="btn btn-secondary" [routerLink]="['/tournament', tournament.id]">
+                  Ver partidas
+                </button>
+              } @else {
+                <button class="btn btn-outline" [routerLink]="['/tournament', tournament.id, 'ranking']">
+                  Ver resultados
+                </button>
+              }
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!loading() && !error() && tournaments().length === 0) {
+    <div class="empty-state">
+      <h3>No hay torneos disponibles</h3>
+      <p>Vuelve pronto para ver nuevos torneos de ajedrez</p>
+    </div>
+  }
+</div>
