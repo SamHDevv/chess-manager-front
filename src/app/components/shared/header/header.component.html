@@ -1,47 +1,54 @@
 <header class="app-header">
   <div class="header-content">
-    <h1 class="app-title" routerLink="/tournaments">{{ title() }}</h1>
-    
-    <nav class="nav" *ngIf="navigation().length > 0">
-      @for (item of navigation(); track item.route) {
-        @if (item.visible !== false) {
-          <a 
-            [routerLink]="item.route" 
-            routerLinkActive="active"
-            class="nav-link">
-            @if (item.icon) {
-              <span class="nav-icon">{{ item.icon }}</span>
-            }
-            {{ item.label }}
-          </a>
-        }
-      }
-    </nav>
-
-    <!-- User Menu -->
-    @if (showUserMenu()) {
-      <div class="user-menu">
-        @if (currentUser()) {
-          <div class="user-info">
-            <span class="user-name">{{ currentUser() }}</span>
-            <div class="user-dropdown">
-              <button class="user-button" (click)="onUserMenuClick()">
-                👤
-              </button>
-              <div class="dropdown-menu">
-                <a href="#" class="dropdown-item">Perfil</a>
-                <a href="#" class="dropdown-item">Configuración</a>
-                <hr class="dropdown-divider">
-                <button class="dropdown-item logout-btn" (click)="onLogout()">
-                  Cerrar sesión
-                </button>
-              </div>
-            </div>
-          </div>
-        } @else {
-          <a routerLink="/login" class="login-link">Iniciar sesión</a>
-        }
+    <!-- Left Section: Logo + Navigation -->
+    <div class="header-left">
+      <!-- Logo Section -->
+      <div class="logo-section">
+        <div class="logo-icon">
+          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+            <circle cx="16" cy="16" r="13.33" fill="#137FEC"/>
+            <path d="M12 10h8l-2 4h-4l-2-4zM10 16h12l-1 6h-10l-1-6z" fill="white"/>
+          </svg>
+        </div>
+        <h1 class="app-title" routerLink="/tournaments">{{ title() }}</h1>
       </div>
-    }
+
+      <!-- Navigation -->
+      <nav class="nav">
+        <a routerLink="/inicio" class="nav-link">Inicio</a>
+        <a routerLink="/tournaments" routerLinkActive="active" class="nav-link">Torneos</a>
+        <a routerLink="/jugadores" class="nav-link">Jugadores</a>
+        <a routerLink="/acerca" class="nav-link">Acerca</a>
+      </nav>
+    </div>
+
+    <!-- Right Section: Search + User Actions -->
+    <div class="header-right">
+      <!-- Search Bar -->
+      <div class="search-container">
+        <div class="search-input">
+          <svg class="search-icon" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M21 21L16.5 16.5M19 11C19 15.4183 15.4183 19 11 19C6.58172 19 3 15.4183 3 11C3 6.58172 6.58172 3 11 3C15.4183 3 19 6.58172 19 11Z" stroke="#9CA3AF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          <input type="text" placeholder="Busca el Borneo" class="search-field">
+        </div>
+      </div>
+
+      <!-- User Actions -->
+      <div class="user-actions">
+        <!-- Notifications Button -->
+        <button class="notification-btn">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+        <!-- User Avatar -->
+        <div class="user-avatar">
+          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User Avatar" class="avatar-img">
+        </div>
+      </div>
+    </div>
   </div>
 </header>
