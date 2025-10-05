@@ -172,6 +172,13 @@ export class TournamentDetailComponent implements OnInit {
     }
   }
 
+  onViewRanking() {
+    const t = this.tournament();
+    if (t) {
+      this.router.navigate(['/tournaments', t.id, 'ranking']);
+    }
+  }
+
   // Helper methods
   formatDate(dateString: string): string {
     const date = new Date(dateString);

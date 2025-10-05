@@ -144,6 +144,25 @@
             </button>
           }
         </div>
+
+        <!-- Tournament Navigation -->
+        @if (tournament()!.status !== 'upcoming') {
+          <div class="tournament-navigation">
+            <h3>Explorar torneo</h3>
+            <div class="navigation-buttons">
+              <button 
+                class="btn btn-outline" 
+                (click)="onViewMatches()">
+                ⚔️ Ver partidas
+              </button>
+              <button 
+                class="btn btn-outline" 
+                (click)="onViewRanking()">
+                📊 Ver clasificación
+              </button>
+            </div>
+          </div>
+        }
       </div>
 
       <!-- Sidebar with participants -->
