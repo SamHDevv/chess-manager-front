@@ -1,0 +1,70 @@
+<div class="ranking-container">
+  <div class="main-content">
+    <div class="header-container">
+      <div class="heading-container">
+        <h1 class="page-title">Ranking del torneo</h1>
+      </div>
+      <div class="description-container">
+        <p class="description-text">Clasificación actual del torneo de ajedrez en curso.</p>
+      </div>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <p>Cargando clasificación...</p>
+      </div>
+    } @else if (error()) {
+      <div class="error-state">
+        <p>{{ error() }}</p>
+      </div>
+    } @else {
+      <div class="table-wrapper">
+        <div class="ranking-table">
+          <!-- Table Header -->
+          <div class="table-header">
+            <div class="header-row">
+              <div class="header-cell player-col">
+                <span class="header-text">Jugador</span>
+              </div>
+              <div class="header-cell points-col">
+                <span class="header-text">Puntos</span>
+              </div>
+              <div class="header-cell wins-col">
+                <span class="header-text">Victorias</span>
+              </div>
+              <div class="header-cell losses-col">
+                <span class="header-text">Derrotas</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Table Body -->
+          <div class="table-body">
+            @for (player of rankings(); track player.playerId) {
+              <div class="table-row">
+                <div class="data-cell player-col">
+                  <span class="player-name">{{ player.playerName }}</span>
+                </div>
+                <div class="data-cell points-col">
+                  <span class="cell-text">{{ formatPoints(player.points) }}</span>
+                </div>
+                <div class="data-cell wins-col">
+                  <span class="cell-text">{{ player.wins }}</span>
+                </div>
+                <div class="data-cell losses-col">
+                  <span class="cell-text">{{ player.losses }}</span>
+                </div>
+              </div>
+            } @empty {
+              <div class="empty-row">
+                <div class="empty-cell">
+                  <span class="empty-text">No hay datos de clasificación disponibles.</span>
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    }
+  </div>
+</div>

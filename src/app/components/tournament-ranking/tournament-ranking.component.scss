@@ -1,0 +1,232 @@
+// Import Inter font
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+.ranking-container {
+  width: 100%;
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  box-sizing: border-box;
+  display: flex;
+  justify-content: center;
+  
+  @media (min-width: 768px) {
+    padding: 2rem 4rem;
+  }
+  
+  @media (min-width: 1200px) {
+    padding: 2rem 8rem;
+  }
+  
+  @media (min-width: 1600px) {
+    padding: 2rem 20rem;
+  }
+}
+
+.main-content {
+  width: 100%;
+  max-width: 56rem; // 896px equivalent
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.header-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.page-title {
+  font-family: 'Inter', sans-serif;
+  font-weight: 700;
+  font-size: 1.5rem;
+  line-height: 1.2;
+  color: #111827;
+  margin: 0;
+  
+  @media (min-width: 768px) {
+    font-size: 1.875rem; // 30px
+  }
+}
+
+.description-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: #4B5563;
+  margin: 0;
+  
+  @media (min-width: 768px) {
+    font-size: 1rem; // 16px
+  }
+}
+
+.table-wrapper {
+  background: #FFFFFF;
+  border: 1px solid #E5E7EB;
+  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  width: 100%;
+  max-height: 80vh;
+}
+
+.ranking-table {
+  width: 100%;
+  overflow-x: auto;
+  min-width: 40rem; // Minimum width for table content
+  
+  @media (min-width: 768px) {
+    min-width: 50rem;
+  }
+  
+  @media (min-width: 1200px) {
+    overflow-x: visible;
+  }
+}
+
+.table-header {
+  background: #F9FAFB;
+  width: 100%;
+}
+
+.header-row {
+  display: grid;
+  grid-template-columns: 
+    minmax(12rem, 2fr)    /* Jugador */
+    minmax(6rem, 8rem)    /* Puntos */
+    minmax(6rem, 8rem)    /* Victorias */
+    minmax(6rem, 8rem);   /* Derrotas */
+  align-items: center;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 
+      2fr                 /* Jugador */
+      8rem                /* Puntos */
+      8rem                /* Victorias */
+      8rem;               /* Derrotas */
+  }
+}
+
+.header-cell {
+  padding: 0.75rem 1.5rem;
+  display: flex;
+  align-items: center;
+  
+  &.points-col,
+  &.wins-col,
+  &.losses-col {
+    justify-content: flex-start;
+  }
+  
+  @media (max-width: 767px) {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.header-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.75rem;
+  line-height: 1;
+  letter-spacing: 0.025em;
+  text-transform: uppercase;
+  color: #6B7280;
+}
+
+.table-body {
+  background: #FFFFFF;
+  border-top: 1px solid #E5E7EB;
+  width: 100%;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.table-row {
+  display: grid;
+  grid-template-columns: 
+    minmax(12rem, 2fr)    /* Jugador */
+    minmax(6rem, 8rem)    /* Puntos */
+    minmax(6rem, 8rem)    /* Victorias */
+    minmax(6rem, 8rem);   /* Derrotas */
+  align-items: center;
+  border-top: 1px solid #E5E7EB;
+  
+  &:first-child {
+    border-top: none;
+  }
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 
+      2fr                 /* Jugador */
+      8rem                /* Puntos */
+      8rem                /* Victorias */
+      8rem;               /* Derrotas */
+  }
+}
+
+.data-cell {
+  padding: 1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  
+  @media (max-width: 767px) {
+    padding: 0.75rem 1rem;
+  }
+}
+
+.player-name {
+  font-family: 'Inter', sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  color: #111827;
+}
+
+.cell-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.25;
+  color: #6B7280;
+}
+
+.empty-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  grid-column: 1 / -1;
+}
+
+.empty-text {
+  font-family: 'Inter', sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: #6B7280;
+  text-align: center;
+}
+
+// Loading and Error States
+.loading-state, 
+.error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1rem;
+  text-align: center;
+  
+  p {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    color: #64748B;
+    margin: 0;
+  }
+}
+
+.error-state p {
+  color: #DC2626;
+}
