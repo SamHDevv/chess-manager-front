@@ -36,18 +36,54 @@
 
       <!-- User Actions -->
       <div class="user-actions">
-        <!-- Notifications Button -->
-        <button class="notification-btn">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+        @if (authService.isAuthenticated()) {
+          <!-- Authenticated User -->
+          <!-- Notifications Button -->
+          <button class="notification-btn">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0" stroke="#6B7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </button>
 
-        <!-- User Avatar -->
-        <div class="user-avatar">
-          <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face" alt="User Avatar" class="avatar-img">
-        </div>
+          <!-- User Menu -->
+          <div class="user-menu" [class.open]="showUserMenu()" (click)="toggleUserMenu()">
+            <div class="user-avatar">
+              <span class="avatar-initials">{{ getUserInitials() }}</span>
+            </div>
+            
+            @if (showUserMenu()) {
+              <div class="user-dropdown">
+                <div class="user-info">
+                  <p class="user-name">{{ authService.currentUser()?.firstName || 'Usuario' }}</p>
+                  <p class="user-email">{{ authService.currentUser()?.email }}</p>
+                </div>
+                <hr class="dropdown-divider">
+                <button class="dropdown-item" (click)="navigateToProfile()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                  Mi Perfil
+                </button>
+                <button class="dropdown-item" (click)="logout()">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <polyline points="16,17 21,12 16,7" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                  Cerrar Sesión
+                </button>
+              </div>
+            }
+          </div>
+        } @else {
+          <!-- Not Authenticated -->
+          <div class="auth-buttons">
+            <a routerLink="/login" class="auth-btn login-btn">Iniciar Sesión</a>
+            <a routerLink="/register" class="auth-btn register-btn">Registro</a>
+          </div>
+        }
       </div>
     </div>
   </div>

@@ -1,13 +1,7 @@
-import { Component, input } from '@angular/core';
+import { Component, input, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterLink, RouterLinkActive } from '@angular/router';
-
-export interface NavigationItem {
-  label: string;
-  route: string;
-  icon?: string;
-  visible?: boolean;
-}
+import { RouterLink, RouterLinkActive, Router } from '@angular/router';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-header',
@@ -16,19 +10,37 @@ export interface NavigationItem {
   styleUrl: './header.component.scss'
 })
 export class HeaderComponent {
+  // Injected services
+  protected readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
+
   // Props usando signals
   title = input<string>('Chess Manager');
-  navigation = input<NavigationItem[]>([]);
-  showUserMenu = input<boolean>(false);
-  currentUser = input<string | null>(null);
+  
+  // Component state
+  protected readonly showUserMenu = signal<boolean>(false);
 
-  onUserMenuClick() {
-    // Lógica del menú de usuario
-    console.log('User menu clicked');
+  protected toggleUserMenu(): void {
+    this.showUserMenu.set(!this.showUserMenu());
   }
 
-  onLogout() {
-    // Lógica de logout
-    console.log('Logout clicked');
+  protected getUserInitials(): string {
+    const user = this.authService.currentUser();
+    if (!user) return 'U';
+    
+    const firstName = user.firstName || '';
+    const lastName = user.lastName || '';
+    
+    return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
+  }
+
+  protected navigateToProfile(): void {
+    this.showUserMenu.set(false);
+    this.router.navigate(['/profile']);
+  }
+
+  protected logout(): void {
+    this.showUserMenu.set(false);
+    this.authService.logout();
   }
 }

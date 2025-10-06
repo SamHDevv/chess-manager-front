@@ -1,0 +1,139 @@
+<div class="auth-container">
+  <div class="auth-card">
+    <!-- Heading -->
+    <div class="auth-heading">
+      <h2 class="auth-title">
+        {{ isLogin() ? 'Inicia Sesión' : 'Crear Cuenta' }}
+      </h2>
+    </div>
+
+    <!-- Form -->
+    <form [formGroup]="authForm" (ngSubmit)="onSubmit()" class="auth-form">
+      
+      <!-- Name Field (Register only) -->
+      @if (isRegister()) {
+        <div class="form-field">
+          <input
+            type="text"
+            id="name"
+            formControlName="name"
+            placeholder="Nombre completo"
+            class="form-input top-field"
+            [class.error]="isFieldInvalid('name')"
+          />
+        </div>
+      }
+
+      <!-- Email Field -->
+      <div class="form-field">
+        <input
+          type="email"
+          id="email"
+          formControlName="email"
+          placeholder="Correo electrónico"
+          class="form-input"
+          [class]="getEmailFieldClass()"
+          [class.error]="isFieldInvalid('email')"
+        />
+      </div>
+
+      <!-- Password Field -->
+      <div class="form-field">
+        <input
+          type="password"
+          id="password"
+          formControlName="password"
+          placeholder="Contraseña"
+          class="form-input"
+          [class]="getPasswordFieldClass()"
+          [class.error]="isFieldInvalid('password')"
+        />
+      </div>
+
+      <!-- Confirm Password Field (Register only) -->
+      @if (isRegister()) {
+        <div class="form-field">
+          <input
+            type="password"
+            id="confirmPassword"
+            formControlName="confirmPassword"
+            placeholder="Confirmar contraseña"
+            class="form-input bottom-field"
+            [class.error]="isFieldInvalid('confirmPassword') || hasPasswordMismatch()"
+          />
+        </div>
+      }
+
+      <!-- Options Row -->
+      <div class="form-options">
+        @if (isLogin()) {
+          <!-- Login Options -->
+          <div class="checkbox-container">
+            <input
+              type="checkbox"
+              id="remember"
+              formControlName="rememberMe"
+              class="form-checkbox"
+            />
+            <label for="remember" class="checkbox-label">Recuérdame</label>
+          </div>
+          
+          <div class="forgot-password">
+            <a href="#" class="auth-link">¿Olvidaste la contraseña?</a>
+          </div>
+        } @else {
+          <!-- Register Options -->
+          <div class="checkbox-container full-width">
+            <input
+              type="checkbox"
+              id="terms"
+              formControlName="acceptTerms"
+              class="form-checkbox"
+            />
+            <label for="terms" class="checkbox-label">
+              Acepto los <a href="#" class="auth-link">términos y condiciones</a>
+            </label>
+          </div>
+        }
+      </div>
+
+      <!-- Submit Button -->
+      <button
+        type="submit"
+        class="auth-button"
+        [class.loading]="authService.isLoading()"
+        [disabled]="authForm.invalid || authService.isLoading() || (isRegister() && hasPasswordMismatch())"
+      >
+        @if (authService.isLoading()) {
+          <span>{{ isLogin() ? 'Iniciando...' : 'Creando cuenta...' }}</span>
+        } @else {
+          <span>{{ isLogin() ? 'Ingresar' : 'Crear Cuenta' }}</span>
+        }
+      </button>
+
+      <!-- Error Messages -->
+      @if (errorMessage()) {
+        <div class="error-message">
+          {{ errorMessage() }}
+        </div>
+      }
+
+      @if (isRegister() && hasPasswordMismatch() && authForm.get('confirmPassword')?.touched) {
+        <div class="error-message">
+          Las contraseñas no coinciden
+        </div>
+      }
+
+      <!-- Toggle Mode Link -->
+      <div class="auth-footer">
+        @if (isLogin()) {
+          <span class="auth-text">¿No tienes una cuenta?</span>
+          <button type="button" (click)="toggleMode()" class="auth-link-btn">Registro</button>
+        } @else {
+          <span class="auth-text">¿Ya tienes una cuenta?</span>
+          <button type="button" (click)="toggleMode()" class="auth-link-btn">Iniciar Sesión</button>
+        }
+      </div>
+    </form>
+  </div>
+</div>
