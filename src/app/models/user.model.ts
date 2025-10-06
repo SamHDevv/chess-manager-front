@@ -1,14 +1,11 @@
+import { UserRole } from './auth.model';
+
 export interface User {
   id: number;
   name: string;
   email: string;
   password?: string;
   role: UserRole;
-}
-
-export enum UserRole {
-  ADMIN = 'admin',
-  PLAYER = 'player'
 }
 
 export interface CreateUserRequest {

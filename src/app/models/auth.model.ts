@@ -8,7 +8,7 @@ export interface AuthRegisterRequest {
   email: string;
   password: string;
   name: string;
-  role?: string;
+  role?: UserRole;
 }
 
 export interface AuthResponse {
@@ -19,12 +19,35 @@ export interface AuthResponse {
   error?: string;
 }
 
+export type UserRole = 'player' | 'admin';
+
+export type Permission = 
+  // Permisos básicos
+  | 'view_tournaments'
+  | 'join_tournaments'
+  | 'view_matches'
+  | 'view_rankings'
+  
+  // Permisos de gestión propia (players)
+  | 'create_tournaments'
+  | 'edit_own_tournaments'
+  | 'delete_own_tournaments'
+  | 'manage_own_tournament_inscriptions'
+  
+  // Permisos administrativos (solo admin)
+  | 'manage_users'
+  | 'edit_any_tournament'
+  | 'delete_any_tournament'
+  | 'view_system_analytics';
+
 export interface AuthUser {
   userId: number;
   email: string;
-  role: string;
+  role: UserRole;
   firstName?: string;
   lastName?: string;
+  createdAt?: Date;
+  lastLogin?: Date;
 }
 
 export interface JwtPayload {
