@@ -157,11 +157,12 @@ export class AuthComponent {
   private handleRegister(): void {
     const { name, email, password } = this.authForm.value;
     
+    // Backend expects 'name' field and optional role (defaults to 'player')
     this.authService.register({
       email,
       password,
-      firstName: name.split(' ')[0],
-      lastName: name.split(' ').slice(1).join(' ')
+      name,
+      role: 'player'
     }).subscribe({
       next: (response: AuthResponse) => {
         if (response.success) {

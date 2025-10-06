@@ -7,8 +7,8 @@ export interface AuthLoginRequest {
 export interface AuthRegisterRequest {
   email: string;
   password: string;
-  firstName?: string;
-  lastName?: string;
+  name: string;
+  role?: string;
 }
 
 export interface AuthResponse {
