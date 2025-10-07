@@ -10,7 +10,6 @@ import {
   AuthUser,
   JwtPayload,
   AuthUserRole,
-  isAuthResponse,
   isAuthUser
 } from '../models';
 

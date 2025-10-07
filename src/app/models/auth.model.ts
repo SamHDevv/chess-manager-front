@@ -41,6 +41,22 @@ export enum AuthUserRole {
   USER = 'user'
 }
 
+// Permission enum for role-based access control
+export enum Permission {
+  VIEW_TOURNAMENTS = 'view_tournaments',
+  JOIN_TOURNAMENTS = 'join_tournaments',
+  VIEW_MATCHES = 'view_matches',
+  VIEW_RANKINGS = 'view_rankings',
+  CREATE_TOURNAMENTS = 'create_tournaments',
+  EDIT_OWN_TOURNAMENTS = 'edit_own_tournaments',
+  DELETE_OWN_TOURNAMENTS = 'delete_own_tournaments',
+  MANAGE_OWN_TOURNAMENT_INSCRIPTIONS = 'manage_own_tournament_inscriptions',
+  MANAGE_USERS = 'manage_users',
+  EDIT_ANY_TOURNAMENT = 'edit_any_tournament',
+  DELETE_ANY_TOURNAMENT = 'delete_any_tournament',
+  VIEW_SYSTEM_ANALYTICS = 'view_system_analytics'
+}
+
 // Type guards
 export function isAuthUser(obj: any): obj is AuthUser {
   return obj && 

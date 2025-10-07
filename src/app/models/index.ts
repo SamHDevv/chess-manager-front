@@ -2,9 +2,17 @@
 export * from './api-response.model';
 
 // Authentication models
-export * from './auth.model';
+export type { 
+  AuthLoginRequest, 
+  AuthRegisterRequest, 
+  AuthResponse, 
+  AuthUser, 
+  JwtPayload
+} from './auth.model';
+export { AuthUserRole, Permission } from './auth.model';
+export { isAuthUser, isAuthResponse } from './auth.model';
 
-// Entity models
+// Entity models  
 export * from './user.model';
 export * from './tournament.model';
 export * from './match.model';

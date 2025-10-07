@@ -431,3 +431,22 @@
     transition: color 0.2s ease;
   }
 }
+
+// Estilo especial para el botón de admin
+.admin-item {
+  color: #7C3AED !important;
+  font-weight: 600;
+
+  &:hover {
+    background: #F3E8FF !important;
+    color: #6B21A8 !important;
+
+    svg {
+      color: #6B21A8 !important;
+    }
+  }
+
+  svg {
+    color: #7C3AED !important;
+  }
+}

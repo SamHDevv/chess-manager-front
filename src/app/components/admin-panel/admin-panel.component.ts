@@ -5,7 +5,7 @@ import { AuthService } from '../../services/auth.service';
 import { RolePermissionService } from '../../services/role-permission.service';
 import { UserService } from '../../services/user.service';
 import { TournamentService } from '../../services/tournament.service';
-import { User } from '../../models/user.model';
+import { User, UserRole } from '../../models/user.model';
 import { Tournament } from '../../models/tournament.model';
 
 interface AdminStats {
@@ -46,7 +46,7 @@ export class AdminPanelComponent {
   // Computed properties
   protected readonly currentUser = this.authService.currentUser;
   protected readonly isAdmin = computed(() => 
-    this.currentUser() ? this.rolePermissionService.isAdmin(this.currentUser()!.role) : false
+    this.currentUser() ? this.rolePermissionService.isAdmin(this.currentUser()!.role as UserRole) : false
   );
 
   ngOnInit() {

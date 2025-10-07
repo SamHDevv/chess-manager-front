@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
 import { RolePermissionService } from '../services/role-permission.service';
 import { Permission } from '../models/auth.model';
+import { UserRole } from '../models/user.model';
 
 /**
  * Guard para rutas que requieren autenticación
@@ -36,7 +37,7 @@ export const permissionGuard = (requiredPermission: Permission) => {
     return false;
   }
 
-  const hasPermission = rolePermissionService.hasPermission(user.role, requiredPermission);
+  const hasPermission = rolePermissionService.hasPermission(user.role as UserRole, requiredPermission);
   
   if (!hasPermission) {
     router.navigate(['/tournaments']); // Redirigir a página principal
@@ -61,7 +62,7 @@ export const adminGuard = () => {
     return false;
   }
 
-  const isAdmin = rolePermissionService.isAdmin(user.role);
+  const isAdmin = rolePermissionService.isAdmin(user.role as UserRole);
   
   if (!isAdmin) {
     router.navigate(['/tournaments']); // No autorizado
@@ -75,12 +76,12 @@ export const adminGuard = () => {
  * Guard para verificar si puede crear torneos
  */
 export const canCreateTournamentGuard = () => {
-  return permissionGuard('create_tournaments');
+  return permissionGuard(Permission.CREATE_TOURNAMENTS);
 };
 
 /**
  * Guard para gestión de usuarios (solo admins)
  */
 export const canManageUsersGuard = () => {
-  return permissionGuard('manage_users');
+  return permissionGuard(Permission.MANAGE_USERS);
 };
