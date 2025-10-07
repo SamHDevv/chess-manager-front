@@ -1,0 +1,219 @@
+<div class="admin-panel">
+  <!-- Header del Panel -->
+  <div class="admin-header">
+    <div class="admin-title">
+      <h1>Panel de Administración</h1>
+      <p class="admin-subtitle">Gestión completa del sistema ChessMaster</p>
+    </div>
+    
+    @if (currentUser()) {
+      <div class="admin-user-info">
+        <span class="user-name">{{ currentUser()?.firstName }} {{ currentUser()?.lastName }}</span>
+        <span class="user-role">{{ getRoleDisplayName(currentUser()?.role || 'player') }}</span>
+      </div>
+    }
+  </div>
+
+  <!-- Navigation Tabs -->
+  <nav class="admin-nav">
+    <button 
+      class="nav-tab"
+      [class.active]="activeTab() === 'dashboard'"
+      (click)="setActiveTab('dashboard')">
+      <span class="nav-icon">📊</span>
+      Dashboard
+    </button>
+    
+    <button 
+      class="nav-tab"
+      [class.active]="activeTab() === 'users'"
+      (click)="setActiveTab('users')">
+      <span class="nav-icon">👥</span>
+      Usuarios
+    </button>
+    
+    <button 
+      class="nav-tab"
+      [class.active]="activeTab() === 'tournaments'"
+      (click)="setActiveTab('tournaments')">
+      <span class="nav-icon">🏆</span>
+      Torneos
+    </button>
+  </nav>
+
+  <!-- Loading State -->
+  @if (isLoading()) {
+    <div class="loading-container">
+      <div class="loading-spinner"></div>
+      <p>Cargando datos...</p>
+    </div>
+  }
+
+  <!-- Dashboard Tab -->
+  @if (activeTab() === 'dashboard' && !isLoading()) {
+    <div class="dashboard-content">
+      <h2>Estadísticas del Sistema</h2>
+      
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value">{{ stats().totalUsers }}</div>
+          <div class="stat-label">Total Usuarios</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{ stats().totalTournaments }}</div>
+          <div class="stat-label">Total Torneos</div>
+        </div>
+        
+        <div class="stat-card">
+          <div class="stat-value">{{ stats().activeTournaments }}</div>
+          <div class="stat-label">Torneos Activos</div>
+        </div>
+      </div>
+
+      <div class="users-by-role">
+        <h3>Distribución de Usuarios por Rol</h3>
+        <div class="role-stats">
+          @for (roleEntry of Object.entries(stats().usersByRole); track roleEntry[0]) {
+            <div class="role-stat">
+              <span class="role-name">{{ getRoleDisplayName(roleEntry[0]) }}:</span>
+              <span class="role-count">{{ roleEntry[1] }} usuarios</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  }
+
+  <!-- Users Tab -->
+  @if (activeTab() === 'users' && !isLoading()) {
+    <div class="users-content">
+      <div class="section-header">
+        <h2>Gestión de Usuarios</h2>
+        <span class="user-count">{{ users().length }} usuarios registrados</span>
+      </div>
+      
+      <div class="users-table">
+        <div class="table-header">
+          <div class="col-id">ID</div>
+          <div class="col-name">Nombre</div>
+          <div class="col-email">Email</div>
+          <div class="col-role">Rol</div>
+          <div class="col-actions">Acciones</div>
+        </div>
+        
+        @for (user of users(); track user.id) {
+          <div class="table-row">
+            <div class="col-id">#{{ user.id }}</div>
+            <div class="col-name">{{ user.name }}</div>
+            <div class="col-email">{{ user.email }}</div>
+            <div class="col-role">
+              <span class="role-badge" [class]="user.role">
+                {{ getRoleDisplayName(user.role) }}
+              </span>
+            </div>
+            <div class="col-actions">
+              @if (user.role === 'player') {
+                <button 
+                  class="btn btn-sm btn-primary"
+                  (click)="promoteUserToAdmin(user.id)">
+                  Promover a Admin
+                </button>
+              }
+              
+              @if (user.role === 'admin' && user.id !== currentUser()?.userId) {
+                <button 
+                  class="btn btn-sm btn-secondary"
+                  (click)="demoteUserToPlayer(user.id)">
+                  Degradar a Player
+                </button>
+              }
+              
+              @if (user.id !== currentUser()?.userId) {
+                <button 
+                  class="btn btn-sm btn-danger"
+                  (click)="deleteUser(user.id)">
+                  Eliminar
+                </button>
+              }
+            </div>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Tournaments Tab -->
+  @if (activeTab() === 'tournaments' && !isLoading()) {
+    <div class="tournaments-content">
+      <div class="section-header">
+        <h2>Gestión de Torneos</h2>
+        <button class="btn btn-primary" routerLink="/tournaments/create">
+          + Crear Torneo
+        </button>
+      </div>
+      
+      <div class="tournaments-grid">
+        @for (tournament of tournaments(); track tournament.id) {
+          <div class="tournament-card">
+            <div class="tournament-header">
+              <h3>{{ tournament.name }}</h3>
+              <span class="tournament-status" [class]="tournament.status?.toLowerCase()">
+                {{ tournament.status }}
+              </span>
+            </div>
+            
+            <div class="tournament-info">
+              <p><strong>Fecha:</strong> {{ tournament.startDate | date:'dd/MM/yyyy' }} - {{ tournament.endDate | date:'dd/MM/yyyy' }}</p>
+              <p><strong>Ubicación:</strong> {{ tournament.location }}</p>
+              <p><strong>Estado:</strong> {{ tournament.status }}</p>
+              @if (tournament.maxParticipants) {
+                <p><strong>Participantes:</strong> {{ tournament.maxParticipants }} máx.</p>
+              }
+            </div>
+            
+            <div class="tournament-actions">
+              <button 
+                class="btn btn-sm btn-primary" 
+                [routerLink]="['/tournaments', tournament.id]">
+                Ver Detalles
+              </button>
+              
+              <button 
+                class="btn btn-sm btn-secondary" 
+                [routerLink]="['/tournaments', tournament.id, 'edit']">
+                Editar
+              </button>
+              
+              <button 
+                class="btn btn-sm btn-danger"
+                (click)="deleteTournament(tournament.id)">
+                Eliminar
+              </button>
+            </div>
+          </div>
+        }
+        
+        @if (tournaments().length === 0) {
+          <div class="empty-state">
+            <p>No hay torneos registrados en el sistema.</p>
+            <button class="btn btn-primary" routerLink="/tournaments/create">
+              Crear el primer torneo
+            </button>
+          </div>
+        }
+      </div>
+    </div>
+  }
+
+  <!-- Access Denied (fallback) -->
+  @if (!isAdmin()) {
+    <div class="access-denied">
+      <h2>Acceso Denegado</h2>
+      <p>No tienes permisos para acceder al panel de administración.</p>
+      <button class="btn btn-primary" routerLink="/tournaments">
+        Volver a Torneos
+      </button>
+    </div>
+  }
+</div>
