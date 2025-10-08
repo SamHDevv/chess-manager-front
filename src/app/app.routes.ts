@@ -5,7 +5,8 @@ import { TournamentMatchesComponent } from './components/tournament-matches/tour
 import { TournamentRankingComponent } from './components/tournament-ranking/tournament-ranking.component';
 import { AuthComponent } from './components/auth/auth.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
-import { adminGuard } from './guards/auth.guards';
+import { UserProfileComponent } from './components/user-profile/user-profile';
+import { adminGuard, authGuard } from './guards/auth.guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: '/tournaments', pathMatch: 'full' },
@@ -19,6 +20,11 @@ export const routes: Routes = [
     path: 'admin', 
     component: AdminPanelComponent,
     canActivate: [adminGuard]
+  },
+  { 
+    path: 'profile', 
+    component: UserProfileComponent,
+    canActivate: [authGuard]
   },
   { path: '**', redirectTo: '/tournaments' }
 ];
