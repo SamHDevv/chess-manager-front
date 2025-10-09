@@ -2,6 +2,7 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
+import { AuthService } from '../../services/auth.service';
 import { Tournament, TournamentStatus } from '../../models/tournament.model';
 
 @Component({
@@ -12,6 +13,7 @@ import { Tournament, TournamentStatus } from '../../models/tournament.model';
 })
 export class TournamentListComponent implements OnInit {
   private readonly tournamentService = inject(TournamentService);
+  protected readonly authService = inject(AuthService);
 
   // Signals for state management
   protected readonly tournaments = signal<Tournament[]>([]);

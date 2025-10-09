@@ -1,7 +1,19 @@
 <div class="tournament-list-container">
   <header class="page-header">
-    <h1>Lista de torneos</h1>
-    <p>Explora y regístrate en los torneos de ajedrez</p>
+    <div class="header-content">
+      <div class="header-text">
+        <h1>Lista de torneos</h1>
+        <p>Explora y regístrate en los torneos de ajedrez</p>
+      </div>
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/tournaments/create" class="create-tournament-btn">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5V19M5 12H19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Crear Torneo
+        </a>
+      }
+    </div>
   </header>
 
   <!-- Loading State -->
