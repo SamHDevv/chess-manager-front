@@ -1,85 +1,121 @@
-<div class="matches-container">
-  <div class="main-content">
-    <div class="header-container">
-      <div class="heading-container">
-        <h2 class="page-title">Vista de Partidas del Torneo</h2>
-      </div>
-      <div class="description-container">
-        <p class="description-text">
-          Visualiza los emparejamientos y resultados de cada ronda. El sistema suizo asegura que cada jugador se enfrente a oponentes con una puntuación similar.
-        </p>
+<div class="tournament-matches">
+  <div class="container">
+    <!-- Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Vista de Partidas del Torneo</h1>
+          <p>Visualiza los emparejamientos y resultados de cada ronda. El sistema suizo asegura que cada jugador se enfrente a oponentes con una puntuación similar.</p>
+        </div>
+        @if (isOrganizer()) {
+          <div class="organizer-badge">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+              <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" stroke="currentColor" stroke-width="2"/>
+              <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Organizador
+          </div>
+        }
       </div>
     </div>
 
     @if (loading()) {
       <div class="loading-state">
-        <p>Cargando partidas...</p>
+        <div class="loading-content">
+          <div class="spinner"></div>
+          <p>Cargando partidas...</p>
+        </div>
       </div>
     } @else if (error()) {
       <div class="error-state">
-        <p>{{ error() }}</p>
+        <div class="error-content">
+          <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="#ef4444" stroke-width="2"/>
+            <line x1="15" y1="9" x2="9" y2="15" stroke="#ef4444" stroke-width="2"/>
+            <line x1="9" y1="9" x2="15" y2="15" stroke="#ef4444" stroke-width="2"/>
+          </svg>
+          <h3>Error al cargar las partidas</h3>
+          <p>{{ error() }}</p>
+        </div>
       </div>
     } @else {
+      <!-- Rounds Display -->
       <div class="rounds-container">
-        @for (roundData of roundsData(); track roundData.roundNumber) {
-          <div class="round-container">
-            <div class="round-header">
-              <h3 class="round-title">Ronda {{ roundData.roundNumber }}</h3>
-            </div>
-            
-            <div class="table-wrapper">
+        @if (roundsData().length > 0) {
+          @for (roundData of roundsData(); track roundData.roundNumber) {
+            <div class="round-section">
+              <div class="round-header">
+                <h2 class="round-title">Ronda {{ roundData.roundNumber }}</h2>
+              </div>
+              
               <div class="matches-table">
-                <!-- Table Header -->
                 <div class="table-header">
-                  <div class="header-row">
-                    <div class="header-cell mesa-col">
-                      <span class="header-text">Mesa</span>
+                  <div class="header-cell mesa">Mesa</div>
+                  <div class="header-cell jugador-blancas">Jugador Blancas</div>
+                  <div class="header-cell jugador-negras">Jugador Negras</div>
+                  <div class="header-cell resultado">Resultado</div>
+                  <div class="header-cell estado">Estado</div>
+                </div>
+                
+                @for (match of roundData.matches; track match.id) {
+                  <div class="table-row">
+                    <div class="cell mesa">{{ match.table }}</div>
+                    
+                    <div class="cell jugador-blancas">
+                      <div class="player-info">
+                        <span class="player-name">{{ match.player1Name }}</span>
+                        @if (match.player1Rating) {
+                          <span class="player-rating">({{ match.player1Rating }})</span>
+                        }
+                      </div>
                     </div>
-                    <div class="header-cell player-white-col">
-                      <span class="header-text">Jugador Blancas</span>
+                    
+                    <div class="cell jugador-negras">
+                      <div class="player-info">
+                        <span class="player-name">{{ match.player2Name }}</span>
+                        @if (match.player2Rating) {
+                          <span class="player-rating">({{ match.player2Rating }})</span>
+                        }
+                      </div>
                     </div>
-                    <div class="header-cell player-black-col">
-                      <span class="header-text">Jugador Negras</span>
+                    
+                    <div class="cell resultado">
+                      @if (isOrganizer() && canEditMatch(match)) {
+                        <select 
+                          [value]="match.result || ''" 
+                          (change)="onResultChange($event, match)"
+                          class="result-select"
+                          [disabled]="savingResult()"
+                        >
+                          <option value="">-</option>
+                          <option value="1-0">1-0</option>
+                          <option value="0-1">0-1</option>
+                          <option value="½-½">½-½</option>
+                        </select>
+                      } @else {
+                        <span class="result-display">{{ getResultDisplay(match.result) }}</span>
+                      }
                     </div>
-                    <div class="header-cell result-col">
-                      <span class="header-text">Resultado</span>
-                    </div>
-                    <div class="header-cell status-col">
-                      <span class="header-text">Estado</span>
+                    
+                    <div class="cell estado">
+                      <span class="status-badge" [ngClass]="getStatusClass(match.status)">
+                        {{ getStatusText(match.status) }}
+                      </span>
                     </div>
                   </div>
-                </div>
-
-                <!-- Table Body -->
-                <div class="table-body">
-                  @for (match of roundData.matches; track match.id) {
-                    <div class="table-row">
-                      <div class="data-cell mesa-col">
-                        <span class="cell-text">{{ $index + 1 }}</span>
-                      </div>
-                      <div class="data-cell player-white-col">
-                        <span class="cell-text">{{ match.whitePlayerName || 'Player ' + match.whitePlayerId }}</span>
-                      </div>
-                      <div class="data-cell player-black-col">
-                        <span class="cell-text">{{ match.blackPlayerName || 'Player ' + match.blackPlayerId }}</span>
-                      </div>
-                      <div class="data-cell result-col result-centered">
-                        <span class="cell-text">{{ getMatchResult(match) }}</span>
-                      </div>
-                      <div class="data-cell status-col status-centered">
-                        <div class="status-badge" [class]="getStatusClass(getMatchStatus(match))">
-                          <span class="status-text">{{ getStatusText(getMatchStatus(match)) }}</span>
-                        </div>
-                      </div>
-                    </div>
-                  }
-                </div>
+                }
               </div>
             </div>
-          </div>
-        } @empty {
+          }
+        } @else {
           <div class="empty-state">
-            <p>No hay partidas disponibles para este torneo.</p>
+            <div class="empty-content">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+                <path d="M9 11H15M9 15H15M17 21H7C6.46957 21 5.96086 20.7893 5.58579 20.4142C5.21071 20.0391 5 19.5304 5 19V5C5 4.46957 5.21071 3.96086 5.58579 3.58579C5.96086 3.21071 6.46957 3 7 3H12.586C12.8512 3.00006 13.1055 3.10545 13.293 3.293L18.707 8.707C18.8946 8.89449 18.9999 9.14881 19 9.414V19C19 19.5304 18.7893 20.0391 18.4142 20.4142C18.0391 20.7893 17.5304 21 17 21Z" stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+              <h3>No hay partidas disponibles</h3>
+              <p>Este torneo aún no tiene partidas programadas.</p>
+            </div>
           </div>
         }
       </div>

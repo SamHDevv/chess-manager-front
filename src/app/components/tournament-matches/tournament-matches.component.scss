@@ -1,323 +1,426 @@
-// Import Inter font
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-.matches-container {
-  width: 100%;
+.tournament-matches {
+  padding: 24px;
+  background-color: #f8fafc;
   min-height: 100vh;
-  padding: 0 2rem;
-  box-sizing: border-box;
-  
-  @media (min-width: 768px) {
-    padding: 0 4rem;
-  }
-  
-  @media (min-width: 1200px) {
-    padding: 0 8rem;
-  }
-  
-  @media (min-width: 1600px) {
-    padding: 0 12rem;
-  }
 }
 
-.main-content {
-  max-width: 96rem; // 1536px equivalent
+.container {
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 2rem;
+}
+
+/* Header styles */
+.page-header {
+  margin-bottom: 32px;
+}
+
+.header-content {
   display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  
-  @media (min-width: 768px) {
-    padding: 2rem 2rem 8rem;
-  }
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
 }
 
-.header-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-bottom: 2rem;
-  
-  @media (min-width: 768px) {
-    margin-bottom: 2rem;
-  }
-}
-
-.heading-container {
-  margin-bottom: 0.5rem;
-}
-
-.page-title {
-  font-family: 'Inter', sans-serif;
+.header-text h1 {
+  font-size: 2rem;
   font-weight: 700;
-  font-size: 1.5rem;
-  line-height: 1.2;
-  color: #0F172A;
+  color: #1f2937;
+  margin: 0 0 8px 0;
+}
+
+.header-text p {
+  font-size: 1rem;
+  color: #6b7280;
   margin: 0;
-  
-  @media (min-width: 768px) {
-    font-size: 1.875rem; // 30px
-  }
-}
-
-.description-container {
-  max-width: 42rem; // 672px equivalent
-}
-
-.description-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 0.875rem;
+  max-width: 600px;
   line-height: 1.5;
-  color: #64748B;
-  margin: 0;
-  
-  @media (min-width: 768px) {
-    font-size: 1rem; // 16px
-    line-height: 1.5;
-  }
 }
 
-.rounds-container {
-  display: flex;
-  flex-direction: column;
-  gap: 3rem;
-  
-  @media (min-width: 768px) {
-    gap: 3rem;
-  }
-}
-
-.round-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.round-header {
-  padding-bottom: 0.5rem;
-}
-
-.round-title {
-  font-family: 'Inter', sans-serif;
-  font-weight: 600;
-  font-size: 1.25rem;
-  line-height: 1.3;
-  color: #0F172A;
-  margin: 0;
-  
-  @media (min-width: 768px) {
-    font-size: 1.5rem; // 24px
-  }
-}
-
-.table-wrapper {
-  background: #FFFFFF;
-  border: 1px solid #E2E8F0;
-  box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);
-  border-radius: 0.5rem;
-  overflow: hidden;
-  width: 100%;
-}
-
-.matches-table {
-  width: 100%;
-  overflow-x: auto;
-  min-width: 50rem; // Minimum width for table content
-  
-  @media (min-width: 768px) {
-    min-width: 60rem;
-  }
-  
-  @media (min-width: 1200px) {
-    min-width: 70rem;
-    overflow-x: visible;
-  }
-}
-
-.table-header {
-  background: #F8FAFC;
-  width: 100%;
-}
-
-.header-row {
-  display: grid;
-  grid-template-columns: 
-    minmax(4rem, 6rem)     /* Mesa */
-    minmax(12rem, 1fr)     /* Jugador Blancas */
-    minmax(12rem, 1fr)     /* Jugador Negras */
-    minmax(8rem, 10rem)    /* Resultado */
-    minmax(8rem, 12rem);   /* Estado */
-  align-items: center;
-  
-  @media (min-width: 768px) {
-    grid-template-columns: 
-      6rem               /* Mesa */
-      1fr                /* Jugador Blancas */
-      1fr                /* Jugador Negras */
-      10rem              /* Resultado */
-      12rem;             /* Estado */
-  }
-  
-  @media (min-width: 1200px) {
-    grid-template-columns: 
-      8rem               /* Mesa */
-      1fr                /* Jugador Blancas */
-      1fr                /* Jugador Negras */
-      12rem              /* Resultado */
-      14rem;             /* Estado */
-  }
-}
-
-.header-cell {
-  padding: 1rem 1.5rem;
-  display: flex;
-  align-items: center;
-  
-  &.result-col,
-  &.status-col {
-    justify-content: center;
-  }
-  
-  @media (max-width: 767px) {
-    padding: 0.75rem 1rem;
-  }
-}
-
-.header-text {
-  font-family: 'Inter', sans-serif;
+/* Organizer badge */
+.organizer-badge {
+  background-color: #1a5298;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.9rem;
   font-weight: 500;
-  font-size: 0.75rem;
-  line-height: 1;
-  text-transform: uppercase;
-  color: #64748B;
-  letter-spacing: 0.025em;
-}
-
-.table-body {
-  width: 100%;
-}
-
-.table-row {
-  display: grid;
-  grid-template-columns: 
-    minmax(4rem, 6rem)     /* Mesa */
-    minmax(12rem, 1fr)     /* Jugador Blancas */
-    minmax(12rem, 1fr)     /* Jugador Negras */
-    minmax(8rem, 10rem)    /* Resultado */
-    minmax(8rem, 12rem);   /* Estado */
-  align-items: center;
-  border-top: 1px solid #E2E8F0;
-  
-  &:first-child {
-    border-top: none;
-  }
-  
-  @media (min-width: 768px) {
-    grid-template-columns: 
-      6rem               /* Mesa */
-      1fr                /* Jugador Blancas */
-      1fr                /* Jugador Negras */
-      10rem              /* Resultado */
-      12rem;             /* Estado */
-  }
-  
-  @media (min-width: 1200px) {
-    grid-template-columns: 
-      8rem               /* Mesa */
-      1fr                /* Jugador Blancas */
-      1fr                /* Jugador Negras */
-      12rem              /* Resultado */
-      14rem;             /* Estado */
-  }
-}
-
-.data-cell {
-  padding: 1rem 1.5rem;
   display: flex;
   align-items: center;
-  
-  &.result-col,
-  &.status-col {
-    justify-content: center;
-  }
-  
-  @media (max-width: 767px) {
-    padding: 0.75rem 1rem;
-  }
-}
-
-.cell-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 400;
-  font-size: 0.875rem;
-  line-height: 1.25;
-  color: #0F172A;
-  
-  .data-cell.mesa-col & {
-    font-weight: 500;
-  }
-}
-
-.status-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.25rem 0.75rem;
-  border-radius: 9999px;
+  gap: 6px;
+  box-shadow: 0 2px 4px rgba(26, 82, 152, 0.3);
   white-space: nowrap;
-
-  &.status-completed {
-    background: #CCFBF1;
-    
-    .status-text {
-      color: #0F766E;
-    }
-  }
-
-  &.status-pending {
-    background: #FEF3C7;
-    
-    .status-text {
-      color: #B45309;
-    }
-  }
-
-  &.status-in-progress {
-    background: #DBEAFE;
-    
-    .status-text {
-      color: #1D4ED8;
-    }
-  }
 }
 
-.status-text {
-  font-family: 'Inter', sans-serif;
-  font-weight: 500;
-  font-size: 0.75rem;
-  line-height: 1;
+.organizer-badge svg {
+  color: white;
 }
 
-// Loading and Error States
-.loading-state, 
-.error-state, 
+/* Loading states */
+.loading-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.loading-content {
+  text-align: center;
+}
+
+.spinner {
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid #1a5298;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.loading-content p {
+  color: #6b7280;
+  margin: 0;
+}
+
+.error-state {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 300px;
+}
+
+.error-content {
+  text-align: center;
+  color: #ef4444;
+}
+
+.error-content h3 {
+  color: #ef4444;
+  margin: 16px 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.error-content p {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Empty state */
 .empty-state {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 3rem 1rem;
+  min-height: 300px;
+}
+
+.empty-content {
   text-align: center;
-  
-  p {
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    color: #64748B;
-    margin: 0;
+}
+
+.empty-content h3 {
+  color: #1f2937;
+  margin: 16px 0 8px;
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.empty-content p {
+  color: #6b7280;
+  margin: 0;
+}
+
+/* Tournament matches styles */
+.rounds-container {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.round-section {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+  overflow: hidden;
+}
+
+.round-header {
+  padding: 24px 24px 16px;
+  background: linear-gradient(135deg, #1a5298 0%, #2563eb 100%);
+  color: white;
+}
+
+.round-title {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+}
+
+/* Table styles */
+.matches-table {
+  display: flex;
+  flex-direction: column;
+}
+
+.table-header,
+.table-row {
+  display: grid;
+  grid-template-columns: 80px 1fr 1fr 120px 120px;
+  align-items: center;
+}
+
+.table-header {
+  background-color: #f9fafb;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+.table-row {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background-color 0.15s ease;
+}
+
+.table-row:hover {
+  background-color: #f9fafb;
+}
+
+.table-row:last-child {
+  border-bottom: none;
+}
+
+.header-cell,
+.cell {
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+}
+
+.header-cell {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.cell {
+  color: #1f2937;
+  font-size: 0.95rem;
+}
+
+/* Mesa column */
+.cell.mesa {
+  justify-content: center;
+  font-weight: 600;
+  color: #6b7280;
+}
+
+/* Player info */
+.player-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.player-name {
+  font-weight: 500;
+  color: #1f2937;
+}
+
+.player-rating {
+  font-size: 0.875rem;
+  color: #6b7280;
+  font-weight: 400;
+}
+
+/* Result column */
+.cell.resultado {
+  justify-content: center;
+}
+
+.result-select {
+  padding: 8px 12px;
+  border: 1.5px solid #d1d5db;
+  border-radius: 8px;
+  background-color: white;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #374151;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100px;
+  text-align: center;
+}
+
+.result-select:hover {
+  border-color: #1a5298;
+  box-shadow: 0 0 0 1px rgba(26, 82, 152, 0.1);
+}
+
+.result-select:focus {
+  outline: none;
+  border-color: #1a5298;
+  box-shadow: 0 0 0 3px rgba(26, 82, 152, 0.1);
+}
+
+.result-select:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.result-display {
+  font-weight: 600;
+  color: #1f2937;
+  font-size: 1rem;
+  text-align: center;
+  width: 100px;
+}
+
+/* Estado column */
+.cell.estado {
+  justify-content: center;
+}
+
+/* Status badges */
+.status-badge {
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 80px;
+}
+
+.status-pending {
+  background-color: #fef3c7;
+  color: #d97706;
+}
+
+.status-in-progress {
+  background-color: #dbeafe;
+  color: #2563eb;
+}
+
+.status-completed {
+  background-color: #d1fae5;
+  color: #065f46;
+}
+
+/* Responsive design */
+@media (max-width: 1024px) {
+  .header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
   }
 }
 
-.error-state p {
-  color: #DC2626;
+@media (max-width: 768px) {
+  .tournament-matches {
+    padding: 16px;
+  }
+
+  .header-text h1 {
+    font-size: 1.75rem;
+  }
+
+  .header-text p {
+    font-size: 0.95rem;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 60px 1fr 100px 100px;
+  }
+
+  /* Hide ratings column on mobile */
+  .jugador-negras {
+    display: none;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 60px 1fr 100px 100px;
+  }
+
+  .player-rating {
+    display: none;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 12px 16px;
+    font-size: 0.875rem;
+  }
+
+  .round-section {
+    margin: 0 -8px;
+    border-radius: 8px;
+  }
+
+  .round-header {
+    padding: 20px 20px 12px;
+  }
+
+  .round-title {
+    font-size: 1.25rem;
+  }
+
+  .result-select {
+    width: 80px;
+    padding: 6px 8px;
+    font-size: 0.75rem;
+  }
+
+  .status-badge {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    min-width: 70px;
+  }
+}
+
+@media (max-width: 480px) {
+  .header-text h1 {
+    font-size: 1.5rem;
+  }
+
+  .table-header,
+  .table-row {
+    grid-template-columns: 50px 1fr 80px 90px;
+  }
+
+  .header-cell,
+  .cell {
+    padding: 10px 12px;
+  }
+
+  .result-select {
+    width: 70px;
+    font-size: 0.7rem;
+  }
+
+  .status-badge {
+    font-size: 0.65rem;
+    padding: 3px 6px;
+    min-width: 60px;
+  }
+
+  .round-header {
+    padding: 16px 16px 10px;
+  }
+
+  .round-title {
+    font-size: 1.1rem;
+  }
 }

@@ -8,6 +8,7 @@ export interface Tournament {
   maxParticipants?: number;
   registrationDeadline?: string;
   status: TournamentStatus;
+  createdBy?: number; // User ID of the tournament organizer
   matches?: any[];
   inscriptions?: any[];
 }
