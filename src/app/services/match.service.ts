@@ -59,4 +59,12 @@ export class MatchService {
   getTournamentStandings(tournamentId: number): Observable<ApiResponse<any[]>> {
     return this.http.get<ApiResponse<any[]>>(`${this.baseUrl}/tournament/${tournamentId}/standings`);
   }
+
+  /**
+   * TODO: Add this endpoint in backend
+   * Checks if the current user is the organizer of the tournament
+   */
+  isUserTournamentOrganizer(tournamentId: number): Observable<ApiResponse<boolean>> {
+    return this.http.get<ApiResponse<boolean>>(`${this.baseUrl}/tournament/${tournamentId}/is-organizer`);
+  }
 }
