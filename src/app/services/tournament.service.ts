@@ -39,4 +39,62 @@ export class TournamentService {
   updateTournamentStatus(id: number, status: TournamentStatus): Observable<ApiResponse<Tournament>> {
     return this.http.patch<ApiResponse<Tournament>>(`${this.baseUrl}/${id}/status`, { status });
   }
+
+  /**
+   * Calculate tournament status based on current date
+   */
+  calculateTournamentStatus(tournament: Tournament): TournamentStatus {
+    const now = new Date();
+    const startDate = new Date(tournament.startDate);
+    const endDate = new Date(tournament.endDate);
+
+    // Remove time component for date comparison
+    now.setHours(0, 0, 0, 0);
+    startDate.setHours(0, 0, 0, 0);
+    endDate.setHours(0, 0, 0, 0);
+
+    if (tournament.status === TournamentStatus.CANCELLED) {
+      return TournamentStatus.CANCELLED;
+    }
+
+    if (now < startDate) {
+      return TournamentStatus.UPCOMING;
+    } else if (now >= startDate && now <= endDate) {
+      return TournamentStatus.ONGOING;
+    } else {
+      return TournamentStatus.FINISHED;
+    }
+  }
+
+  /**
+   * Update tournament status if it has changed based on dates
+   */
+  updateStatusIfNeeded(tournament: Tournament): Observable<Tournament> {
+    const calculatedStatus = this.calculateTournamentStatus(tournament);
+    
+    if (calculatedStatus !== tournament.status) {
+      return new Observable(observer => {
+        this.updateTournamentStatus(tournament.id, calculatedStatus).subscribe({
+          next: (response) => {
+            if (response.success && response.data) {
+              observer.next(response.data);
+            } else {
+              observer.next(tournament);
+            }
+            observer.complete();
+          },
+          error: (error) => {
+            console.error('Failed to update tournament status:', error);
+            observer.next(tournament);
+            observer.complete();
+          }
+        });
+      });
+    } else {
+      return new Observable(observer => {
+        observer.next(tournament);
+        observer.complete();
+      });
+    }
+  }
 }

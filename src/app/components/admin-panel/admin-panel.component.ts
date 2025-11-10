@@ -130,12 +130,64 @@ export class AdminPanelComponent {
     
     this.tournamentService.getAllTournaments().subscribe({
       next: (response) => {
-        this.tournaments.set(response.data || []);
+        if (response.success && response.data) {
+          // Update tournament statuses based on current date
+          this.updateTournamentStatuses(response.data);
+        } else {
+          this.tournaments.set([]);
+        }
         this.isLoading.set(false);
       },
       error: (error) => {
         console.error('Error loading tournaments:', error);
+        this.tournaments.set([]);
         this.isLoading.set(false);
+      }
+    });
+  }
+
+  private updateTournamentStatuses(tournaments: Tournament[]): void {
+    const updatedTournaments: Tournament[] = [];
+    let pendingUpdates = tournaments.length;
+
+    if (pendingUpdates === 0) {
+      this.tournaments.set([]);
+      return;
+    }
+
+    tournaments.forEach(tournament => {
+      const calculatedStatus = this.tournamentService.calculateTournamentStatus(tournament);
+      
+      if (calculatedStatus !== tournament.status) {
+        // Status needs update - call backend
+        this.tournamentService.updateTournamentStatus(tournament.id, calculatedStatus).subscribe({
+          next: (updateResponse) => {
+            if (updateResponse.success && updateResponse.data) {
+              updatedTournaments.push(updateResponse.data);
+            } else {
+              updatedTournaments.push(tournament);
+            }
+            
+            if (--pendingUpdates === 0) {
+              this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+            }
+          },
+          error: (error) => {
+            console.error('Failed to update tournament status:', error);
+            updatedTournaments.push(tournament);
+            
+            if (--pendingUpdates === 0) {
+              this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+            }
+          }
+        });
+      } else {
+        // Status is correct, no update needed
+        updatedTournaments.push(tournament);
+        
+        if (--pendingUpdates === 0) {
+          this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+        }
       }
     });
   }
@@ -163,13 +215,25 @@ export class AdminPanelComponent {
 
   // Tournament management actions
   protected deleteTournament(tournamentId: number): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este torneo?')) {
+    const tournament = this.tournaments().find(t => t.id === tournamentId);
+    const confirmMessage = tournament?.status === 'ongoing' 
+      ? '¿Estás seguro de que quieres eliminar este torneo EN CURSO? Esta acción no se puede deshacer y eliminará todas las partidas asociadas.'
+      : '¿Estás seguro de que quieres eliminar este torneo?';
+      
+    if (confirm(confirmMessage)) {
       this.tournamentService.deleteTournament(tournamentId).subscribe({
-        next: () => {
-          this.loadTournaments(); // Reload the list
+        next: (response) => {
+          if (response.success) {
+            alert('Torneo eliminado correctamente');
+            this.loadTournaments(); // Reload the list
+          } else {
+            alert('Error al eliminar torneo: ' + (response.message || 'Error desconocido'));
+          }
         },
         error: (error) => {
           console.error('Error deleting tournament:', error);
+          const errorMsg = error.error?.message || error.message || 'Error al eliminar el torneo';
+          alert('Error: ' + errorMsg);
         }
       });
     }

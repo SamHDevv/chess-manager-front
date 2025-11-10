@@ -3,12 +3,15 @@ import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { TournamentService } from '../../services/tournament.service';
+import { InscriptionService } from '../../services/inscription.service';
 
 interface UserTournament {
   id: number;
   name: string;
   date: string;
   status: 'Registrado' | 'Completado' | 'En progreso' | 'Cancelado';
+  location?: string;
 }
 
 @Component({
@@ -20,6 +23,8 @@ interface UserTournament {
 export class UserProfileComponent implements OnInit {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
+  private readonly tournamentService = inject(TournamentService);
+  private readonly inscriptionService = inject(InscriptionService);
 
   protected readonly isEditMode = signal<boolean>(false);
   protected readonly isLoading = signal<boolean>(false);
@@ -34,14 +39,12 @@ export class UserProfileComponent implements OnInit {
     return (firstName.charAt(0) + lastName.charAt(0)).toUpperCase() || 'U';
   });
 
-  protected readonly userTournaments = signal<UserTournament[]>([
-    { id: 1, name: 'Campeonato Daganzo Ajedrez', date: '2024-07-15', status: 'Registrado' },
-    { id: 2, name: 'Abierto regional', date: '2024-08-05', status: 'Completado' },
-    { id: 3, name: 'Clasificatoria Nacional', date: '2024-09-20', status: 'Registrado' }
-  ]);
+  protected readonly userTournaments = signal<UserTournament[]>([]);
+  protected readonly loadingTournaments = signal<boolean>(false);
 
   ngOnInit() {
     this.initializeForm();
+    this.loadUserTournaments();
   }
 
   private initializeForm(): void {
@@ -62,6 +65,45 @@ export class UserProfileComponent implements OnInit {
         lastName: user?.lastName || '',
         email: user?.email || ''
       });
+    }
+  }
+
+  private loadUserTournaments(): void {
+    const currentUser = this.currentUser();
+    if (!currentUser?.userId) {
+      return;
+    }
+
+    this.loadingTournaments.set(true);
+    
+    // Get user's inscriptions to tournaments
+    this.inscriptionService.getInscriptionsByUserId(currentUser.userId).subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          const tournaments = response.data.map(inscription => ({
+            id: inscription.tournament?.id || inscription.tournamentId,
+            name: inscription.tournament?.name || 'Torneo',
+            date: inscription.tournament?.startDate || inscription.registrationDate,
+            status: this.mapTournamentStatus(inscription.tournament?.status),
+            location: inscription.tournament?.location
+          }));
+          this.userTournaments.set(tournaments);
+        }
+        this.loadingTournaments.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading user tournaments:', error);
+        this.loadingTournaments.set(false);
+      }
+    });
+  }
+
+  private mapTournamentStatus(status: any): 'Registrado' | 'Completado' | 'En progreso' | 'Cancelado' {
+    switch (status) {
+      case 'ongoing': return 'En progreso';
+      case 'finished': return 'Completado';
+      case 'cancelled': return 'Cancelado';
+      default: return 'Registrado';
     }
   }
 

@@ -61,7 +61,6 @@ export class MatchService {
   }
 
   /**
-   * TODO: Add this endpoint in backend
    * Checks if the current user is the organizer of the tournament
    */
   isUserTournamentOrganizer(tournamentId: number): Observable<ApiResponse<boolean>> {

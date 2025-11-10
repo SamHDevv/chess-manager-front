@@ -56,7 +56,8 @@ export class TournamentListComponent implements OnInit {
       next: (response) => {
         this.loading.set(false);
         if (response.success && response.data) {
-          this.tournaments.set(response.data);
+          // Update tournament statuses based on current date
+          this.updateTournamentStatuses(response.data);
         } else {
           this.error.set(response.message || 'Error desconocido');
         }
@@ -65,6 +66,52 @@ export class TournamentListComponent implements OnInit {
         this.loading.set(false);
         this.error.set('Error de conexión con el servidor');
         console.error('Error loading tournaments:', err);
+      }
+    });
+  }
+
+  private updateTournamentStatuses(tournaments: Tournament[]): void {
+    const updatedTournaments: Tournament[] = [];
+    let pendingUpdates = tournaments.length;
+
+    if (pendingUpdates === 0) {
+      this.tournaments.set([]);
+      return;
+    }
+
+    tournaments.forEach(tournament => {
+      const calculatedStatus = this.tournamentService.calculateTournamentStatus(tournament);
+      
+      if (calculatedStatus !== tournament.status) {
+        // Status needs update - call backend
+        this.tournamentService.updateTournamentStatus(tournament.id, calculatedStatus).subscribe({
+          next: (updateResponse) => {
+            if (updateResponse.success && updateResponse.data) {
+              updatedTournaments.push(updateResponse.data);
+            } else {
+              updatedTournaments.push(tournament);
+            }
+            
+            if (--pendingUpdates === 0) {
+              this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+            }
+          },
+          error: (error) => {
+            console.error('Failed to update tournament status:', error);
+            updatedTournaments.push(tournament);
+            
+            if (--pendingUpdates === 0) {
+              this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+            }
+          }
+        });
+      } else {
+        // Status is correct, no update needed
+        updatedTournaments.push(tournament);
+        
+        if (--pendingUpdates === 0) {
+          this.tournaments.set(updatedTournaments.sort((a, b) => a.id - b.id));
+        }
       }
     });
   }
