@@ -162,7 +162,7 @@ export class AuthComponent {
       email,
       password,
       name,
-      role: 'player'
+      role: 'player' as const
     }).subscribe({
       next: (response: AuthResponse) => {
         if (response.success) {

@@ -221,6 +221,10 @@ export class AuthService {
   // Private helper methods
 
   private setAuth(token: string, user: AuthUser): void {
+    console.log('🚀 AUTH SUCCESS - Setting user:', user);
+    console.log('🚀 AUTH SUCCESS - User role:', user.role);
+    console.log('🚀 AUTH SUCCESS - Is admin?', user.role === 'admin');
+    
     localStorage.setItem(this.TOKEN_KEY, token);
     localStorage.setItem(this.USER_KEY, JSON.stringify(user));
     this._currentUser.set(user);
