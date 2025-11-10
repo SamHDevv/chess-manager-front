@@ -74,55 +74,63 @@ export class AdminPanelComponent {
   private loadDashboardData(): void {
     this.isLoading.set(true);
     
-    // Load basic stats (mock data for now)
-    // TODO: Replace with actual API calls
-    setTimeout(() => {
+    // Load real stats from backend
+    Promise.all([
+      this.userService.getAllUsers().toPromise(),
+      this.tournamentService.getAllTournaments().toPromise()
+    ]).then(([usersResponse, tournamentsResponse]) => {
+      const users = usersResponse?.data || [];
+      const tournaments = tournamentsResponse?.data || [];
+      
+      // Count users by role
+      const usersByRole: Record<string, number> = {};
+      users.forEach(user => {
+        const role = user.role || 'player';
+        usersByRole[role] = (usersByRole[role] || 0) + 1;
+      });
+      
+      // Count active tournaments (ongoing status)
+      const activeTournaments = tournaments.filter(t => t.status === 'ongoing').length;
+      
       this.stats.set({
-        totalUsers: 150,
-        totalTournaments: 25,
-        activeTournaments: 8,
-        usersByRole: {
-          'player': 145,
-          'admin': 5
-        }
+        totalUsers: users.length,
+        totalTournaments: tournaments.length,
+        activeTournaments: activeTournaments,
+        usersByRole: usersByRole
+      });
+      
+      this.isLoading.set(false);
+    }).catch(error => {
+      console.error('Error loading dashboard data:', error);
+      // Set empty stats on error
+      this.stats.set({
+        totalUsers: 0,
+        totalTournaments: 0,
+        activeTournaments: 0,
+        usersByRole: {}
       });
       this.isLoading.set(false);
-    }, 1000);
+    });
   }
 
   private loadUsers(): void {
     this.isLoading.set(true);
     
-    // TODO: Replace with actual UserService call
-    // this.userService.getAllUsers().subscribe({
-    //   next: (users) => {
-    //     this.users.set(users);
-    //     this.isLoading.set(false);
-    //   },
-    //   error: (error) => {
-    //     console.error('Error loading users:', error);
-    //     this.isLoading.set(false);
-    //   }
-    // });
-
-    // Mock data for now
-    setTimeout(() => {
-      this.users.set([
-        {
-          id: 1,
-          email: 'demo@test.com',
-          name: 'Demo User',
-          role: 'player'
-        },
-        {
-          id: 2,
-          email: 'admin@test.com', 
-          name: 'Admin User',
-          role: 'admin'
+    this.userService.getAllUsers().subscribe({
+      next: (response) => {
+        if (response.success && response.data) {
+          this.users.set(response.data);
+        } else {
+          this.users.set([]);
         }
-      ] as User[]);
-      this.isLoading.set(false);
-    }, 800);
+        this.isLoading.set(false);
+      },
+      error: (error) => {
+        console.error('Error loading users:', error);
+        this.users.set([]);
+        this.isLoading.set(false);
+      }
+    });
   }
 
   private loadTournaments(): void {
