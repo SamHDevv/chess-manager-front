@@ -9,7 +9,7 @@ import {
   AuthResponse, 
   AuthUser,
   JwtPayload,
-  AuthUserRole,
+  UserRole,
   isAuthUser
 } from '../models';
 
@@ -172,7 +172,7 @@ export class AuthService {
   /**
    * Check if user has specific role
    */
-  hasRole(role: AuthUserRole): boolean {
+  hasRole(role: UserRole): boolean {
     const user = this._currentUser();
     return user ? user.role === role : false;
   }
@@ -181,7 +181,7 @@ export class AuthService {
    * Check if user is admin
    */
   isAdmin(): boolean {
-    return this.hasRole(AuthUserRole.ADMIN);
+    return this.hasRole('admin');
   }
 
   /**
