@@ -186,7 +186,11 @@
                   </div>
                   <div class="participant-info">
                     <span class="participant-name">{{ participant.name }}</span>
-                    <span class="participant-email">{{ participant.email }}</span>
+                    @if (participant.elo) {
+                      <span class="participant-elo">ELO: {{ participant.elo }}</span>
+                    } @else {
+                      <span class="participant-elo">Sin rating</span>
+                    }
                   </div>
                 </div>
               }
