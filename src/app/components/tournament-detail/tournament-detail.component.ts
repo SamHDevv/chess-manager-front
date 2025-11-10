@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { InscriptionService } from '../../services/inscription.service';
+import { AuthService } from '../../services/auth.service';
 import { Tournament, TournamentStatus } from '../../models/tournament.model';
 import { User } from '../../models/user.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-detail',
@@ -18,6 +20,7 @@ export class TournamentDetailComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly tournamentService = inject(TournamentService);
   private readonly inscriptionService = inject(InscriptionService);
+  protected readonly authService = inject(AuthService);
 
   // State signals
   protected readonly tournament = signal<Tournament | null>(null);
@@ -29,25 +32,26 @@ export class TournamentDetailComponent implements OnInit {
 
   // Computed values
   protected readonly canInscribe = computed(() => {
-    const t = this.tournament();
-    if (!t) return false;
+    const tournament = this.tournament();
+    const isAuthenticated = this.authService.isAuthenticated();
+    if (!tournament || !isAuthenticated) return false;
     
-    return t.status === 'upcoming' && 
+    return tournament.status === 'upcoming' && 
            !this.userInscribed() &&
-           (!t.maxParticipants || this.participants().length < t.maxParticipants) &&
-           (!t.registrationDeadline || new Date(t.registrationDeadline) > new Date());
+           (!tournament.maxParticipants || this.participants().length < tournament.maxParticipants) &&
+           (!tournament.registrationDeadline || new Date(tournament.registrationDeadline) > new Date());
   });
 
   protected readonly spotsLeft = computed(() => {
-    const t = this.tournament();
-    if (!t || !t.maxParticipants) return null;
-    return t.maxParticipants - this.participants().length;
+    const tournament = this.tournament();
+    if (!tournament || !tournament.maxParticipants) return null;
+    return tournament.maxParticipants - this.participants().length;
   });
 
   protected readonly isRegistrationClosed = computed(() => {
-    const t = this.tournament();
-    if (!t || !t.registrationDeadline) return false;
-    return new Date(t.registrationDeadline) <= new Date();
+    const tournament = this.tournament();
+    if (!tournament || !tournament.registrationDeadline) return false;
+    return new Date(tournament.registrationDeadline) <= new Date();
   });
 
   ngOnInit() {
@@ -65,8 +69,10 @@ export class TournamentDetailComponent implements OnInit {
     this.error.set(null);
 
     try {
-      // Load tournament details
-      const tournamentResponse = await this.tournamentService.getTournamentById(tournamentId).toPromise();
+      // Load tournament details using firstValueFrom instead of toPromise
+      const tournamentResponse = await firstValueFrom(
+        this.tournamentService.getTournamentById(tournamentId)
+      );
       
       if (tournamentResponse?.success && tournamentResponse.data) {
         this.tournament.set(tournamentResponse.data);
@@ -74,8 +80,8 @@ export class TournamentDetailComponent implements OnInit {
         // Load participants
         await this.loadParticipants(tournamentId);
         
-        // Check if current user is inscribed (mock for now - will be real when auth is implemented)
-        this.checkUserInscription(tournamentId);
+        // Check if current user is inscribed
+        await this.checkUserInscription(tournamentId);
       } else {
         this.error.set(tournamentResponse?.message || 'Error al cargar el torneo');
       }
@@ -89,7 +95,9 @@ export class TournamentDetailComponent implements OnInit {
 
   private async loadParticipants(tournamentId: number) {
     try {
-      const inscriptionsResponse = await this.inscriptionService.getInscriptionsByTournamentId(tournamentId).toPromise();
+      const inscriptionsResponse = await firstValueFrom(
+        this.inscriptionService.getInscriptionsByTournamentId(tournamentId)
+      );
       
       if (inscriptionsResponse?.success && inscriptionsResponse.data) {
         // Extract users from inscriptions
@@ -101,61 +109,129 @@ export class TournamentDetailComponent implements OnInit {
     }
   }
 
-  private checkUserInscription(tournamentId: number) {
-    // TODO: Implement real user authentication check
-    // For now, simulate user not inscribed
-    this.userInscribed.set(false);
+  private async checkUserInscription(tournamentId: number) {
+    // Check if user is authenticated
+    if (!this.authService.isAuthenticated()) {
+      this.userInscribed.set(false);
+      return;
+    }
+
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      this.userInscribed.set(false);
+      return;
+    }
+
+    try {
+      // Get user's inscriptions to check if they're already registered
+      const inscriptionsResponse = await firstValueFrom(
+        this.inscriptionService.getInscriptionsByUserId(currentUser.userId)
+      );
+      
+      if (inscriptionsResponse?.success && inscriptionsResponse.data) {
+        // Check if user is inscribed in this tournament
+        const isInscribed = inscriptionsResponse.data.some(
+          (inscription: any) => inscription.tournamentId === tournamentId
+        );
+        this.userInscribed.set(isInscribed);
+      } else {
+        this.userInscribed.set(false);
+      }
+    } catch (error) {
+      console.error('Error checking user inscription:', error);
+      this.userInscribed.set(false);
+    }
   }
 
   async onInscribe() {
-    const t = this.tournament();
-    if (!t || !this.canInscribe()) return;
+    const tournament = this.tournament();
+    if (!tournament || !this.canInscribe()) return;
+
+    // Check authentication
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login'], { 
+        queryParams: { returnUrl: this.router.url } 
+      });
+      return;
+    }
+
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      this.error.set('Error de autenticación. Por favor, inicia sesión nuevamente.');
+      return;
+    }
 
     this.inscriptionLoading.set(true);
+    this.error.set(null);
 
     try {
-      // TODO: Get real user ID from auth service when implemented
-      const mockUserId = 1; // This will be replaced with real auth
-      
-      const response = await this.inscriptionService.createInscription({ userId: mockUserId, tournamentId: t.id }).toPromise();
+      const response = await firstValueFrom(
+        this.inscriptionService.createInscription({ 
+          userId: currentUser.userId, 
+          tournamentId: tournament.id 
+        })
+      );
       
       if (response?.success) {
         this.userInscribed.set(true);
         // Reload participants to show updated count
-        await this.loadParticipants(t.id);
+        await this.loadParticipants(tournament.id);
       } else {
         this.error.set(response?.message || 'Error al inscribirse en el torneo');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error inscribing in tournament:', error);
-      this.error.set('Error al conectar con el servidor');
+      this.error.set(
+        error?.error?.message || 
+        error?.message || 
+        'Error al conectar con el servidor'
+      );
     } finally {
       this.inscriptionLoading.set(false);
     }
   }
 
   async onCancelInscription() {
-    const t = this.tournament();
-    if (!t || !this.userInscribed()) return;
+    const tournament = this.tournament();
+    if (!tournament || !this.userInscribed()) return;
+
+    // Check authentication
+    if (!this.authService.isAuthenticated()) {
+      this.router.navigate(['/login']);
+      return;
+    }
+
+    const currentUser = this.authService.currentUser();
+    if (!currentUser) {
+      this.error.set('Error de autenticación. Por favor, inicia sesión nuevamente.');
+      return;
+    }
 
     this.inscriptionLoading.set(true);
+    this.error.set(null);
 
     try {
-      // TODO: Get real user ID from auth service when implemented
-      const mockUserId = 1;
-      
-      const response = await this.inscriptionService.cancelInscriptionByUserAndTournament(mockUserId, t.id).toPromise();
+      const response = await firstValueFrom(
+        this.inscriptionService.cancelInscriptionByUserAndTournament(
+          currentUser.userId, 
+          tournament.id
+        )
+      );
       
       if (response?.success) {
         this.userInscribed.set(false);
         // Reload participants to show updated count
-        await this.loadParticipants(t.id);
+        await this.loadParticipants(tournament.id);
       } else {
         this.error.set(response?.message || 'Error al cancelar inscripción');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error canceling inscription:', error);
-      this.error.set('Error al conectar con el servidor');
+      this.error.set(
+        error?.error?.message || 
+        error?.message || 
+        'Error al conectar con el servidor'
+      );
     } finally {
       this.inscriptionLoading.set(false);
     }
@@ -166,16 +242,16 @@ export class TournamentDetailComponent implements OnInit {
   }
 
   onViewMatches() {
-    const t = this.tournament();
-    if (t) {
-      this.router.navigate(['/tournaments', t.id, 'matches']);
+    const tournament = this.tournament();
+    if (tournament) {
+      this.router.navigate(['/tournaments', tournament.id, 'matches']);
     }
   }
 
   onViewRanking() {
-    const t = this.tournament();
-    if (t) {
-      this.router.navigate(['/tournaments', t.id, 'ranking']);
+    const tournament = this.tournament();
+    if (tournament) {
+      this.router.navigate(['/tournaments', tournament.id, 'ranking']);
     }
   }
 
