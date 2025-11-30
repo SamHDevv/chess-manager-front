@@ -252,25 +252,99 @@ export class AdminPanelComponent {
     const user = this.users().find(u => u.id === userId);
     const userName = user?.name || 'este usuario';
     
-    if (!confirm(`¿Estás seguro de que quieres eliminar a ${userName}? Esta acción no se puede deshacer.`)) {
-      return;
-    }
+    // Primero obtener información sobre la eliminación
+    this.userService.getUserDeletionInfo(userId).subscribe({
+      next: (infoResponse) => {
+        if (!infoResponse.success || !infoResponse.data) {
+          alert('Error al obtener información del usuario');
+          return;
+        }
 
+        const deletionInfo = infoResponse.data;
+        
+        // Construir mensaje de confirmación con advertencias
+        let confirmMessage = `¿Estás seguro de que quieres eliminar a ${userName}?\n\n`;
+        
+        if (deletionInfo.warnings.length > 0) {
+          confirmMessage += '⚠️ ADVERTENCIAS:\n';
+          deletionInfo.warnings.forEach(warning => {
+            confirmMessage += `• ${warning}\n`;
+          });
+          confirmMessage += '\n';
+        }
+        
+        if (deletionInfo.affectedItems.tournaments > 0 || 
+            deletionInfo.affectedItems.inscriptions > 0 || 
+            deletionInfo.affectedItems.matches > 0) {
+          confirmMessage += '📊 ELEMENTOS AFECTADOS:\n';
+          if (deletionInfo.affectedItems.inscriptions > 0) {
+            confirmMessage += `• ${deletionInfo.affectedItems.inscriptions} inscripción(es)\n`;
+          }
+          if (deletionInfo.affectedItems.tournaments > 0) {
+            confirmMessage += `• ${deletionInfo.affectedItems.tournaments} torneo(s)\n`;
+          }
+          if (deletionInfo.affectedItems.matches > 0) {
+            confirmMessage += `• ${deletionInfo.affectedItems.matches} partida(s)\n`;
+          }
+          confirmMessage += '\n';
+        }
+        
+        confirmMessage += '🔄 El sistema gestionará automáticamente todas las relaciones.\n\n';
+        confirmMessage += 'Esta acción no se puede deshacer.';
+        
+        // Mostrar confirmación
+        if (!confirm(confirmMessage)) {
+          return;
+        }
+        
+        // Proceder con la eliminación
+        this.performUserDeletion(userId);
+      },
+      error: (error) => {
+        console.error('Error al obtener información de eliminación:', error);
+        
+        // Fallback: confirmación simple si falla la consulta de información
+        if (confirm(`¿Estás seguro de que quieres eliminar a ${userName}? Esta acción no se puede deshacer.`)) {
+          this.performUserDeletion(userId);
+        }
+      }
+    });
+  }
+  
+  private performUserDeletion(userId: number): void {
     this.userService.deleteUser(userId).subscribe({
       next: (response) => {
         if (response.success) {
           console.log('Usuario eliminado exitosamente');
+          alert('✅ Usuario eliminado correctamente.\nTodas las relaciones se han gestionado automáticamente.');
           // Recargar la lista de usuarios y estadísticas
           this.loadUsers();
           this.loadDashboardData();
         } else {
           console.error('Error al eliminar usuario:', response.message);
-          alert('Error al eliminar usuario: ' + (response.message || 'Error desconocido'));
+          alert('❌ Error al eliminar usuario: ' + (response.message || 'Error desconocido'));
         }
       },
       error: (error) => {
-        console.error('Error al eliminar usuario:', error);
-        alert('Error al conectar con el servidor');
+        console.error('Error completo al eliminar usuario:', error);
+        
+        let errorMessage = 'Error desconocido';
+        
+        // Manejar diferentes tipos de errores
+        if (error.status === 500) {
+          errorMessage = error.error?.message || 
+            'Error interno del servidor. Por favor, contacta al administrador.';
+        } else if (error.status === 404) {
+          errorMessage = 'Usuario no encontrado';
+        } else if (error.status === 403) {
+          errorMessage = 'No tienes permisos para eliminar este usuario';
+        } else if (error.status === 0) {
+          errorMessage = 'No se puede conectar con el servidor. Verifica que el backend esté ejecutándose.';
+        } else {
+          errorMessage = error.error?.message || error.message || errorMessage;
+        }
+        
+        alert(`❌ Error al eliminar usuario (Código ${error.status}):\n${errorMessage}`);
       }
     });
   }

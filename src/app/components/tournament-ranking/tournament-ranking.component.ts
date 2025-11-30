@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { MatchService } from '../../services/match.service';
-import { Tournament, Match, MatchResult } from '../../models';
+import { Tournament, Match, MatchResult, DELETED_USER_ID, isDeletedUser, isUserDeleted, getUserDisplayName } from '../../models';
 
 export interface PlayerRanking {
   playerId: number;
@@ -97,7 +97,7 @@ export class TournamentRankingComponent implements OnInit {
 
       return {
         playerId,
-        playerName: `Player ${playerId}`, // Placeholder - would normally come from user service
+        playerName: isDeletedUser(playerId) ? `Usuario #${playerId} (Eliminado)` : `Player ${playerId}`,
         points,
         wins,
         losses,

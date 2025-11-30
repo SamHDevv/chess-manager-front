@@ -41,9 +41,11 @@
           <!-- Table Body -->
           <div class="table-body">
             @for (player of rankings(); track player.playerId) {
-              <div class="table-row">
+              <div class="table-row" [class.deleted-user-row]="player.playerId === 999999">
                 <div class="data-cell player-col">
-                  <span class="player-name">{{ player.playerName }}</span>
+                  <span class="player-name" [class.deleted-user]="player.playerId === 999999">
+                    {{ player.playerName }}
+                  </span>
                 </div>
                 <div class="data-cell points-col">
                   <span class="cell-text">{{ formatPoints(player.points) }}</span>

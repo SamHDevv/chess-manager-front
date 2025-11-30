@@ -2,6 +2,8 @@
   min-height: calc(100vh - 4rem);
   background: #f8fafc;
   padding: 2rem;
+  max-width: 1600px;
+  margin: 0 auto;
   
   @media (max-width: 768px) {
     padding: 1rem;
@@ -237,16 +239,26 @@
 
 // Users Table
 .users-table {
+  background: white;
+  border-radius: 0.75rem;
+  overflow: hidden;
+  box-shadow: 0 0.0625rem 0.1875rem rgba(0, 0, 0, 0.1);
+  
   .table-header, .table-row {
     display: grid;
-    grid-template-columns: 4rem 1fr 1.5fr 8rem 12rem;
+    grid-template-columns: 60px minmax(150px, 1fr) minmax(200px, 1.5fr) 120px minmax(300px, 1fr);
     gap: 1rem;
-    padding: 1rem 2rem;
+    padding: 1rem 1.5rem;
     align-items: center;
+    
+    @media (max-width: 1200px) {
+      grid-template-columns: 60px 150px 200px 120px 1fr;
+    }
     
     @media (max-width: 768px) {
       grid-template-columns: 1fr;
       gap: 0.5rem;
+      padding: 1rem;
     }
   }
   
@@ -255,14 +267,56 @@
     font-weight: 600;
     color: #374151;
     font-size: 0.875rem;
-    border-bottom: 0.0625rem solid #e2e8f0;
+    border-bottom: 0.125rem solid #e2e8f0;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
   }
   
   .table-row {
     border-bottom: 0.0625rem solid #f1f5f9;
+    transition: background-color 0.2s ease;
+    
+    &:last-child {
+      border-bottom: none;
+    }
     
     &:hover {
       background: #f8fafc;
+    }
+  }
+  
+  // Column styling
+  .col-id {
+    font-weight: 600;
+    color: #64748b;
+    font-size: 0.875rem;
+  }
+  
+  .col-name {
+    font-weight: 500;
+    color: #0f172a;
+  }
+  
+  .col-email {
+    color: #64748b;
+    font-size: 0.875rem;
+    word-break: break-word;
+  }
+  
+  .col-role {
+    display: flex;
+    align-items: center;
+  }
+  
+  .col-actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    
+    @media (max-width: 768px) {
+      flex-direction: column;
+      justify-content: flex-start;
     }
   }
 }
@@ -290,16 +344,19 @@
   border: none;
   border-radius: 0.375rem;
   font-weight: 500;
+  font-size: 0.8125rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-decoration: none;
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.375rem;
+  white-space: nowrap;
   
   &.btn-sm {
     padding: 0.375rem 0.75rem;
-    font-size: 0.875rem;
+    font-size: 0.75rem;
   }
   
   &.btn-primary {
@@ -308,6 +365,8 @@
     
     &:hover {
       background: #2563eb;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
     }
   }
   
@@ -317,6 +376,8 @@
     
     &:hover {
       background: #4b5563;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(107, 114, 128, 0.3);
     }
   }
   
@@ -326,7 +387,13 @@
     
     &:hover {
       background: #dc2626;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(239, 68, 68, 0.3);
     }
+  }
+  
+  &:active {
+    transform: translateY(0);
   }
 }
 

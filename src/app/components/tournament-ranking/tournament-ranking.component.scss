@@ -230,3 +230,24 @@
 .error-state p {
   color: #DC2626;
 }
+
+// Deleted user styling
+.deleted-user-row {
+  opacity: 0.6;
+  background-color: #F9FAFB !important;
+  
+  &:hover {
+    background-color: #F3F4F6 !important;
+  }
+}
+
+.deleted-user {
+  color: #9CA3AF !important;
+  font-style: italic;
+  position: relative;
+  
+  &::before {
+    content: '🚫 ';
+    margin-right: 0.25rem;
+  }
+}
