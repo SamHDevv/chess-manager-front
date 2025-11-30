@@ -20,6 +20,11 @@ export const routes: Routes = [
     canActivate: [authGuard]
   },
   { path: 'tournaments/:id', component: TournamentDetailComponent },
+  { 
+    path: 'tournaments/:id/edit', 
+    component: TournamentCreateComponent,
+    canActivate: [authGuard]
+  },
   { path: 'tournaments/:id/matches', component: TournamentMatchesComponent },
   { path: 'tournaments/:id/ranking', component: TournamentRankingComponent },
   { 

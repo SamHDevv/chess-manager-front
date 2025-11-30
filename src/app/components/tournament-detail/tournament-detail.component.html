@@ -152,6 +152,40 @@
           }
         </div>
 
+        <!-- Organizer/Admin Actions -->
+        @if (canEdit() || canDelete()) {
+          <div class="organizer-actions">
+            <h3>Gestión del torneo</h3>
+            <div class="organizer-buttons">
+              @if (canEdit()) {
+                <button 
+                  class="btn btn-secondary" 
+                  (click)="onEditTournament()">
+                  ✏️ Editar torneo
+                </button>
+              }
+              
+              @if (canDelete()) {
+                <button 
+                  class="btn btn-danger" 
+                  (click)="onDeleteTournament()">
+                  🗑️ Eliminar torneo
+                </button>
+              }
+            </div>
+            
+            @if (isOrganizer()) {
+              <div class="organizer-badge">
+                👑 Eres el organizador de este torneo
+              </div>
+            } @else if (isAdmin()) {
+              <div class="admin-badge">
+                🛡️ Gestión como administrador
+              </div>
+            }
+          </div>
+        }
+
         <!-- Tournament Navigation -->
         @if (tournament()!.status !== 'upcoming') {
           <div class="tournament-navigation">
