@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { ApiResponse } from '../models/api-response.model';
-import { User, CreateUserRequest, UpdateUserRequest } from '../models/user.model';
+import { User, CreateUserRequest, UpdateUserRequest, UserDeletionInfo } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,10 @@ export class UserService {
 
   updateUser(id: number, userData: UpdateUserRequest): Observable<ApiResponse<User>> {
     return this.http.put<ApiResponse<User>>(`${this.baseUrl}/${id}`, userData);
+  }
+
+  getUserDeletionInfo(id: number): Observable<ApiResponse<UserDeletionInfo>> {
+    return this.http.get<ApiResponse<UserDeletionInfo>>(`${this.baseUrl}/${id}/deletion-info`);
   }
 
   deleteUser(id: number): Observable<ApiResponse<{ deleted: boolean }>> {

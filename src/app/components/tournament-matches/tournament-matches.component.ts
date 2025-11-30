@@ -5,7 +5,7 @@ import { ActivatedRoute } from '@angular/router';
 import { MatchService } from '../../services/match.service';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { Match, Tournament, MatchResult } from '../../models';
+import { Match, Tournament, MatchResult, isDeletedUser, isUserDeleted, getUserDisplayName } from '../../models';
 
 export interface SimpleMatch {
   id: number;
@@ -145,13 +145,26 @@ export class TournamentMatchesComponent implements OnInit {
    * Convert backend Match to SimpleMatch
    */
   private convertToSimpleMatch(match: Match): SimpleMatch {
+    const getPlayerName = (player: any, playerId: number): string => {
+      if (isDeletedUser(playerId)) {
+        return 'Usuario Eliminado';
+      }
+      
+      // Si el jugador tiene datos pero está marcado como eliminado
+      if (player && isUserDeleted(player)) {
+        return `Usuario #${player.id} (Eliminado)`;
+      }
+      
+      return player?.name || player?.firstName + ' ' + player?.lastName || `Player ${playerId}`;
+    };
+
     return {
       id: match.id,
       round: match.round,
       table: match.id, // Use match ID as table number
-      player1Name: match.whitePlayer?.name || match.whitePlayer?.firstName + ' ' + match.whitePlayer?.lastName || `Player ${match.whitePlayerId}`,
+      player1Name: getPlayerName(match.whitePlayer, match.whitePlayerId),
       player1Rating: match.whitePlayer?.rating || match.whitePlayer?.eloRating,
-      player2Name: match.blackPlayer?.name || match.blackPlayer?.firstName + ' ' + match.blackPlayer?.lastName || `Player ${match.blackPlayerId}`,
+      player2Name: getPlayerName(match.blackPlayer, match.blackPlayerId),
       player2Rating: match.blackPlayer?.rating || match.blackPlayer?.eloRating,
       result: this.mapBackendResultToFrontend(match.result),
       status: this.mapBackendStatusToFrontend(match.result)

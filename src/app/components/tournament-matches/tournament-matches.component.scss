@@ -424,3 +424,24 @@
     font-size: 1.1rem;
   }
 }
+
+/* Deleted user styling */
+.player-name {
+  &:has-text("Usuario Eliminado") {
+    color: #9CA3AF !important;
+    font-style: italic;
+  }
+}
+
+/* Alternative approach using attribute selector */
+[class*="deleted"] .player-name,
+.player-name[data-deleted="true"] {
+  color: #9CA3AF !important;
+  font-style: italic;
+  position: relative;
+  
+  &::before {
+    content: '🚫 ';
+    margin-right: 0.25rem;
+  }
+}
