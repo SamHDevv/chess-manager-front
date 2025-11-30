@@ -202,23 +202,76 @@ export class AdminPanelComponent {
 
   // User management actions
   protected promoteUserToAdmin(userId: number): void {
-    // TODO: Implement promote user API call
-    console.log('Promoting user to admin:', userId);
-    // this.userService.updateUserRole(userId, 'admin').subscribe({...});
+    if (!confirm('¿Estás seguro de que quieres promover este usuario a Administrador?')) {
+      return;
+    }
+
+    this.userService.updateUser(userId, { role: 'admin' }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Usuario promovido a admin exitosamente');
+          // Recargar la lista de usuarios
+          this.loadUsers();
+        } else {
+          console.error('Error al promover usuario:', response.message);
+          alert('Error al promover usuario: ' + (response.message || 'Error desconocido'));
+        }
+      },
+      error: (error) => {
+        console.error('Error al promover usuario:', error);
+        alert('Error al conectar con el servidor');
+      }
+    });
   }
 
   protected demoteUserToPlayer(userId: number): void {
-    // TODO: Implement demote user API call
-    console.log('Demoting user to player:', userId);
-    // this.userService.updateUserRole(userId, 'player').subscribe({...});
+    if (!confirm('¿Estás seguro de que quieres degradar este usuario a Jugador?')) {
+      return;
+    }
+
+    this.userService.updateUser(userId, { role: 'player' }).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Usuario degradado a player exitosamente');
+          // Recargar la lista de usuarios
+          this.loadUsers();
+        } else {
+          console.error('Error al degradar usuario:', response.message);
+          alert('Error al degradar usuario: ' + (response.message || 'Error desconocido'));
+        }
+      },
+      error: (error) => {
+        console.error('Error al degradar usuario:', error);
+        alert('Error al conectar con el servidor');
+      }
+    });
   }
 
   protected deleteUser(userId: number): void {
-    if (confirm('¿Estás seguro de que quieres eliminar este usuario?')) {
-      // TODO: Implement delete user API call
-      console.log('Deleting user:', userId);
-      // this.userService.deleteUser(userId).subscribe({...});
+    const user = this.users().find(u => u.id === userId);
+    const userName = user?.name || 'este usuario';
+    
+    if (!confirm(`¿Estás seguro de que quieres eliminar a ${userName}? Esta acción no se puede deshacer.`)) {
+      return;
     }
+
+    this.userService.deleteUser(userId).subscribe({
+      next: (response) => {
+        if (response.success) {
+          console.log('Usuario eliminado exitosamente');
+          // Recargar la lista de usuarios y estadísticas
+          this.loadUsers();
+          this.loadDashboardData();
+        } else {
+          console.error('Error al eliminar usuario:', response.message);
+          alert('Error al eliminar usuario: ' + (response.message || 'Error desconocido'));
+        }
+      },
+      error: (error) => {
+        console.error('Error al eliminar usuario:', error);
+        alert('Error al conectar con el servidor');
+      }
+    });
   }
 
   // Tournament management actions
