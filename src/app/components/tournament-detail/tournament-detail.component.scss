@@ -336,42 +336,59 @@
 
 // Organizer/Admin Actions Section
 .organizer-actions {
-  padding: 2rem;
-  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
-  border: 2px solid #dee2e6;
+  padding: 1.5rem;
+  background: white;
+  border: 1px solid #e2e8f0;
   border-radius: 12px;
   margin-top: 2rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   h3 {
-    margin: 0 0 1.5rem 0;
+    margin: 0 0 1rem 0;
     color: #2c3e50;
-    font-size: 1.3rem;
+    font-size: 1.1rem;
     font-weight: 600;
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    
+    &::before {
+      content: '⚙️';
+      font-size: 1.2rem;
+    }
   }
 }
 
 .organizer-buttons {
   display: flex;
-  gap: 1rem;
-  justify-content: center;
+  gap: 0.75rem;
   flex-wrap: wrap;
-  margin-bottom: 1rem;
 
   .btn {
-    min-width: 180px;
+    flex: 1;
+    min-width: 160px;
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
     
     &.btn-secondary {
-      background: #3498db;
+      background: white;
+      color: #3498db;
+      border: 2px solid #3498db;
       
       &:hover:not(:disabled) {
-        background: #2980b9;
+        background: #3498db;
+        color: white;
       }
     }
     
     &.btn-danger {
+      background: white;
+      color: #e74c3c;
+      border: 2px solid #e74c3c;
+      
       &:hover:not(:disabled) {
-        box-shadow: 0 4px 12px rgba(231, 76, 60, 0.3);
+        background: #e74c3c;
+        color: white;
       }
     }
   }
@@ -380,22 +397,24 @@
 .organizer-badge,
 .admin-badge {
   text-align: center;
-  padding: 0.75rem 1.5rem;
-  border-radius: 8px;
-  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
   margin-top: 1rem;
+  border: 1px solid;
 }
 
 .organizer-badge {
-  background: linear-gradient(135deg, #ffd89b 0%, #19547b 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(255, 216, 155, 0.4);
+  background: #fff8e1;
+  color: #f57c00;
+  border-color: #ffecb3;
 }
 
 .admin-badge {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.4);
+  background: #e8eaf6;
+  color: #5e35b1;
+  border-color: #c5cae9;
 }
 
 // Tournament Navigation Section
