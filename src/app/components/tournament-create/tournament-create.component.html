@@ -9,8 +9,8 @@
         Volver
       </button>
       <div class="header-content">
-        <h1 class="page-title">Crear Nuevo Torneo</h1>
-        <p class="page-subtitle">Organiza tu propio torneo de ajedrez</p>
+        <h1 class="page-title">{{ pageTitle() }}</h1>
+        <p class="page-subtitle">{{ pageSubtitle() }}</p>
       </div>
     </div>
 
@@ -23,7 +23,7 @@
             <path d="M22 4L12 14.01L9 11.01" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
           <div>
-            <h3>¡Torneo creado exitosamente!</h3>
+            <h3>¡Torneo {{ isEditMode() ? 'actualizado' : 'creado' }} exitosamente!</h3>
             <p>Serás redirigido al detalle del torneo en unos segundos...</p>
           </div>
         </div>
@@ -290,9 +290,9 @@
                 <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" opacity="0.25"/>
                 <path d="M4 12a8 8 0 0 1 8-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 0 1 4 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" fill="currentColor"/>
               </svg>
-              Creando...
+              {{ isEditMode() ? 'Actualizando...' : 'Creando...' }}
             } @else {
-              Crear Torneo
+              {{ isEditMode() ? 'Actualizar Torneo' : 'Crear Torneo' }}
             }
           </button>
         </div>

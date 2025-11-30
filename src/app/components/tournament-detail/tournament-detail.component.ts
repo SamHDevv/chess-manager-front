@@ -42,6 +42,30 @@ export class TournamentDetailComponent implements OnInit {
            (!tournament.registrationDeadline || new Date(tournament.registrationDeadline) > new Date());
   });
 
+  // Check if current user is the organizer or admin
+  protected readonly isOrganizer = computed(() => {
+    const tournament = this.tournament();
+    const currentUser = this.authService.currentUser();
+    if (!tournament || !currentUser) return false;
+    
+    return tournament.createdBy === currentUser.userId;
+  });
+
+  protected readonly isAdmin = computed(() => {
+    const currentUser = this.authService.currentUser();
+    return currentUser?.role === 'admin';
+  });
+
+  // User can edit if they are organizer or admin
+  protected readonly canEdit = computed(() => {
+    return this.isOrganizer() || this.isAdmin();
+  });
+
+  // User can delete if they are organizer or admin
+  protected readonly canDelete = computed(() => {
+    return this.isOrganizer() || this.isAdmin();
+  });
+
   protected readonly spotsLeft = computed(() => {
     const tournament = this.tournament();
     if (!tournament || !tournament.maxParticipants) return null;
@@ -252,6 +276,61 @@ export class TournamentDetailComponent implements OnInit {
     const tournament = this.tournament();
     if (tournament) {
       this.router.navigate(['/tournaments', tournament.id, 'ranking']);
+    }
+  }
+
+  onEditTournament() {
+    const tournament = this.tournament();
+    if (!tournament || !this.canEdit()) return;
+    
+    this.router.navigate(['/tournaments', tournament.id, 'edit']);
+  }
+
+  async onDeleteTournament() {
+    const tournament = this.tournament();
+    if (!tournament || !this.canDelete()) return;
+
+    // Confirmation dialog
+    const participantCount = this.participants().length;
+    let confirmMessage = `¿Estás seguro de que quieres eliminar el torneo "${tournament.name}"?`;
+    
+    if (participantCount > 0) {
+      confirmMessage += `\n\n⚠️ Hay ${participantCount} participante(s) inscrito(s).`;
+    }
+    
+    if (tournament.status === 'ongoing') {
+      confirmMessage += '\n\n⚠️ El torneo está EN CURSO. Se eliminarán todas las partidas asociadas.';
+    }
+    
+    confirmMessage += '\n\nEsta acción no se puede deshacer.';
+
+    if (!confirm(confirmMessage)) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.tournamentService.deleteTournament(tournament.id)
+      );
+      
+      if (response?.success) {
+        alert('✅ Torneo eliminado correctamente');
+        this.router.navigate(['/tournaments']);
+      } else {
+        this.error.set(response?.message || 'Error al eliminar el torneo');
+      }
+    } catch (error: any) {
+      console.error('Error deleting tournament:', error);
+      this.error.set(
+        error?.error?.message || 
+        error?.message || 
+        'Error al conectar con el servidor'
+      );
+    } finally {
+      this.loading.set(false);
     }
   }
 

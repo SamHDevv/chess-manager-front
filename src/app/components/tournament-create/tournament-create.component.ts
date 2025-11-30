@@ -1,10 +1,11 @@
 import { Component, inject, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { CreateTournamentRequest, TournamentStatus } from '../../models/tournament.model';
+import { CreateTournamentRequest, TournamentStatus, Tournament } from '../../models/tournament.model';
+import { firstValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-tournament-create',
@@ -18,11 +19,14 @@ export class TournamentCreateComponent implements OnInit {
   private readonly tournamentService = inject(TournamentService);
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
+  private readonly route = inject(ActivatedRoute);
 
   // Estado del componente
   protected readonly isLoading = signal<boolean>(false);
   protected readonly error = signal<string | null>(null);
   protected readonly success = signal<boolean>(false);
+  protected readonly isEditMode = signal<boolean>(false);
+  protected readonly tournamentId = signal<number | null>(null);
   
   // Formulario reactivo
   protected tournamentForm!: FormGroup;
@@ -30,6 +34,15 @@ export class TournamentCreateComponent implements OnInit {
   // Computed para verificar autenticación
   protected readonly isAuthenticated = computed(() => 
     this.authService.isAuthenticated()
+  );
+
+  // Computed para el título de la página
+  protected readonly pageTitle = computed(() => 
+    this.isEditMode() ? 'Editar Torneo' : 'Crear Nuevo Torneo'
+  );
+
+  protected readonly pageSubtitle = computed(() => 
+    this.isEditMode() ? 'Modifica los detalles de tu torneo' : 'Organiza tu propio torneo de ajedrez'
   );
 
   // Opciones para selects
@@ -45,7 +58,19 @@ export class TournamentCreateComponent implements OnInit {
       return;
     }
 
+    // Verificar si está en modo edición
+    const tournamentIdParam = this.route.snapshot.paramMap.get('id');
+    if (tournamentIdParam) {
+      this.isEditMode.set(true);
+      this.tournamentId.set(+tournamentIdParam);
+    }
+
     this.initializeForm();
+
+    // Cargar datos del torneo si está en modo edición
+    if (this.isEditMode() && this.tournamentId()) {
+      this.loadTournamentData(this.tournamentId()!);
+    }
   }
 
   private initializeForm(): void {
@@ -87,6 +112,51 @@ export class TournamentCreateComponent implements OnInit {
     const month = String(date.getMonth() + 1).padStart(2, '0');
     const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
+  }
+
+  // Cargar datos del torneo para edición
+  private async loadTournamentData(tournamentId: number): Promise<void> {
+    this.isLoading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.tournamentService.getTournamentById(tournamentId)
+      );
+
+      if (response?.success && response.data) {
+        const tournament = response.data;
+        
+        // Verificar que el usuario es el organizador o admin
+        const currentUser = this.authService.currentUser();
+        if (currentUser && tournament.createdBy !== currentUser.userId && currentUser.role !== 'admin') {
+          this.error.set('No tienes permisos para editar este torneo');
+          setTimeout(() => this.router.navigate(['/tournaments', tournamentId]), 2000);
+          return;
+        }
+
+        // Rellenar el formulario con los datos del torneo
+        this.tournamentForm.patchValue({
+          name: tournament.name,
+          description: tournament.description || '',
+          startDate: this.formatDateForInput(new Date(tournament.startDate)),
+          endDate: this.formatDateForInput(new Date(tournament.endDate)),
+          registrationDeadline: tournament.registrationDeadline 
+            ? this.formatDateForInput(new Date(tournament.registrationDeadline))
+            : '',
+          location: tournament.location,
+          maxParticipants: tournament.maxParticipants,
+          status: tournament.status
+        });
+      } else {
+        this.error.set('No se pudo cargar el torneo');
+      }
+    } catch (error: any) {
+      console.error('Error loading tournament:', error);
+      this.error.set('Error al cargar el torneo');
+    } finally {
+      this.isLoading.set(false);
+    }
   }
 
   // Validador personalizado para fechas
@@ -137,7 +207,7 @@ export class TournamentCreateComponent implements OnInit {
     return '';
   }
 
-  // Método principal para crear el torneo
+  // Método principal para crear o actualizar el torneo
   protected createTournament(): void {
     if (this.tournamentForm.invalid) {
       this.markFormGroupTouched();
@@ -149,7 +219,7 @@ export class TournamentCreateComponent implements OnInit {
 
     const formValue = this.tournamentForm.value;
     
-    const createRequest: CreateTournamentRequest = {
+    const tournamentData: CreateTournamentRequest = {
       name: formValue.name.trim(),
       description: formValue.description?.trim() || '',
       startDate: formValue.startDate,
@@ -160,24 +230,32 @@ export class TournamentCreateComponent implements OnInit {
       status: formValue.status
     };
 
-    this.tournamentService.createTournament(createRequest).subscribe({
+    const operation$ = this.isEditMode() && this.tournamentId()
+      ? this.tournamentService.updateTournament(this.tournamentId()!, tournamentData)
+      : this.tournamentService.createTournament(tournamentData);
+
+    operation$.subscribe({
       next: (response) => {
-        console.log('Tournament created successfully:', response);
+        console.log(`Tournament ${this.isEditMode() ? 'updated' : 'created'} successfully:`, response);
         this.success.set(true);
         
-        // Redirigir al detalle del torneo creado después de 2 segundos
+        // Redirigir al detalle del torneo después de 2 segundos
         setTimeout(() => {
-          if (response.data?.id) {
-            this.router.navigate(['/tournaments', response.data.id]);
+          const tournamentId = this.isEditMode() 
+            ? this.tournamentId() 
+            : response.data?.id;
+            
+          if (tournamentId) {
+            this.router.navigate(['/tournaments', tournamentId]);
           } else {
             this.router.navigate(['/tournaments']);
           }
         }, 2000);
       },
       error: (error) => {
-        console.error('Error creating tournament:', error);
+        console.error(`Error ${this.isEditMode() ? 'updating' : 'creating'} tournament:`, error);
         this.error.set(
-          error?.error?.message || error?.message || 'Error al crear el torneo. Por favor, inténtalo de nuevo.'
+          error?.error?.message || error?.message || `Error al ${this.isEditMode() ? 'actualizar' : 'crear'} el torneo. Por favor, inténtalo de nuevo.`
         );
         this.isLoading.set(false);
       },
