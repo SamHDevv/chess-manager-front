@@ -239,7 +239,7 @@
 .users-table {
   .table-header, .table-row {
     display: grid;
-    grid-template-columns: 4rem 1fr 1fr 8rem 12rem;
+    grid-template-columns: 4rem 1fr 1.5fr 8rem 12rem;
     gap: 1rem;
     padding: 1rem 2rem;
     align-items: center;
