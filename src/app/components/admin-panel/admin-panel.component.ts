@@ -5,7 +5,8 @@ import { AuthService } from '../../services/auth.service';
 import { RolePermissionService } from '../../services/role-permission.service';
 import { UserService } from '../../services/user.service';
 import { TournamentService } from '../../services/tournament.service';
-import { User, UserRole } from '../../models/user.model';
+import { User } from '../../models/user.model';
+import { UserRole } from '../../models/auth.model';
 import { Tournament } from '../../models/tournament.model';
 
 interface AdminStats {

@@ -88,7 +88,14 @@
         <!-- Action Buttons -->
         <div class="tournament-actions">
           @if (tournament()!.status === 'upcoming') {
-            @if (canInscribe()) {
+            @if (!authService.isAuthenticated()) {
+              <button class="btn btn-primary btn-large" (click)="onInscribe()">
+                Iniciar sesión para inscribirse
+              </button>
+              <div class="info-message">
+                ℹ️ Debes iniciar sesión para inscribirte en este torneo
+              </div>
+            } @else if (canInscribe()) {
               @if (!userInscribed()) {
                 <button 
                   class="btn btn-primary btn-large" 
@@ -179,7 +186,11 @@
                   </div>
                   <div class="participant-info">
                     <span class="participant-name">{{ participant.name }}</span>
-                    <span class="participant-email">{{ participant.email }}</span>
+                    @if (participant.elo) {
+                      <span class="participant-elo">ELO: {{ participant.elo }}</span>
+                    } @else {
+                      <span class="participant-elo">Sin rating</span>
+                    }
                   </div>
                 </div>
               }

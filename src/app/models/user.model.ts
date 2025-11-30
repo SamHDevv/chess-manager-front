@@ -6,6 +6,7 @@ export interface User {
   email: string;
   password?: string;
   role: UserRole;
+  elo?: number; // Rating ELO del jugador (opcional)
 }
 
 export interface CreateUserRequest {

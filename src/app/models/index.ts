@@ -7,9 +7,10 @@ export type {
   AuthRegisterRequest, 
   AuthResponse, 
   AuthUser, 
-  JwtPayload
+  JwtPayload,
+  UserRole,
+  Permission
 } from './auth.model';
-export { AuthUserRole, Permission } from './auth.model';
 export { isAuthUser, isAuthResponse } from './auth.model';
 
 // Entity models  

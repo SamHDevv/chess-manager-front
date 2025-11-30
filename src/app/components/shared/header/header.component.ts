@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
 import { RolePermissionService } from '../../../services/role-permission.service';
-import { UserRole } from '../../../models/user.model';
+import { UserRole } from '../../../models/auth.model';
 
 @Component({
   selector: 'app-header',

@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Permission } from '../models/auth.model';
-import { UserRole } from '../models/user.model';
+import { Permission, UserRole } from '../models/auth.model';
 
 @Injectable({
   providedIn: 'root'
@@ -8,35 +7,35 @@ import { UserRole } from '../models/user.model';
 export class RolePermissionService {
   
   private readonly ROLE_PERMISSIONS: Record<UserRole, Permission[]> = {
-    [UserRole.PLAYER]: [
+    'player': [
       // Permisos básicos
-      Permission.VIEW_TOURNAMENTS,
-      Permission.JOIN_TOURNAMENTS, 
-      Permission.VIEW_MATCHES,
-      Permission.VIEW_RANKINGS,
+      'view_tournaments',
+      'join_tournaments', 
+      'view_matches',
+      'view_rankings',
       
-      // Permisos de gestión propia (✨ NOVEDAD)
-      Permission.CREATE_TOURNAMENTS,
-      Permission.EDIT_OWN_TOURNAMENTS,
-      Permission.DELETE_OWN_TOURNAMENTS,
-      Permission.MANAGE_OWN_TOURNAMENT_INSCRIPTIONS
+      // Permisos de gestión propia
+      'create_tournaments',
+      'edit_own_tournaments',
+      'delete_own_tournaments',
+      'manage_own_tournament_inscriptions'
     ],
-    [UserRole.ADMIN]: [
+    'admin': [
       // Hereda todos los permisos de player
-      Permission.VIEW_TOURNAMENTS,
-      Permission.JOIN_TOURNAMENTS,
-      Permission.VIEW_MATCHES, 
-      Permission.VIEW_RANKINGS,
-      Permission.CREATE_TOURNAMENTS,
-      Permission.EDIT_OWN_TOURNAMENTS,
-      Permission.DELETE_OWN_TOURNAMENTS,
-      Permission.MANAGE_OWN_TOURNAMENT_INSCRIPTIONS,
+      'view_tournaments',
+      'join_tournaments',
+      'view_matches', 
+      'view_rankings',
+      'create_tournaments',
+      'edit_own_tournaments',
+      'delete_own_tournaments',
+      'manage_own_tournament_inscriptions',
       
       // Permisos exclusivos de admin
-      Permission.MANAGE_USERS,
-      Permission.EDIT_ANY_TOURNAMENT,
-      Permission.DELETE_ANY_TOURNAMENT,
-      Permission.VIEW_SYSTEM_ANALYTICS
+      'manage_users',
+      'edit_any_tournament',
+      'delete_any_tournament',
+      'view_system_analytics'
     ]
   };
 
@@ -63,21 +62,21 @@ export class RolePermissionService {
     tournamentCreatorId: number | null | undefined, 
     action: 'edit' | 'delete' | 'manage_inscriptions'
   ): boolean {
-    const isAdmin = userRole === UserRole.ADMIN;
+    const isAdmin = userRole === 'admin';
     const isOwner = userId === tournamentCreatorId;
     
     // Los admins pueden hacer todo
     if (isAdmin) {
-      if (action === 'edit') return this.hasPermission(userRole, Permission.EDIT_ANY_TOURNAMENT);
-      if (action === 'delete') return this.hasPermission(userRole, Permission.DELETE_ANY_TOURNAMENT);
-      if (action === 'manage_inscriptions') return this.hasPermission(userRole, Permission.MANAGE_OWN_TOURNAMENT_INSCRIPTIONS);
+      if (action === 'edit') return this.hasPermission(userRole, 'edit_any_tournament');
+      if (action === 'delete') return this.hasPermission(userRole, 'delete_any_tournament');
+      if (action === 'manage_inscriptions') return this.hasPermission(userRole, 'manage_own_tournament_inscriptions');
     }
     
     // Los players solo pueden gestionar sus propios torneos
     if (isOwner) {
-      if (action === 'edit') return this.hasPermission(userRole, Permission.EDIT_OWN_TOURNAMENTS);
-      if (action === 'delete') return this.hasPermission(userRole, Permission.DELETE_OWN_TOURNAMENTS);
-      if (action === 'manage_inscriptions') return this.hasPermission(userRole, Permission.MANAGE_OWN_TOURNAMENT_INSCRIPTIONS);
+      if (action === 'edit') return this.hasPermission(userRole, 'edit_own_tournaments');
+      if (action === 'delete') return this.hasPermission(userRole, 'delete_own_tournaments');
+      if (action === 'manage_inscriptions') return this.hasPermission(userRole, 'manage_own_tournament_inscriptions');
     }
     
     return false;
@@ -87,21 +86,21 @@ export class RolePermissionService {
    * Verifica si un usuario puede crear torneos
    */
   canCreateTournaments(role: UserRole): boolean {
-    return this.hasPermission(role, Permission.CREATE_TOURNAMENTS);
+    return this.hasPermission(role, 'create_tournaments');
   }
 
   /**
    * Verifica si un usuario es administrador
    */
   isAdmin(role: UserRole): boolean {
-    return role === UserRole.ADMIN;
+    return role === 'admin';
   }
 
   /**
    * Verifica si un usuario puede gestionar otros usuarios
    */
   canManageUsers(role: UserRole): boolean {
-    return this.hasPermission(role, Permission.MANAGE_USERS);
+    return this.hasPermission(role, 'manage_users');
   }
 
   /**
@@ -109,8 +108,8 @@ export class RolePermissionService {
    */
   getRoleDisplayName(role: UserRole): string {
     const roleNames: Record<UserRole, string> = {
-      [UserRole.PLAYER]: 'Jugador',
-      [UserRole.ADMIN]: 'Administrador'
+      'player': 'Jugador',
+      'admin': 'Administrador'
     };
     
     return roleNames[role];
@@ -121,8 +120,8 @@ export class RolePermissionService {
    */
   getRoleDescription(role: UserRole): string {
     const descriptions: Record<UserRole, string> = {
-      [UserRole.PLAYER]: 'Puede crear y gestionar sus propios torneos, inscribirse en cualquier torneo',
-      [UserRole.ADMIN]: 'Control total del sistema, puede gestionar cualquier torneo y usuarios'
+      'player': 'Puede crear y gestionar sus propios torneos, inscribirse en cualquier torneo',
+      'admin': 'Control total del sistema, puede gestionar cualquier torneo y usuarios'
     };
     
     return descriptions[role];
