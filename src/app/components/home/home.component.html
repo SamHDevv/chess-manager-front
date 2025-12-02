@@ -1,0 +1,121 @@
+<div class="home-container">
+  <!-- Hero Section -->
+  <section class="hero-section">
+    <div class="hero-content">
+      <h1 class="hero-title">Gestiona tus torneos de ajedrez</h1>
+      <p class="hero-subtitle">
+        La plataforma completa para organizar y participar en torneos de ajedrez de forma sencilla
+      </p>
+      <div class="hero-actions">
+        @if (authService.isAuthenticated()) {
+          <a routerLink="/tournaments/create" class="btn-primary">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+            </svg>
+            Crear Torneo
+          </a>
+          <a routerLink="/tournaments" class="btn-secondary">Explorar Torneos</a>
+        } @else {
+          <a routerLink="/register" class="btn-primary">Comenzar Gratis</a>
+          <a routerLink="/tournaments" class="btn-secondary">Explorar Torneos</a>
+        }
+      </div>
+    </div>
+    <div class="hero-illustration">
+      <!-- Chess pieces illustration -->
+      <svg viewBox="0 0 400 400" fill="none" class="chess-illustration">
+        <circle cx="200" cy="200" r="150" fill="url(#gradient1)" opacity="0.1"/>
+        <path d="M150 100h100l-20 40h-60l-20-40zM130 160h140l-10 80h-120l-10-80z" fill="url(#gradient2)"/>
+        <defs>
+          <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#137FEC"/>
+            <stop offset="100%" style="stop-color:#7C3AED"/>
+          </linearGradient>
+          <linearGradient id="gradient2" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#137FEC"/>
+            <stop offset="100%" style="stop-color:#7C3AED"/>
+          </linearGradient>
+        </defs>
+      </svg>
+    </div>
+  </section>
+
+  <!-- How it works Section -->
+  <section class="how-it-works-section">
+    <div class="section-header">
+      <h2>¿Cómo funciona?</h2>
+      <p>Tres simples pasos para empezar</p>
+    </div>
+
+    <div class="steps-grid">
+      @for (step of steps; track step.number) {
+        <div class="step-card">
+          <div class="step-number">{{ step.number }}</div>
+          <div class="step-icon">
+            <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+              <path [attr.d]="getStepIcon(step.icon)" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <h3>{{ step.title }}</h3>
+          <p>{{ step.description }}</p>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Upcoming Tournaments Section -->
+  <section class="upcoming-tournaments-section">
+    <div class="section-header">
+      <h2>Próximos Torneos</h2>
+      <a routerLink="/tournaments" class="view-all-link">
+        Ver todos →
+      </a>
+    </div>
+
+    @if (loading()) {
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <p>Cargando torneos...</p>
+      </div>
+    } @else if (upcomingTournaments().length > 0) {
+      <div class="tournaments-grid">
+        @for (tournament of upcomingTournaments(); track tournament.id) {
+          <div class="tournament-card">
+            <div class="tournament-header">
+              <h3>{{ tournament.name }}</h3>
+              <span class="tournament-status">{{ tournament.status }}</span>
+            </div>
+            <div class="tournament-info">
+              <div class="info-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+                  <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>{{ tournament.maxParticipants || 'Ilimitado' }} jugadores</span>
+              </div>
+              <div class="info-item">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                  <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" stroke-width="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" stroke-width="2"/>
+                  <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" stroke-width="2"/>
+                  <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" stroke-width="2"/>
+                </svg>
+                <span>{{ tournament.startDate | date:'d MMM' }}</span>
+              </div>
+            </div>
+            <a [routerLink]="['/tournaments', tournament.id]" class="tournament-link">
+              Ver detalles →
+            </a>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        <p>No hay torneos próximos en este momento</p>
+        @if (authService.isAuthenticated()) {
+          <a routerLink="/tournaments/create" class="btn-primary">Crear el primero</a>
+        }
+      </div>
+    }
+  </section>
+</div>

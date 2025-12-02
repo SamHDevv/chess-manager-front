@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { HomeComponent } from './components/home/home.component';
 import { TournamentListComponent } from './components/tournament-list/tournament-list.component';
 import { TournamentDetailComponent } from './components/tournament-detail/tournament-detail.component';
 import { TournamentMatchesComponent } from './components/tournament-matches/tournament-matches.component';
@@ -12,7 +13,7 @@ import { PlayerDetailComponent } from './components/player-detail/player-detail.
 import { adminGuard, authGuard } from './guards/auth.guards';
 
 export const routes: Routes = [
-  { path: '', redirectTo: '/tournaments', pathMatch: 'full' },
+  { path: '', component: HomeComponent },
   { path: 'login', component: AuthComponent },
   { path: 'register', component: AuthComponent },
   { path: 'tournaments', component: TournamentListComponent },

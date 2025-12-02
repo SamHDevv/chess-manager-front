@@ -20,6 +20,7 @@ export class TournamentListComponent implements OnInit {
   protected readonly loading = signal(false);
   protected readonly error = signal<string | null>(null);
   protected readonly selectedFilter = signal<'all' | 'upcoming' | 'ongoing'>('all');
+  protected readonly searchQuery = signal<string>('');
 
   // Computed values
   protected readonly upcomingTournaments = computed(() =>
@@ -32,16 +33,29 @@ export class TournamentListComponent implements OnInit {
 
   protected readonly filteredTournaments = computed(() => {
     const filter = this.selectedFilter();
-    const allTournaments = this.tournaments();
+    const query = this.searchQuery().toLowerCase().trim();
+    let allTournaments = this.tournaments();
 
+    // Apply status filter
     switch (filter) {
       case 'upcoming':
-        return this.upcomingTournaments();
+        allTournaments = this.upcomingTournaments();
+        break;
       case 'ongoing':
-        return this.ongoingTournaments();
-      default:
-        return allTournaments;
+        allTournaments = this.ongoingTournaments();
+        break;
     }
+
+    // Apply search filter
+    if (query) {
+      return allTournaments.filter(t => 
+        t.name.toLowerCase().includes(query) ||
+        t.description?.toLowerCase().includes(query) ||
+        t.location.toLowerCase().includes(query)
+      );
+    }
+
+    return allTournaments;
   });
 
   ngOnInit(): void {
@@ -118,6 +132,11 @@ export class TournamentListComponent implements OnInit {
 
   protected setFilter(filter: 'all' | 'upcoming' | 'ongoing'): void {
     this.selectedFilter.set(filter);
+  }
+
+  protected onSearchChange(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    this.searchQuery.set(input.value);
   }
 
   protected formatDate(dateString: string): string {
