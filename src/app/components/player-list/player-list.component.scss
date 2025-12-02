@@ -245,21 +245,14 @@
     .player-info {
       flex: 1;
       min-width: 0;
+      display: flex;
+      align-items: center;
 
       h3 {
         font-family: $font-family-work-sans;
         font-size: $font-size-xl;
         font-weight: $font-weight-semibold;
         color: $color-text-primary;
-        margin: 0 0 var(--space-1) 0;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .player-id {
-        font-size: $font-size-sm;
-        color: $color-text-secondary;
         margin: 0;
         overflow: hidden;
         text-overflow: ellipsis;
