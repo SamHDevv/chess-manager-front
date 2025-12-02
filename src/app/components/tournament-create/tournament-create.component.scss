@@ -1,16 +1,20 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+// Importar sistema de diseño
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .tournament-create {
   min-height: 100vh;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: linear-gradient(135deg, $color-bg-tertiary 0%, $color-bg-slate-200 100%);
+  font-family: $font-family-inter;
 
   .container {
     max-width: 56rem;
     margin: 0 auto;
     padding: 2rem;
 
-    @media (max-width: 768px) {
+    @include mobile {
       padding: 1rem;
     }
   }
@@ -25,10 +29,10 @@
       gap: 0.5rem;
       padding: 0.5rem 1rem;
       margin-bottom: 1rem;
-      background: #fff;
-      border: 1px solid #e2e8f0;
+      background: $color-bg-primary;
+      border: 1px solid $color-bg-slate-200;
       border-radius: 0.5rem;
-      color: #64748b;
+      color: $color-text-slate-500;
       text-decoration: none;
       font-size: 0.875rem;
       font-weight: 500;
@@ -36,9 +40,9 @@
       cursor: pointer;
 
       &:hover {
-        background: #f8fafc;
-        color: #475569;
-        border-color: #cbd5e1;
+        background: $color-bg-tertiary;
+        color: $color-text-slate-600;
+        border-color: $color-border-gray;
       }
 
       svg {
@@ -50,17 +54,17 @@
       .page-title {
         font-size: 2rem;
         font-weight: 700;
-        color: #1e293b;
+        color: $color-text-slate-800;
         margin-bottom: 0.5rem;
 
-        @media (max-width: 768px) {
+        @include mobile {
           font-size: 1.5rem;
         }
       }
 
       .page-subtitle {
         font-size: 1.125rem;
-        color: #64748b;
+        color: $color-text-slate-500;
         margin: 0;
       }
     }
@@ -68,7 +72,7 @@
 
   // Messages
   .success-message {
-    background: #f0fdf4;
+    background: $color-success-bg;
     border: 1px solid #bbf7d0;
     border-radius: 0.75rem;
     padding: 1.5rem;
@@ -87,7 +91,7 @@
       h3 {
         font-size: 1.125rem;
         font-weight: 600;
-        color: #166534;
+        color: $color-text-emerald-900;
         margin: 0 0 0.25rem 0;
       }
 
@@ -103,13 +107,13 @@
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    background: #fef2f2;
+    background: $color-error-bg;
     border: 1px solid #fecaca;
     border-radius: 0.5rem;
     padding: 1rem;
     margin-bottom: 1.5rem;
     font-size: 0.875rem;
-    color: #dc2626;
+    color: $color-text-red-600;
 
     svg {
       flex-shrink: 0;
@@ -118,30 +122,30 @@
 
   // Tournament Form
   .tournament-form {
-    background: #fff;
+    background: $color-bg-primary;
     border-radius: 1rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
     overflow: hidden;
 
     .form-section {
       padding: 2rem;
-      border-bottom: 0.0625rem solid #f1f5f9;
+      border-bottom: 0.0625rem solid $color-bg-slate-100;
 
       &:last-child {
         border-bottom: none;
       }
 
-      @media (max-width: 768px) {
+      @include mobile {
         padding: 1.5rem;
       }
 
       .section-title {
         font-size: 1.25rem;
         font-weight: 600;
-        color: #1e293b;
+        color: $color-text-slate-800;
         margin-bottom: 1.5rem;
         padding-bottom: 0.5rem;
-        border-bottom: 0.125rem solid #e2e8f0;
+        border-bottom: 0.125rem solid $color-bg-slate-200;
       }
     }
 
@@ -150,7 +154,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 1.5rem;
 
-      @media (max-width: 768px) {
+      @include mobile {
         grid-template-columns: 1fr;
         gap: 1rem;
       }
@@ -163,33 +167,33 @@
         display: block;
         font-size: 0.875rem;
         font-weight: 500;
-        color: #374151;
+        color: $color-text-tertiary;
         margin-bottom: 0.5rem;
       }
 
       .form-control {
         width: 100%;
         padding: 0.75rem 1rem;
-        border: 1px solid #d1d5db;
+        border: 1px solid $color-border-gray;
         border-radius: 0.5rem;
         font-size: 1rem;
         transition: all 0.2s ease;
-        background: #fff;
+        background: $color-bg-primary;
 
         &:focus {
           outline: none;
-          border-color: #3b82f6;
+          border-color: $color-primary-lighter;
           box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         &.error {
-          border-color: #ef4444;
+          border-color: $color-error;
           box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
         }
 
         &:disabled {
-          background: #f9fafb;
-          color: #9ca3af;
+          background: $color-bg-gray-light;
+          color: $color-text-disabled;
           cursor: not-allowed;
         }
 
@@ -222,14 +226,14 @@
 
       .char-counter {
         font-size: 0.75rem;
-        color: #9ca3af;
+        color: $color-text-disabled;
         text-align: right;
         margin-top: 0.25rem;
       }
 
       .error-text {
         font-size: 0.875rem;
-        color: #ef4444;
+        color: $color-error;
         margin-top: 0.25rem;
       }
     }
@@ -239,9 +243,9 @@
       gap: 1rem;
       justify-content: flex-end;
       padding: 2rem;
-      background: #f8fafc;
+      background: $color-bg-tertiary;
 
-      @media (max-width: 768px) {
+      @include mobile {
         flex-direction: column-reverse;
         padding: 1.5rem;
       }
@@ -270,11 +274,11 @@
     }
 
     &.btn-primary {
-      background: #3b82f6;
+      background: $color-primary-lighter;
       color: white;
 
       &:hover:not(:disabled) {
-        background: #2563eb;
+        background: $color-primary-light;
       }
 
       &:focus {
@@ -283,22 +287,22 @@
     }
 
     &.btn-secondary {
-      background: #f1f5f9;
-      color: #475569;
-      border-color: #e2e8f0;
+      background: $color-bg-slate-100;
+      color: $color-text-slate-600;
+      border-color: $color-bg-slate-200;
 
       &:hover:not(:disabled) {
-        background: #e2e8f0;
+        background: $color-bg-slate-200;
       }
     }
 
     &.btn-outline {
       background: transparent;
-      color: #64748b;
-      border-color: #cbd5e1;
+      color: $color-text-slate-500;
+      border-color: $color-border-gray;
 
       &:hover:not(:disabled) {
-        background: #f8fafc;
+        background: $color-bg-tertiary;
       }
     }
 
@@ -317,7 +321,7 @@
   }
 
   // Responsive adjustments
-  @media (max-width: 640px) {
+  @include responsive($breakpoint-sm) {
     .tournament-form {
       .form-row {
         grid-template-columns: 1fr;

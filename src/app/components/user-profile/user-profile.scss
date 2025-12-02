@@ -1,12 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+// Importar sistema de diseño
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .user-profile {
   max-width: 56rem;
   margin: 0 auto;
   padding: 2rem;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: $font-family-inter;
   line-height: 1.5;
-  color: #1a1a1a;
+  color: $color-text-primary;
 
   // Profile Header
   .profile-header {
@@ -14,7 +18,7 @@
     align-items: center;
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 0.0625rem solid #e5e5e5;
+    border-bottom: 0.0625rem solid $color-border;
   }
 
   .avatar-section {
@@ -28,7 +32,7 @@
     width: 5rem;
     height: 5rem;
     border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, $color-secondary-lighter 0%, $color-secondary-light 100%);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -45,19 +49,19 @@
     width: 2rem;
     height: 2rem;
     border-radius: 50%;
-    background: #fff;
-    border: 2px solid #e5e5e5;
+    background: $color-bg-primary;
+    border: 2px solid $color-border;
     display: flex;
     align-items: center;
     justify-content: center;
     cursor: pointer;
-    color: #6b7280;
+    color: $color-text-gray;
     transition: all 0.2s ease;
 
     &:hover {
-      background: #f9fafb;
-      color: #374151;
-      border-color: #d1d5db;
+      background: $color-bg-gray-light;
+      color: $color-text-tertiary;
+      border-color: $color-border-gray;
     }
   }
 
@@ -72,7 +76,7 @@
     gap: 1.5rem;
     margin-bottom: 1.5rem;
 
-    @media (max-width: 768px) {
+    @include mobile {
       grid-template-columns: 1fr;
       gap: 1rem;
     }
@@ -87,41 +91,41 @@
   label {
     font-size: 0.875rem;
     font-weight: 500;
-    color: #374151;
+    color: $color-text-tertiary;
   }
 
   .form-control {
     padding: 0.75rem 1rem;
-    border: 1px solid #d1d5db;
+    border: 1px solid $color-border-gray;
     border-radius: 0.5rem;
     font-size: 1rem;
     transition: all 0.2s ease;
-    background: #fff;
+    background: $color-bg-primary;
 
     &:focus {
       outline: none;
-      border-color: #3b82f6;
+      border-color: $color-primary-lighter;
       box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
     }
 
     &.error {
-      border-color: #ef4444;
+      border-color: $color-error;
       box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.1);
     }
 
     &:disabled {
-      background: #f9fafb;
-      color: #9ca3af;
+      background: $color-bg-gray-light;
+      color: $color-text-disabled;
       cursor: not-allowed;
     }
   }
 
   .form-display {
     padding: 0.75rem 1rem;
-    background: #f9fafb;
-    border: 1px solid #e5e7eb;
+    background: $color-bg-gray-light;
+    border: 1px solid $color-border-light;
     border-radius: 0.5rem;
-    color: #374151;
+    color: $color-text-tertiary;
     min-height: 3rem;
     display: flex;
     align-items: center;
@@ -129,7 +133,7 @@
 
   .error-message {
     font-size: 0.875rem;
-    color: #ef4444;
+    color: $color-error;
     margin-top: 0.25rem;
   }
 
@@ -139,7 +143,7 @@
     margin-top: 2rem;
     justify-content: flex-end;
 
-    @media (max-width: 768px) {
+    @include mobile {
       flex-direction: column-reverse;
     }
   }
@@ -166,31 +170,31 @@
     }
 
     &.btn-primary {
-      background: #3b82f6;
+      background: $color-primary-lighter;
       color: white;
 
       &:hover:not(:disabled) {
-        background: #2563eb;
+        background: $color-primary-light;
       }
     }
 
     &.btn-secondary {
-      background: #f9fafb;
-      color: #374151;
-      border-color: #d1d5db;
+      background: $color-bg-gray-light;
+      color: $color-text-tertiary;
+      border-color: $color-border-gray;
 
       &:hover:not(:disabled) {
-        background: #f3f4f6;
+        background: $color-bg-gray-lighter;
       }
     }
 
     &.btn-outline {
       background: transparent;
-      color: #3b82f6;
-      border-color: #3b82f6;
+      color: $color-primary-lighter;
+      border-color: $color-primary-lighter;
 
       &:hover {
-        background: #3b82f6;
+        background: $color-primary-lighter;
         color: white;
       }
     }
@@ -201,49 +205,49 @@
     .section-title {
       font-size: 1.125rem;
       font-weight: 600;
-      color: #1f2937;
+      color: $color-text-light;
       margin-bottom: 1.5rem;
     }
   }
 
   .tournaments-table {
-    border: 1px solid #e5e7eb;
+    border: 1px solid $color-border-light;
     border-radius: 0.5rem;
     overflow: hidden;
-    background: #fff;
+    background: $color-bg-primary;
 
     .table-header {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      background: #f9fafb;
-      border-bottom: 0.0625rem solid #e5e7eb;
+      background: $color-bg-gray-light;
+      border-bottom: 0.0625rem solid $color-border-light;
     }
 
     .header-cell {
       padding: 1rem;
       font-size: 0.875rem;
       font-weight: 500;
-      color: #374151;
+      color: $color-text-tertiary;
     }
 
     .table-row {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      border-bottom: 0.0625rem solid #f3f4f6;
+      border-bottom: 0.0625rem solid $color-bg-gray-lighter;
 
       &:last-child {
         border-bottom: none;
       }
 
       &:hover {
-        background: #f9fafb;
+        background: $color-bg-gray-light;
       }
     }
 
     .cell {
       padding: 1rem;
       font-size: 0.875rem;
-      color: #374151;
+      color: $color-text-tertiary;
       display: flex;
       align-items: center;
     }
@@ -262,30 +266,30 @@
     letter-spacing: 0.05em;
 
     &.status-registered {
-      background: #dbeafe;
-      color: #1d4ed8;
+      background: $color-info-bg;
+      color: $color-text-blue-700;
     }
 
     &.status-completed {
-      background: #dcfce7;
-      color: #166534;
+      background: $color-success-emerald-bg;
+      color: $color-text-emerald-900;
     }
 
     &.status-progress {
       background: #fef3c7;
-      color: #92400e;
+      color: $color-text-amber-800;
     }
 
     &.status-cancelled {
       background: #fee2e2;
-      color: #dc2626;
+      color: $color-text-red-600;
     }
   }
 
   .empty-state {
     text-align: center;
     padding: 3rem 1rem;
-    color: #6b7280;
+    color: $color-text-gray;
 
     p {
       margin-bottom: 1rem;
@@ -293,7 +297,7 @@
   }
 
   // Responsive Design
-  @media (max-width: 768px) {
+  @include mobile {
     padding: 1rem;
 
     .tournaments-table {
@@ -306,13 +310,13 @@
       .header-cell,
       .cell {
         padding: 0.75rem 1rem;
-        border-bottom: 0.0625rem solid #f3f4f6;
+        border-bottom: 0.0625rem solid $color-bg-gray-lighter;
       }
 
       .header-cell {
         background: none;
         font-weight: 600;
-        color: #1f2937;
+        color: $color-text-light;
       }
 
       .cell:last-child {
@@ -323,18 +327,18 @@
       .tournament-date::before {
         content: 'Fecha: ';
         font-weight: 500;
-        color: #6b7280;
+        color: $color-text-gray;
       }
 
       .tournament-status::before {
         content: 'Estado: ';
         font-weight: 500;
-        color: #6b7280;
+        color: $color-text-gray;
       }
     }
   }
 
-  @media (max-width: 480px) {
+  @include responsive($breakpoint-xs) {
     .avatar {
       width: 4rem;
       height: 4rem;

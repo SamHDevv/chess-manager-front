@@ -1,10 +1,14 @@
+// Importar sistema de diseño
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .tournament-detail-container {
   max-width: 75rem;
   margin: 0 auto;
   padding: 2rem;
   min-height: 80vh;
 
-  @media (max-width: 768px) {
+  @include mobile {
     padding: 1rem;
   }
 }
@@ -23,8 +27,8 @@
 .spinner {
   width: 3.125rem;
   height: 3.125rem;
-  border: 0.25rem solid #f3f3f3;
-  border-top: 0.25rem solid #3498db;
+  border: 0.25rem solid $color-border-subtle;
+  border-top: 0.25rem solid $color-blue-alt;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin-bottom: 1rem;
@@ -59,7 +63,7 @@
   }
 
   p {
-    color: #666;
+    color: $color-text-gray;
     margin-bottom: 1.5rem;
   }
 }
@@ -73,7 +77,7 @@
   padding-bottom: 1rem;
   border-bottom: 0.0625rem solid #dee2e6;
 
-  @media (max-width: 768px) {
+  @include mobile {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
@@ -83,14 +87,14 @@
 .back-button {
   background: none;
   border: none;
-  color: #3498db;
+  color: $color-blue-alt;
   font-size: 1rem;
   cursor: pointer;
   padding: 0.5rem 0;
   transition: color 0.3s ease;
 
   &:hover {
-    color: #2980b9;
+    color: $color-blue-alt-dark;
     text-decoration: underline;
   }
 }
@@ -103,23 +107,23 @@
   text-transform: uppercase;
 
   &.status-upcoming {
-    background: #e8f5e8;
-    color: #27ae60;
+    background: $color-success-bg;
+    color: $color-success;
   }
 
   &.status-ongoing {
-    background: #fff3cd;
-    color: #856404;
+    background: $color-warning-light;
+    color: $color-warning-text;
   }
 
   &.status-finished {
-    background: #f8d7da;
-    color: #721c24;
+    background: $color-error-bg;
+    color: $color-error-text;
   }
 
   &.status-cancelled {
-    background: #d1ecf1;
-    color: #0c5460;
+    background: $color-info-light;
+    color: $color-info-text;
   }
 }
 
@@ -148,7 +152,7 @@
   gap: 2rem;
   padding: 2rem;
 
-  @media (max-width: 768px) {
+  @include mobile {
     flex-direction: column;
     gap: 1.5rem;
   }
@@ -158,13 +162,13 @@
   flex-shrink: 0;
   width: 12.5rem;
   height: 12.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, $color-secondary-lighter 0%, $color-secondary-light 100%);
   border-radius: 12px;
   display: flex;
   align-items: center;
   justify-content: center;
 
-  @media (max-width: 768px) {
+  @include mobile {
     width: 100%;
     height: 9.375rem;
   }
@@ -181,17 +185,17 @@
 
   h1 {
     margin: 0 0 1rem 0;
-    color: #2c3e50;
+    color: $color-text-secondary;
     font-size: 2.5rem;
     line-height: 1.2;
 
-    @media (max-width: 768px) {
+    @include mobile {
       font-size: 2rem;
     }
   }
 
   .tournament-description {
-    color: #666;
+    color: $color-text-gray;
     font-size: 1.1rem;
     line-height: 1.6;
     margin-bottom: 2rem;
@@ -204,7 +208,7 @@
     gap: 2rem;
     margin-bottom: 1rem;
 
-    @media (max-width: 768px) {
+    @include mobile {
       flex-direction: column;
       gap: 0.5rem;
     }
@@ -218,12 +222,12 @@
 
     .label {
       font-weight: 600;
-      color: #555;
+      color: $color-text-subtle;
       font-size: 0.9rem;
     }
 
     .value {
-      color: #2c3e50;
+      color: $color-text-secondary;
       font-size: 1rem;
 
       &.expired {
@@ -237,7 +241,7 @@
 // Action Buttons Section
 .tournament-actions {
   padding: 2rem;
-  background: #f8f9fa;
+  background: $color-bg-secondary;
   border-top: 0.0625rem solid #dee2e6;
   text-align: center;
 }
@@ -266,11 +270,11 @@
   }
 
   &.btn-primary {
-    background: #3498db;
+    background: $color-blue-alt;
     color: white;
 
     &:hover:not(:disabled) {
-      background: #2980b9;
+      background: $color-blue-alt-dark;
       transform: translateY(-2px);
     }
   }
@@ -297,11 +301,11 @@
 
   &.btn-outline {
     background: transparent;
-    color: #3498db;
-    border: 2px solid #3498db;
+    color: $color-blue-alt;
+    border: 2px solid $color-blue-alt;
 
     &:hover:not(:disabled) {
-      background: #3498db;
+      background: $color-blue-alt;
       color: white;
     }
   }
@@ -310,8 +314,8 @@
 .spots-warning {
   margin-top: 1rem;
   padding: 0.75rem 1rem;
-  background: #fff3cd;
-  color: #856404;
+  background: $color-warning-light;
+  color: $color-warning-text;
   border-radius: 6px;
   border: 1px solid #ffeaa7;
 }
@@ -328,8 +332,8 @@
 .info-message {
   margin-top: 1rem;
   padding: 0.75rem 1rem;
-  background: #d1ecf1;
-  color: #0c5460;
+  background: $color-info-light;
+  color: $color-info-text;
   border-radius: 6px;
   border: 1px solid #bee5eb;
 }
@@ -338,14 +342,14 @@
 .organizer-actions {
   padding: 1.5rem;
   background: white;
-  border: 1px solid #e2e8f0;
+  border: 1px solid $color-bg-slate-200;
   border-radius: 12px;
   margin-top: 2rem;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 
   h3 {
     margin: 0 0 1rem 0;
-    color: #2c3e50;
+    color: $color-text-secondary;
     font-size: 1.1rem;
     font-weight: 600;
     display: flex;
@@ -372,11 +376,11 @@
     
     &.btn-secondary {
       background: white;
-      color: #3498db;
-      border: 2px solid #3498db;
+      color: $color-blue-alt;
+      border: 2px solid $color-blue-alt;
       
       &:hover:not(:disabled) {
-        background: #3498db;
+        background: $color-blue-alt;
         color: white;
       }
     }
@@ -428,7 +432,7 @@
 
   h3 {
     margin: 0 0 1.5rem 0;
-    color: #2c3e50;
+    color: $color-text-secondary;
     font-size: 1.4rem;
     font-weight: 600;
   }
@@ -442,7 +446,7 @@
     .btn {
       min-width: 11.25rem;
       
-      @media (max-width: 768px) {
+      @include mobile {
         min-width: 8.75rem;
         font-size: 0.9rem;
         padding: 0.75rem 1.5rem;
@@ -450,7 +454,7 @@
     }
   }
 
-  @media (max-width: 768px) {
+  @include mobile {
     padding: 1.5rem;
     margin-top: 1.5rem;
 
@@ -477,9 +481,9 @@
 
   h3 {
     margin: 0 0 1.5rem 0;
-    color: #2c3e50;
+    color: $color-text-secondary;
     font-size: 1.3rem;
-    border-bottom: 0.125rem solid #3498db;
+    border-bottom: 0.125rem solid $color-blue-alt;
     padding-bottom: 0.5rem;
   }
 }
@@ -506,7 +510,7 @@
     border-radius: 3px;
 
     &:hover {
-      background: #555;
+      background: $color-text-subtle;
     }
   }
 }
@@ -516,7 +520,7 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem;
-  background: #f8f9fa;
+  background: $color-bg-secondary;
   border-radius: 8px;
   border: 1px solid #dee2e6;
   transition: all 0.3s ease;
@@ -529,7 +533,7 @@
   .participant-avatar {
     width: 2.5rem;
     height: 2.5rem;
-    background: #3498db;
+    background: $color-blue-alt;
     color: white;
     border-radius: 50%;
     display: flex;
@@ -547,12 +551,12 @@
 
     .participant-name {
       font-weight: 600;
-      color: #2c3e50;
+      color: $color-text-secondary;
     }
 
     .participant-elo {
       font-size: 0.85rem;
-      color: #666;
+      color: $color-text-gray;
       font-weight: 500;
       
       &:not(:has(text)) {
@@ -566,7 +570,7 @@
 .empty-participants {
   text-align: center;
   padding: 2rem;
-  color: #666;
+  color: $color-text-gray;
 
   .empty-icon {
     font-size: 3rem;
@@ -579,7 +583,7 @@
   }
 
   .empty-subtitle {
-    color: #3498db;
+    color: $color-blue-alt;
     font-weight: 500;
   }
 }
@@ -599,7 +603,7 @@
 
     .capacity-fill {
       height: 100%;
-      background: linear-gradient(90deg, #27ae60, #2ecc71);
+      background: linear-gradient(90deg, $color-success, #2ecc71);
       border-radius: 4px;
       transition: width 0.3s ease;
 
@@ -611,7 +615,7 @@
 
   .capacity-text {
     font-size: 0.9rem;
-    color: #666;
+    color: $color-text-gray;
     font-weight: 500;
   }
 }
@@ -628,12 +632,12 @@
     justify-content: space-between;
     align-items: center;
     padding: 0.75rem;
-    background: #f8f9fa;
+    background: $color-bg-secondary;
     border-radius: 6px;
 
     .stat-label {
       font-weight: 600;
-      color: #555;
+      color: $color-text-subtle;
     }
 
     .stat-value {
@@ -644,7 +648,7 @@
       }
 
       &.finished {
-        color: #27ae60;
+        color: $color-success;
       }
     }
   }

@@ -1,6 +1,10 @@
 // Import Inter font
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
+// Importar sistema de diseño
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .ranking-container {
   width: 100%;
   min-height: 100vh;
@@ -42,7 +46,7 @@
   font-weight: 700;
   font-size: 1.5rem;
   line-height: 1.2;
-  color: #111827;
+  color: $color-text-dark;
   margin: 0;
   
   @media (min-width: 768px) {
@@ -55,7 +59,7 @@
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.5;
-  color: #4B5563;
+  color: $color-text-muted;
   margin: 0;
   
   @media (min-width: 768px) {
@@ -64,8 +68,8 @@
 }
 
 .table-wrapper {
-  background: #FFFFFF;
-  border: 1px solid #E5E7EB;
+  background: $color-bg-primary;
+  border: 1px solid $color-border-light;
   box-shadow: 0 0.0625rem 0.125rem rgba(0, 0, 0, 0.05);
   border-radius: 0.5rem;
   overflow: hidden;
@@ -88,7 +92,7 @@
 }
 
 .table-header {
-  background: #F9FAFB;
+  background: $color-bg-gray-light;
   width: 100%;
 }
 
@@ -133,12 +137,12 @@
   line-height: 1;
   letter-spacing: 0.025em;
   text-transform: uppercase;
-  color: #6B7280;
+  color: $color-text-gray;
 }
 
 .table-body {
-  background: #FFFFFF;
-  border-top: 0.0625rem solid #E5E7EB;
+  background: $color-bg-primary;
+  border-top: 0.0625rem solid $color-border-light;
   width: 100%;
   max-height: 60vh;
   overflow-y: auto;
@@ -152,7 +156,7 @@
     minmax(6rem, 8rem)    /* Victorias */
     minmax(6rem, 8rem);   /* Derrotas */
   align-items: center;
-  border-top: 0.0625rem solid #E5E7EB;
+  border-top: 0.0625rem solid $color-border-light;
   
   &:first-child {
     border-top: none;
@@ -182,7 +186,7 @@
   font-weight: 500;
   font-size: 0.875rem;
   line-height: 1.25;
-  color: #111827;
+  color: $color-text-dark;
 }
 
 .cell-text {
@@ -190,7 +194,7 @@
   font-weight: 400;
   font-size: 0.875rem;
   line-height: 1.25;
-  color: #6B7280;
+  color: $color-text-gray;
 }
 
 .empty-row {
@@ -206,7 +210,7 @@
   font-weight: 400;
   font-size: 1rem;
   line-height: 1.5;
-  color: #6B7280;
+  color: $color-text-gray;
   text-align: center;
 }
 
@@ -228,21 +232,21 @@
 }
 
 .error-state p {
-  color: #DC2626;
+  color: $color-text-red-600;
 }
 
 // Deleted user styling
 .deleted-user-row {
   opacity: 0.6;
-  background-color: #F9FAFB !important;
+  background-color: $color-bg-gray-light !important;
   
   &:hover {
-    background-color: #F3F4F6 !important;
+    background-color: $color-bg-gray-lighter !important;
   }
 }
 
 .deleted-user {
-  color: #9CA3AF !important;
+  color: $color-text-disabled !important;
   font-style: italic;
   position: relative;
   

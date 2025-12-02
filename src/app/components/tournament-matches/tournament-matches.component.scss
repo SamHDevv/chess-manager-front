@@ -1,6 +1,10 @@
+// Importar sistema de diseño
+@import '../../../styles/variables';
+@import '../../../styles/mixins';
+
 .tournament-matches {
   padding: 1.5rem;
-  background-color: #f8fafc;
+  background-color: $color-bg-tertiary;
   min-height: 100vh;
 }
 
@@ -26,13 +30,13 @@
 .header-text h1 {
   font-size: 2rem;
   font-weight: 700;
-  color: #1f2937;
+  color: $color-text-light;
   margin: 0 0 8px 0;
 }
 
 .header-text p {
   font-size: 1rem;
-  color: #6b7280;
+  color: $color-text-gray;
   margin: 0;
   max-width: 37.5rem;
   line-height: 1.5;
@@ -40,7 +44,7 @@
 
 /* Organizer badge */
 .organizer-badge {
-  background-color: #1a5298;
+  background-color: $color-primary-darker;
   color: white;
   padding: 0.5rem 16px;
   border-radius: 20px;
@@ -70,8 +74,8 @@
 }
 
 .spinner {
-  border: 3px solid #f3f3f3;
-  border-top: 0.1875rem solid #1a5298;
+  border: 3px solid $color-border-subtle;
+  border-top: 0.1875rem solid $color-primary-darker;
   border-radius: 50%;
   width: 2.5rem;
   height: 2.5rem;
@@ -85,7 +89,7 @@
 }
 
 .loading-content p {
-  color: #6b7280;
+  color: $color-text-gray;
   margin: 0;
 }
 
@@ -98,18 +102,18 @@
 
 .error-content {
   text-align: center;
-  color: #ef4444;
+  color: $color-error;
 }
 
 .error-content h3 {
-  color: #ef4444;
+  color: $color-error;
   margin: 1rem 0 8px;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 .error-content p {
-  color: #6b7280;
+  color: $color-text-gray;
   margin: 0;
 }
 
@@ -126,14 +130,14 @@
 }
 
 .empty-content h3 {
-  color: #1f2937;
+  color: $color-text-light;
   margin: 1rem 0 8px;
   font-size: 1.25rem;
   font-weight: 600;
 }
 
 .empty-content p {
-  color: #6b7280;
+  color: $color-text-gray;
   margin: 0;
 }
 
@@ -148,13 +152,13 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1), 0 1px 2px rgba(0, 0, 0, 0.06);
-  border: 1px solid #e5e7eb;
+  border: 1px solid $color-border-light;
   overflow: hidden;
 }
 
 .round-header {
   padding: 1.5rem 24px 16px;
-  background: linear-gradient(135deg, #1a5298 0%, #2563eb 100%);
+  background: linear-gradient(135deg, $color-primary-darker 0%, $color-primary-light 100%);
   color: white;
 }
 
@@ -178,17 +182,17 @@
 }
 
 .table-header {
-  background-color: #f9fafb;
-  border-bottom: 0.125rem solid #e5e7eb;
+  background-color: $color-bg-gray-light;
+  border-bottom: 0.125rem solid $color-border-light;
 }
 
 .table-row {
-  border-bottom: 0.0625rem solid #f3f4f6;
+  border-bottom: 0.0625rem solid $color-bg-gray-lighter;
   transition: background-color 0.15s ease;
 }
 
 .table-row:hover {
-  background-color: #f9fafb;
+  background-color: $color-bg-gray-light;
 }
 
 .table-row:last-child {
@@ -205,13 +209,13 @@
 .header-cell {
   font-weight: 600;
   font-size: 0.875rem;
-  color: #374151;
+  color: $color-text-tertiary;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
 .cell {
-  color: #1f2937;
+  color: $color-text-light;
   font-size: 0.95rem;
 }
 
@@ -219,7 +223,7 @@
 .cell.mesa {
   justify-content: center;
   font-weight: 600;
-  color: #6b7280;
+  color: $color-text-gray;
 }
 
 /* Player info */
@@ -231,12 +235,12 @@
 
 .player-name {
   font-weight: 500;
-  color: #1f2937;
+  color: $color-text-light;
 }
 
 .player-rating {
   font-size: 0.875rem;
-  color: #6b7280;
+  color: $color-text-gray;
   font-weight: 400;
 }
 
@@ -247,12 +251,12 @@
 
 .result-select {
   padding: 0.5rem 12px;
-  border: 1.5px solid #d1d5db;
+  border: 1.5px solid $color-border-gray;
   border-radius: 8px;
   background-color: white;
   font-size: 0.875rem;
   font-weight: 500;
-  color: #374151;
+  color: $color-text-tertiary;
   cursor: pointer;
   transition: all 0.2s ease;
   width: 6.25rem;
@@ -260,26 +264,26 @@
 }
 
 .result-select:hover {
-  border-color: #1a5298;
+  border-color: $color-primary-darker;
   box-shadow: 0 0 0 1px rgba(26, 82, 152, 0.1);
 }
 
 .result-select:focus {
   outline: none;
-  border-color: #1a5298;
+  border-color: $color-primary-darker;
   box-shadow: 0 0 0 3px rgba(26, 82, 152, 0.1);
 }
 
 .result-select:disabled {
-  background-color: #f9fafb;
-  color: #9ca3af;
+  background-color: $color-bg-gray-light;
+  color: $color-text-disabled;
   cursor: not-allowed;
-  border-color: #e5e7eb;
+  border-color: $color-border-light;
 }
 
 .result-display {
   font-weight: 600;
-  color: #1f2937;
+  color: $color-text-light;
   font-size: 1rem;
   text-align: center;
   width: 6.25rem;
@@ -306,21 +310,21 @@
 
 .status-pending {
   background-color: #fef3c7;
-  color: #d97706;
+  color: $color-warning;
 }
 
 .status-in-progress {
-  background-color: #dbeafe;
-  color: #2563eb;
+  background-color: $color-info-bg;
+  color: $color-primary-light;
 }
 
 .status-completed {
   background-color: #d1fae5;
-  color: #065f46;
+  color: $color-success-dark;
 }
 
 /* Responsive design */
-@media (max-width: 1024px) {
+@include tablet {
   .header-content {
     flex-direction: column;
     align-items: flex-start;
@@ -328,7 +332,7 @@
   }
 }
 
-@media (max-width: 768px) {
+@include mobile {
   .tournament-matches {
     padding: 1rem;
   }
@@ -392,7 +396,7 @@
   }
 }
 
-@media (max-width: 480px) {
+@include responsive($breakpoint-xs) {
   .header-text h1 {
     font-size: 1.5rem;
   }
@@ -430,7 +434,7 @@
 /* Deleted user styling */
 .player-name {
   &:has-text("Usuario Eliminado") {
-    color: #9CA3AF !important;
+    color: $color-text-disabled !important;
     font-style: italic;
   }
 }
@@ -438,7 +442,7 @@
 /* Alternative approach using attribute selector */
 [class*="deleted"] .player-name,
 .player-name[data-deleted="true"] {
-  color: #9CA3AF !important;
+  color: $color-text-disabled !important;
   font-style: italic;
   position: relative;
   
