@@ -10,8 +10,27 @@
   <!-- Error State -->
   @if (error() && !loading()) {
     <div class="error-state">
+      <div class="error-icon">
+        @if (error()?.includes('iniciar sesión')) {
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+          </svg>
+        } @else {
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z" fill="currentColor"/>
+          </svg>
+        }
+      </div>
+      <h2>{{ error()?.includes('iniciar sesión') ? 'Autenticación requerida' : 'Error' }}</h2>
       <p>{{ error() }}</p>
-      <button (click)="goBack()">Volver a la lista</button>
+      <div class="error-actions">
+        @if (error()?.includes('iniciar sesión')) {
+          <a routerLink="/auth" class="btn-primary">Iniciar Sesión</a>
+          <button (click)="goBack()" class="btn-secondary">Volver a la lista</button>
+        } @else {
+          <button (click)="goBack()" class="btn-primary">Volver a la lista</button>
+        }
+      </div>
     </div>
   }
 

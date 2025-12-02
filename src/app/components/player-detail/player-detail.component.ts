@@ -120,7 +120,12 @@ export class PlayerDetailComponent {
         }
       },
       error: (err) => {
-        this.error.set('Error al cargar el jugador');
+        // Check if it's an authentication error (401 or 403)
+        if (err.status === 401 || err.status === 403) {
+          this.error.set('Debes iniciar sesión para ver el perfil de este jugador');
+        } else {
+          this.error.set('Error al cargar el jugador');
+        }
         this.loading.set(false);
         console.error('Error loading player:', err);
       }
