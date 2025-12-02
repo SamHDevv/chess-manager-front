@@ -1,0 +1,190 @@
+<div class="player-detail-container">
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando información del jugador...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error() && !loading()) {
+    <div class="error-state">
+      <p>{{ error() }}</p>
+      <button (click)="goBack()">Volver a la lista</button>
+    </div>
+  }
+
+  <!-- Player Content -->
+  @if (player() && !loading()) {
+    <!-- Header with Back Button -->
+    <div class="page-header">
+      <button class="back-button" (click)="goBack()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+          <path d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z"/>
+        </svg>
+        Volver
+      </button>
+    </div>
+
+    <!-- Player Profile Card -->
+    <div class="profile-card">
+      <div class="profile-header">
+        <div class="avatar-section">
+          <div class="player-avatar-large">
+            {{ player()!.name.charAt(0).toUpperCase() }}
+          </div>
+          <div class="player-main-info">
+            <h1>{{ player()!.name }}</h1>
+            <p class="player-id">Jugador #{{ player()!.id }}</p>
+            <span [class]="'role-badge ' + getRoleClass(player()!.role)">
+              {{ getRoleLabel(player()!.role) }}
+            </span>
+          </div>
+        </div>
+
+        @if (player()!.elo) {
+          <div class="elo-display">
+            <span class="elo-label">Rating ELO</span>
+            <span class="elo-value">{{ player()!.elo }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <!-- Statistics Grid -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon matches">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M9 11l3 3L22 4" stroke="currentColor" stroke-width="2"/>
+            <path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Partidas Jugadas</span>
+          <span class="stat-value">{{ stats().totalMatches }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon wins">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Victorias</span>
+          <span class="stat-value">{{ stats().wins }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon losses">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+            <path d="M15 9l-6 6M9 9l6 6" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Derrotas</span>
+          <span class="stat-value">{{ stats().losses }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon draws">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M12 2v20M2 12h20" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Empates</span>
+          <span class="stat-value">{{ stats().draws }}</span>
+        </div>
+      </div>
+
+      <div class="stat-card highlight">
+        <div class="stat-icon winrate">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" fill="currentColor"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Tasa de Victoria</span>
+          <span class="stat-value">{{ stats().winRate.toFixed(1) }}%</span>
+        </div>
+      </div>
+
+      <div class="stat-card">
+        <div class="stat-icon tournaments">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path d="M4 19.5A2.5 2.5 0 016.5 17H20" stroke="currentColor" stroke-width="2"/>
+            <path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z" stroke="currentColor" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="stat-content">
+          <span class="stat-label">Torneos</span>
+          <span class="stat-value">{{ stats().totalTournaments }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Recent Matches Section -->
+    <div class="section-card">
+      <h2>Partidas Recientes</h2>
+      
+      @if (recentMatches().length > 0) {
+        <div class="matches-list">
+          @for (match of recentMatches(); track match.id) {
+            <div class="match-item">
+              <div class="match-info">
+                <span class="match-round">Ronda {{ match.round }}</span>
+                <span class="match-tournament">
+                  Torneo #{{ match.tournamentId }}
+                </span>
+              </div>
+              <div [class]="'match-result ' + getMatchResultClass(match)">
+                {{ getMatchResult(match) }}
+              </div>
+            </div>
+          }
+        </div>
+
+        @if (matches().length > 5) {
+          <div class="view-all">
+            <a [routerLink]="['/matches']" [queryParams]="{ player: player()!.id }">
+              Ver todas las partidas →
+            </a>
+          </div>
+        }
+      } @else {
+        <div class="empty-state-inline">
+          <p>Este jugador aún no ha participado en ninguna partida</p>
+        </div>
+      }
+    </div>
+
+    <!-- Tournaments Section -->
+    <div class="section-card">
+      <h2>Torneos Inscritos</h2>
+      
+      @if (inscriptions().length > 0) {
+        <div class="tournaments-grid">
+          @for (inscription of inscriptions(); track inscription.id) {
+            <div class="tournament-chip">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+                <path d="M3 2a1 1 0 011-1h8a1 1 0 011 1v12l-5-3-5 3V2z"/>
+              </svg>
+              <span>Torneo #{{ inscription.tournamentId }}</span>
+            </div>
+          }
+        </div>
+      } @else {
+        <div class="empty-state-inline">
+          <p>Este jugador no está inscrito en ningún torneo</p>
+        </div>
+      }
+    </div>
+  }
+</div>

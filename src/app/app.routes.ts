@@ -7,6 +7,8 @@ import { TournamentCreateComponent } from './components/tournament-create/tourna
 import { AuthComponent } from './components/auth/auth.component';
 import { AdminPanelComponent } from './components/admin-panel/admin-panel.component';
 import { UserProfileComponent } from './components/user-profile/user-profile';
+import { PlayerListComponent } from './components/player-list/player-list.component';
+import { PlayerDetailComponent } from './components/player-detail/player-detail.component';
 import { adminGuard, authGuard } from './guards/auth.guards';
 
 export const routes: Routes = [
@@ -27,6 +29,8 @@ export const routes: Routes = [
   },
   { path: 'tournaments/:id/matches', component: TournamentMatchesComponent },
   { path: 'tournaments/:id/ranking', component: TournamentRankingComponent },
+  { path: 'players', component: PlayerListComponent },
+  { path: 'players/:id', component: PlayerDetailComponent },
   { 
     path: 'admin', 
     component: AdminPanelComponent,

@@ -1,0 +1,129 @@
+<div class="player-list-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="title-section">
+      <h1>Jugadores</h1>
+      <p class="subtitle">Explora la comunidad de jugadores</p>
+    </div>
+
+    <!-- Search and Filter Controls -->
+    <div class="controls-section">
+      <div class="search-box">
+        <input
+          type="text"
+          placeholder="Buscar por nombre..."
+          (input)="onSearchChange($event)"
+          [value]="searchQuery()"
+        />
+      </div>
+
+      <div class="sort-controls">
+        <label>Ordenar por:</label>
+        <button
+          [class.active]="sortBy() === 'name'"
+          (click)="onSortChange('name')"
+        >
+          Nombre
+        </button>
+        <button
+          [class.active]="sortBy() === 'elo'"
+          (click)="onSortChange('elo')"
+        >
+          ELO
+        </button>
+      </div>
+    </div>
+
+    <!-- Results Count -->
+    @if (searchQuery()) {
+      <p class="results-info">
+        Mostrando {{ filteredCount() }} de {{ playersCount() }} jugadores
+      </p>
+    } @else {
+      <p class="results-info">
+        Total: {{ playersCount() }} jugadores
+      </p>
+    }
+  </div>
+
+  <!-- Loading State -->
+  @if (loading()) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Cargando jugadores...</p>
+    </div>
+  }
+
+  <!-- Error State / Demo Mode -->
+  @if (error() && !loading() && players().length === 0) {
+    <div class="error-state">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" class="error-icon">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2"/>
+        <path d="M12 8v4M12 16h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      <h3>No se pudo conectar con el servidor</h3>
+      <p>{{ error() }}</p>
+      <button (click)="loadPlayers()">Reintentar</button>
+    </div>
+  }
+
+  <!-- Demo Mode Warning -->
+  @if (error() && players().length > 0) {
+    <div class="demo-warning">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+        <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <span>{{ error() }}</span>
+    </div>
+  }
+
+  <!-- Players Grid -->
+  @if (!loading() && !error()) {
+    @if (filteredPlayers().length > 0) {
+      <div class="players-grid">
+        @for (player of filteredPlayers(); track player.id) {
+          <div class="player-card">
+            <div class="player-header">
+              <div class="player-avatar">
+                {{ player.name.charAt(0).toUpperCase() }}
+              </div>
+              <div class="player-info">
+                <h3>{{ player.name }}</h3>
+                <p class="player-id">Jugador #{{ player.id }}</p>
+              </div>
+            </div>
+
+            <div class="player-stats">
+              @if (player.elo) {
+                <div class="stat-item full-width">
+                  <span class="stat-label">ELO Rating</span>
+                  <span class="stat-value">{{ player.elo }}</span>
+                </div>
+              } @else {
+                <div class="stat-item full-width">
+                  <span class="stat-label">ELO Rating</span>
+                  <span class="stat-value no-rating">Sin rating</span>
+                </div>
+              }
+            </div>
+
+            <div class="player-actions">
+              <a [routerLink]="['/players', player.id]" class="btn-view">
+                Ver Perfil
+              </a>
+            </div>
+          </div>
+        }
+      </div>
+    } @else {
+      <div class="empty-state">
+        @if (searchQuery()) {
+          <p>No se encontraron jugadores con "{{ searchQuery() }}"</p>
+          <button (click)="searchQuery.set('')">Limpiar búsqueda</button>
+        } @else {
+          <p>No hay jugadores registrados</p>
+        }
+      </div>
+    }
+  }
+</div>
