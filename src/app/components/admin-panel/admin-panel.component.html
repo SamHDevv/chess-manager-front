@@ -159,14 +159,14 @@
             <div class="tournament-header">
               <h3>{{ tournament.name }}</h3>
               <span class="tournament-status" [class]="tournament.status.toLowerCase()">
-                {{ tournament.status }}
+                {{ getStatusLabel(tournament.status) }}
               </span>
             </div>
             
             <div class="tournament-info">
               <p><strong>Fecha:</strong> {{ tournament.startDate | date:'dd/MM/yyyy' }} - {{ tournament.endDate | date:'dd/MM/yyyy' }}</p>
               <p><strong>Ubicación:</strong> {{ tournament.location }}</p>
-              <p><strong>Estado:</strong> {{ tournament.status }}</p>
+              <p><strong>Estado:</strong> {{ getStatusLabel(tournament.status) }}</p>
               @if (tournament.maxParticipants) {
                 <p><strong>Participantes:</strong> {{ tournament.maxParticipants }} máx.</p>
               }

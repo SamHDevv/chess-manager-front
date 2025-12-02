@@ -7,7 +7,7 @@ import { UserService } from '../../services/user.service';
 import { TournamentService } from '../../services/tournament.service';
 import { User } from '../../models/user.model';
 import { UserRole } from '../../models/auth.model';
-import { Tournament } from '../../models/tournament.model';
+import { Tournament, TournamentStatus } from '../../models/tournament.model';
 
 interface AdminStats {
   totalUsers: number;
@@ -395,5 +395,15 @@ export class AdminPanelComponent {
       month: 'short', 
       day: 'numeric'
     });
+  }
+
+  protected getStatusLabel(status: TournamentStatus): string {
+    const labels = {
+      [TournamentStatus.UPCOMING]: 'Próximo',
+      [TournamentStatus.ONGOING]: 'En curso',
+      [TournamentStatus.FINISHED]: 'Finalizado',
+      [TournamentStatus.CANCELLED]: 'Cancelado'
+    };
+    return labels[status] || status;
   }
 }
