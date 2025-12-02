@@ -187,6 +187,12 @@
   font-size: 0.875rem;
   line-height: 1.25;
   color: $color-text-dark;
+
+  .player-elo {
+    font-weight: 400;
+    color: $color-text-muted;
+    margin-left: 0.25rem;
+  }
 }
 
 .cell-text {

@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, ActivatedRoute } from '@angular/router';
@@ -13,7 +13,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './tournament-create.component.html',
   styleUrl: './tournament-create.component.scss'
 })
-export class TournamentCreateComponent implements OnInit {
+export class TournamentCreateComponent {
   // Servicios inyectados
   private readonly fb = inject(FormBuilder);
   private readonly tournamentService = inject(TournamentService);
@@ -51,26 +51,29 @@ export class TournamentCreateComponent implements OnInit {
     { value: TournamentStatus.ONGOING, label: 'En curso' }
   ];
 
-  ngOnInit(): void {
-    // Verificar autenticación
-    if (!this.isAuthenticated()) {
-      this.router.navigate(['/login']);
-      return;
-    }
-
-    // Verificar si está en modo edición
-    const tournamentIdParam = this.route.snapshot.paramMap.get('id');
-    if (tournamentIdParam) {
-      this.isEditMode.set(true);
-      this.tournamentId.set(+tournamentIdParam);
-    }
-
+  constructor() {
+    // Inicializar formulario
     this.initializeForm();
 
-    // Cargar datos del torneo si está en modo edición
-    if (this.isEditMode() && this.tournamentId()) {
-      this.loadTournamentData(this.tournamentId()!);
-    }
+    // Efecto para verificar autenticación y cargar datos
+    effect(() => {
+      // Verificar autenticación
+      if (!this.isAuthenticated()) {
+        this.router.navigate(['/login']);
+        return;
+      }
+
+      // Verificar si está en modo edición
+      const tournamentIdParam = this.route.snapshot.paramMap.get('id');
+      if (tournamentIdParam) {
+        const id = +tournamentIdParam;
+        this.isEditMode.set(true);
+        this.tournamentId.set(id);
+        
+        // Cargar datos del torneo
+        this.loadTournamentData(id);
+      }
+    });
   }
 
   private initializeForm(): void {

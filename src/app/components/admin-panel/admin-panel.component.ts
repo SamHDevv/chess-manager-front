@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
@@ -50,25 +50,30 @@ export class AdminPanelComponent {
     this.currentUser() ? this.rolePermissionService.isAdmin(this.currentUser()!.role as UserRole) : false
   );
 
-  ngOnInit() {
+  constructor() {
+    // Load dashboard data on initialization
     this.loadDashboardData();
+    
+    // React to tab changes
+    effect(() => {
+      const tab = this.activeTab();
+      switch (tab) {
+        case 'users':
+          this.loadUsers();
+          break;
+        case 'tournaments':
+          this.loadTournaments();
+          break;
+        case 'dashboard':
+          this.loadDashboardData();
+          break;
+      }
+    });
   }
 
   // Tab navigation
   protected setActiveTab(tab: 'dashboard' | 'users' | 'tournaments'): void {
     this.activeTab.set(tab);
-    
-    switch (tab) {
-      case 'users':
-        this.loadUsers();
-        break;
-      case 'tournaments':
-        this.loadTournaments();
-        break;
-      case 'dashboard':
-        this.loadDashboardData();
-        break;
-    }
   }
 
   // Data loading methods

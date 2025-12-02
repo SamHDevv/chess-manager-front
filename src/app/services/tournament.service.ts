@@ -40,6 +40,10 @@ export class TournamentService {
     return this.http.patch<ApiResponse<Tournament>>(`${this.baseUrl}/${id}/status`, { status });
   }
 
+  generateMatches(tournamentId: number): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${this.baseUrl}/${tournamentId}/generate-matches`, {});
+  }
+
   /**
    * Calculate tournament status based on current date
    */

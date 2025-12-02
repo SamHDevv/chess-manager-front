@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal, computed } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { PlayerService, Player } from '../../services/player.service';
@@ -24,7 +24,7 @@ interface PlayerStats {
   templateUrl: './player-detail.component.html',
   styleUrl: './player-detail.component.scss'
 })
-export class PlayerDetailComponent implements OnInit {
+export class PlayerDetailComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly playerService = inject(PlayerService);
@@ -91,14 +91,17 @@ export class PlayerDetailComponent implements OnInit {
     return this.matches().slice(0, 5);
   });
 
-  ngOnInit(): void {
-    const playerId = this.route.snapshot.paramMap.get('id');
-    if (playerId) {
-      this.loadPlayerData(+playerId);
-    } else {
-      this.error.set('ID de jugador inválido');
-      this.loading.set(false);
-    }
+  constructor() {
+    // Load player data when route params change
+    effect(() => {
+      const playerId = this.route.snapshot.paramMap.get('id');
+      if (playerId) {
+        this.loadPlayerData(+playerId);
+      } else {
+        this.error.set('ID de jugador inválido');
+        this.loading.set(false);
+      }
+    });
   }
 
   private loadPlayerData(playerId: number): void {

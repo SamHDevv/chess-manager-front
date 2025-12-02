@@ -1,4 +1,4 @@
-import { Component, input, computed, signal, inject, OnInit } from '@angular/core';
+import { Component, input, computed, signal, inject, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
@@ -14,7 +14,7 @@ import { firstValueFrom } from 'rxjs';
   templateUrl: './tournament-detail.component.html',
   styleUrl: './tournament-detail.component.scss'
 })
-export class TournamentDetailComponent implements OnInit {
+export class TournamentDetailComponent {
   // Dependencies
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
@@ -56,14 +56,28 @@ export class TournamentDetailComponent implements OnInit {
     return currentUser?.role === 'admin';
   });
 
-  // User can edit if they are organizer or admin
+  // User can edit if they are organizer or admin AND tournament is not ongoing
   protected readonly canEdit = computed(() => {
-    return this.isOrganizer() || this.isAdmin();
+    const tournament = this.tournament();
+    const isAuthorized = this.isOrganizer() || this.isAdmin();
+    const isNotOngoing = tournament?.status !== 'ongoing';
+    return isAuthorized && isNotOngoing;
   });
 
-  // User can delete if they are organizer or admin
+  // User can delete if they are organizer or admin AND tournament is not ongoing or finished
   protected readonly canDelete = computed(() => {
-    return this.isOrganizer() || this.isAdmin();
+    const tournament = this.tournament();
+    const isAuthorized = this.isOrganizer() || this.isAdmin();
+    const canBeDeleted = tournament?.status !== 'ongoing' && tournament?.status !== 'finished';
+    return isAuthorized && canBeDeleted;
+  });
+
+  // User can manage matches if they are organizer or admin AND tournament is ongoing
+  protected readonly canManageMatches = computed(() => {
+    const tournament = this.tournament();
+    const isAuthorized = this.isOrganizer() || this.isAdmin();
+    const isOngoing = tournament?.status === 'ongoing';
+    return isAuthorized && isOngoing;
   });
 
   protected readonly spotsLeft = computed(() => {
@@ -78,14 +92,16 @@ export class TournamentDetailComponent implements OnInit {
     return new Date(tournament.registrationDeadline) <= new Date();
   });
 
-  ngOnInit() {
-    // Get tournament ID from route parameters
-    const tournamentId = this.route.snapshot.paramMap.get('id');
-    if (tournamentId) {
-      this.loadTournamentDetails(+tournamentId);
-    } else {
-      this.error.set('ID de torneo no válido');
-    }
+  constructor() {
+    // Effect para cargar datos del torneo cuando cambia la ruta
+    effect(() => {
+      const tournamentId = this.route.snapshot.paramMap.get('id');
+      if (tournamentId) {
+        this.loadTournamentDetails(+tournamentId);
+      } else {
+        this.error.set('ID de torneo no válido');
+      }
+    });
   }
 
   private async loadTournamentDetails(tournamentId: number) {

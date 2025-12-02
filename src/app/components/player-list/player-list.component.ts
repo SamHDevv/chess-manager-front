@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { PlayerService, Player } from '../../services/player.service';
@@ -10,7 +10,7 @@ import { AuthService } from '../../services/auth.service';
   templateUrl: './player-list.component.html',
   styleUrl: './player-list.component.scss'
 })
-export class PlayerListComponent implements OnInit {
+export class PlayerListComponent {
   private readonly playerService = inject(PlayerService);
   protected readonly authService = inject(AuthService);
 
@@ -51,7 +51,8 @@ export class PlayerListComponent implements OnInit {
   protected readonly playersCount = computed(() => this.players().length);
   protected readonly filteredCount = computed(() => this.filteredPlayers().length);
 
-  ngOnInit(): void {
+  constructor() {
+    // Load players on initialization
     this.loadPlayers();
   }
 

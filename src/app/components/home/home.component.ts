@@ -1,4 +1,4 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
@@ -11,7 +11,7 @@ import { Tournament } from '../../models/tournament.model';
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent {
   private readonly tournamentService = inject(TournamentService);
   protected readonly authService = inject(AuthService);
 
@@ -41,7 +41,8 @@ export class HomeComponent implements OnInit {
     }
   ];
 
-  ngOnInit(): void {
+  constructor() {
+    // Load upcoming tournaments on initialization
     this.loadUpcomingTournaments();
   }
 

@@ -413,12 +413,27 @@
   background: #fff8e1;
   color: #f57c00;
   border-color: #ffecb3;
+
+  &.info-badge {
+    background: #e3f2fd;
+    color: #1976d2;
+    border-color: #bbdefb;
+  }
 }
 
 .admin-badge {
   background: #e8eaf6;
   color: #5e35b1;
   border-color: #c5cae9;
+}
+
+.btn-success {
+  @include button-primary;
+  background: $color-success;
+  
+  &:hover {
+    background: darken($color-success, 10%);
+  }
 }
 
 // Tournament Navigation Section

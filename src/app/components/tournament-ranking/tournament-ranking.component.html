@@ -45,6 +45,9 @@
                 <div class="data-cell player-col">
                   <span class="player-name" [class.deleted-user]="player.playerId === 999999">
                     {{ player.playerName }}
+                    @if (player.playerElo > 0) {
+                      <span class="player-elo">({{ player.playerElo }})</span>
+                    }
                   </span>
                 </div>
                 <div class="data-cell points-col">

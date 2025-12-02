@@ -153,7 +153,7 @@
         </div>
 
         <!-- Organizer/Admin Actions -->
-        @if (canEdit() || canDelete()) {
+        @if (canEdit() || canDelete() || canManageMatches()) {
           <div class="organizer-actions">
             <h3>Gestión del torneo</h3>
             <div class="organizer-buttons">
@@ -172,9 +172,21 @@
                   🗑️ Eliminar torneo
                 </button>
               }
+
+              @if (canManageMatches()) {
+                <button 
+                  class="btn btn-success" 
+                  (click)="onViewMatches()">
+                  ⚔️ Registrar resultados
+                </button>
+              }
             </div>
             
-            @if (isOrganizer()) {
+            @if (isOrganizer() && tournament()?.status === 'ongoing') {
+              <div class="organizer-badge info-badge">
+                ℹ️ El torneo está en progreso. Usa "Registrar resultados" para ingresar los resultados de las partidas.
+              </div>
+            } @else if (isOrganizer()) {
               <div class="organizer-badge">
                 👑 Eres el organizador de este torneo
               </div>

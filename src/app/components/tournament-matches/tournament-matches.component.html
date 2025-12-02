@@ -13,7 +13,7 @@
               <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" stroke="currentColor" stroke-width="2"/>
               <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2"/>
             </svg>
-            Organizador
+            {{ authService.isAdmin() ? 'Administrador' : 'Organizador' }}
           </div>
         }
       </div>
@@ -39,6 +39,37 @@
         </div>
       </div>
     } @else {
+      <!-- No matches - Show generate button -->
+      @if (roundsData().length === 0 && isOrganizer()) {
+        <div class="empty-state">
+          <div class="empty-content">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+              <path d="M9 2H4a2 2 0 0 0-2 2v5m0 10a2 2 0 0 0 2 2h5M22 9V4a2 2 0 0 0-2-2h-5m10 10a2 2 0 0 1-2 2h-5" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>No hay partidas disponibles</h3>
+            <p>Este torneo aún no tiene partidas programadas.</p>
+            <button class="btn-generate-matches" (click)="onGenerateMatches()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              Generar Partidas
+            </button>
+          </div>
+        </div>
+      } @else if (roundsData().length === 0) {
+        <div class="empty-state">
+          <div class="empty-content">
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none">
+              <path d="M9 2H4a2 2 0 0 0-2 2v5m0 10a2 2 0 0 0 2 2h5M22 9V4a2 2 0 0 0-2-2h-5m10 10a2 2 0 0 1-2 2h-5" 
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h3>No hay partidas disponibles</h3>
+            <p>Este torneo aún no tiene partidas programadas.</p>
+          </div>
+        </div>
+      }
+      
       <!-- Rounds Display -->
       <div class="rounds-container">
         @if (roundsData().length > 0) {

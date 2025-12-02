@@ -1,4 +1,4 @@
-import { Component, inject, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -20,7 +20,7 @@ interface UserTournament {
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss'
 })
-export class UserProfileComponent implements OnInit {
+export class UserProfileComponent {
   private readonly authService = inject(AuthService);
   private readonly fb = inject(FormBuilder);
   private readonly tournamentService = inject(TournamentService);
@@ -42,17 +42,21 @@ export class UserProfileComponent implements OnInit {
   protected readonly userTournaments = signal<UserTournament[]>([]);
   protected readonly loadingTournaments = signal<boolean>(false);
 
-  ngOnInit() {
-    this.initializeForm();
-    this.loadUserTournaments();
-  }
-
-  private initializeForm(): void {
+  constructor() {
+    // Initialize form
     const user = this.currentUser();
     this.profileForm = this.fb.group({
       firstName: [user?.firstName || '', [Validators.required, Validators.minLength(2)]],
       lastName: [user?.lastName || '', [Validators.required, Validators.minLength(2)]],
       email: [user?.email || '', [Validators.required, Validators.email]]
+    });
+
+    // Load tournaments when user changes
+    effect(() => {
+      const user = this.currentUser();
+      if (user?.userId) {
+        this.loadUserTournaments(user.userId);
+      }
     });
   }
 
@@ -68,16 +72,11 @@ export class UserProfileComponent implements OnInit {
     }
   }
 
-  private loadUserTournaments(): void {
-    const currentUser = this.currentUser();
-    if (!currentUser?.userId) {
-      return;
-    }
-
+  private loadUserTournaments(userId: number): void {
     this.loadingTournaments.set(true);
     
     // Get user's inscriptions to tournaments
-    this.inscriptionService.getInscriptionsByUserId(currentUser.userId).subscribe({
+    this.inscriptionService.getInscriptionsByUserId(userId).subscribe({
       next: (response) => {
         if (response.success && response.data) {
           const tournaments = response.data.map(inscription => ({

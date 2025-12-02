@@ -35,7 +35,7 @@ export class TournamentMatchesComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly matchService = inject(MatchService);
   private readonly tournamentService = inject(TournamentService);
-  private readonly authService = inject(AuthService);
+  protected readonly authService = inject(AuthService);
 
   // Inputs
   readonly tournamentId = input<number>();
@@ -52,8 +52,13 @@ export class TournamentMatchesComponent implements OnInit {
     const tournament = this.tournament();
     const currentUser = this.authService.currentUser();
     
-    // Local check: user must be the tournament creator
-    return tournament && currentUser && tournament.createdBy === currentUser.userId;
+    if (!tournament || !currentUser) return false;
+    
+    // Admin can always manage matches
+    if (this.authService.isAdmin()) return true;
+    
+    // Organizer can manage their tournament
+    return tournament.createdBy === currentUser.userId;
   });
 
   readonly roundsData = computed<RoundData[]>(() => {
@@ -163,9 +168,9 @@ export class TournamentMatchesComponent implements OnInit {
       round: match.round,
       table: match.id, // Use match ID as table number
       player1Name: getPlayerName(match.whitePlayer, match.whitePlayerId),
-      player1Rating: match.whitePlayer?.rating || match.whitePlayer?.eloRating,
+      player1Rating: match.whitePlayer?.elo || match.whitePlayer?.rating || match.whitePlayer?.eloRating || null,
       player2Name: getPlayerName(match.blackPlayer, match.blackPlayerId),
-      player2Rating: match.blackPlayer?.rating || match.blackPlayer?.eloRating,
+      player2Rating: match.blackPlayer?.elo || match.blackPlayer?.rating || match.blackPlayer?.eloRating || null,
       result: this.mapBackendResultToFrontend(match.result),
       status: this.mapBackendStatusToFrontend(match.result)
     };
@@ -218,6 +223,48 @@ export class TournamentMatchesComponent implements OnInit {
   }
 
   // Organizer methods
+  /**
+   * Generate matches for the tournament using Swiss pairing system
+   */
+  async onGenerateMatches(): Promise<void> {
+    const tournament = this.tournament();
+    if (!tournament) return;
+
+    if (!confirm(`¿Generar partidas para el torneo "${tournament.name}"?\n\nSe utilizará el sistema suizo para emparejar a los participantes.`)) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    this.tournamentService.generateMatches(tournament.id).subscribe({
+      next: (response) => {
+        if (response.success) {
+          alert('✅ Partidas generadas correctamente');
+          // Reload matches
+          this.loadMatchesFromBackend(tournament.id);
+        } else {
+          this.error.set(response.message || 'Error al generar partidas');
+          this.loading.set(false);
+        }
+      },
+      error: (error) => {
+        console.error('Error generating matches:', error);
+        let errorMessage = 'Error al generar partidas';
+        
+        if (error.error?.message) {
+          errorMessage = error.error.message;
+        } else if (error.status === 400) {
+          errorMessage = 'No se pueden generar partidas. Verifica que el torneo tenga suficientes participantes.';
+        }
+        
+        this.error.set(errorMessage);
+        alert('❌ ' + errorMessage);
+        this.loading.set(false);
+      }
+    });
+  }
+
   onResultChange(event: Event, match: SimpleMatch): void {
     const target = event.target as HTMLSelectElement;
     const result = target.value || null;

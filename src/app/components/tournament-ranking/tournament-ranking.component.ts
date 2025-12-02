@@ -1,13 +1,15 @@
-import { Component, inject, input, signal, computed, OnInit } from '@angular/core';
+import { Component, inject, input, signal, computed, effect } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { MatchService } from '../../services/match.service';
-import { Tournament, Match, MatchResult, DELETED_USER_ID, isDeletedUser, isUserDeleted, getUserDisplayName } from '../../models';
+import { UserService } from '../../services/user.service';
+import { Tournament, Match, MatchResult, User, DELETED_USER_ID, isDeletedUser, isUserDeleted, getUserDisplayName } from '../../models';
 
 export interface PlayerRanking {
   playerId: number;
   playerName: string;
+  playerElo: number;
   points: number;
   wins: number;
   losses: number;
@@ -21,10 +23,11 @@ export interface PlayerRanking {
   templateUrl: './tournament-ranking.component.html',
   styleUrl: './tournament-ranking.component.scss'
 })
-export class TournamentRankingComponent implements OnInit {
+export class TournamentRankingComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly tournamentService = inject(TournamentService);
   private readonly matchService = inject(MatchService);
+  private readonly userService = inject(UserService);
 
   // Inputs
   readonly tournamentId = input<number>();
@@ -32,8 +35,21 @@ export class TournamentRankingComponent implements OnInit {
   // Signals
   private readonly tournament = signal<Tournament | null>(null);
   private readonly matches = signal<Match[]>([]);
+  private readonly users = signal<Map<number, User>>(new Map());
   readonly loading = signal(true);
   readonly error = signal<string | null>(null);
+
+  // Effect to load data when tournament ID changes
+  constructor() {
+    effect(() => {
+      const tournamentIdFromRoute = this.route.snapshot.paramMap.get('id');
+      const tourId = this.tournamentId() || (tournamentIdFromRoute ? parseInt(tournamentIdFromRoute) : null);
+      
+      if (tourId) {
+        this.loadTournamentData(tourId);
+      }
+    });
+  }
 
   // Computed rankings
   readonly rankings = computed<PlayerRanking[]>(() => {
@@ -95,9 +111,16 @@ export class TournamentRankingComponent implements OnInit {
         }
       });
 
+      const usersMap = this.users();
+      const user = usersMap.get(playerId);
+      const playerElo = user?.elo || 0;
+
       return {
         playerId,
-        playerName: isDeletedUser(playerId) ? `Usuario #${playerId} (Eliminado)` : `Player ${playerId}`,
+        playerName: isDeletedUser(playerId) 
+          ? `Usuario #${playerId} (Eliminado)` 
+          : user?.name || `Player ${playerId}`,
+        playerElo,
         points,
         wins,
         losses,
@@ -115,18 +138,10 @@ export class TournamentRankingComponent implements OnInit {
     });
   });
 
-  async ngOnInit() {
+  private async loadTournamentData(tourId: number) {
     try {
       this.loading.set(true);
       this.error.set(null);
-
-      // Get tournament ID from route or input
-      const tournamentIdFromRoute = this.route.snapshot.paramMap.get('id');
-      const tourId = this.tournamentId() || (tournamentIdFromRoute ? parseInt(tournamentIdFromRoute) : null);
-      
-      if (!tourId) {
-        throw new Error('Tournament ID not found');
-      }
 
       // Load tournament and matches in parallel
       const [tournament, matches] = await Promise.all([
@@ -136,6 +151,32 @@ export class TournamentRankingComponent implements OnInit {
 
       this.tournament.set(tournament?.data || null);
       this.matches.set(matches?.data || []);
+
+      // Get unique player IDs from matches
+      const playerIds = new Set<number>();
+      (matches?.data || []).forEach(match => {
+        playerIds.add(match.whitePlayerId);
+        playerIds.add(match.blackPlayerId);
+      });
+
+      // Load all users data
+      const usersMap = new Map<number, User>();
+      await Promise.all(
+        Array.from(playerIds).map(async playerId => {
+          if (!isDeletedUser(playerId)) {
+            try {
+              const userResponse = await this.userService.getUserById(playerId).toPromise();
+              if (userResponse?.data) {
+                usersMap.set(playerId, userResponse.data);
+              }
+            } catch (error) {
+              console.error(`Error loading user ${playerId}:`, error);
+            }
+          }
+        })
+      );
+
+      this.users.set(usersMap);
     } catch (err) {
       console.error('Error loading tournament ranking:', err);
       this.error.set('Error al cargar la clasificación del torneo');
