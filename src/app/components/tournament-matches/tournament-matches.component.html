@@ -2,11 +2,10 @@
   <div class="container">
     <!-- Header -->
     <div class="page-header">
-      <div class="header-content">
-        <div class="header-text">
-          <h1>Vista de Partidas del Torneo</h1>
-          <p>Visualiza los emparejamientos y resultados de cada ronda. El sistema suizo asegura que cada jugador se enfrente a oponentes con una puntuación similar.</p>
-        </div>
+      <div class="header-top">
+        <button class="back-button" (click)="onBackToTournament()">
+          ← Volver al torneo
+        </button>
         @if (isOrganizer()) {
           <div class="organizer-badge">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -16,6 +15,17 @@
             {{ authService.isAdmin() ? 'Administrador' : 'Organizador' }}
           </div>
         }
+      </div>
+      <div class="header-content">
+        <div class="header-text">
+          <h1>Vista de Partidas del Torneo</h1>
+          <p>Visualiza los emparejamientos y resultados de cada ronda. El sistema suizo asegura que cada jugador se enfrente a oponentes con una puntuación similar.</p>
+        </div>
+        <div class="header-actions">
+          <button class="btn-view-ranking" (click)="onViewRanking()">
+            Ver clasificación
+          </button>
+        </div>
       </div>
     </div>
 
@@ -136,6 +146,38 @@
                   </div>
                 }
               </div>
+            </div>
+          }
+          
+          <!-- Generate Next Round Button - Diseño mejorado -->
+          @if (isOrganizer() && canGenerateNextRound()) {
+            <div class="next-round-section">
+              <div class="completion-badge">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                  <circle cx="12" cy="12" r="10" stroke="#10b981" stroke-width="2"/>
+                  <path d="M9 12l2 2 4-4" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>Ronda {{ getCurrentRoundNumber() }} completada</span>
+              </div>
+              
+              <button class="btn-generate-next-round" (click)="onGenerateMatches()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                </svg>
+                Generar Ronda {{ getNextRoundNumber() }}
+              </button>
+              
+              <p class="round-info">
+                Todos los resultados han sido registrados. Haz clic para generar la siguiente ronda del torneo.
+              </p>
+            </div>
+          } @else if (isOrganizer() && roundsData().length > 0 && !allResultsComplete()) {
+            <div class="pending-results-message">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#f59e0b" stroke-width="2"/>
+                <path d="M12 8v4M12 16h.01" stroke="#f59e0b" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <p>Completa todos los resultados de la Ronda {{ getCurrentRoundNumber() }} antes de generar la siguiente ronda</p>
             </div>
           }
         } @else {

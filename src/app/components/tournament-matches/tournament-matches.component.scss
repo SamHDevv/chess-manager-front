@@ -1,6 +1,7 @@
 // Importar sistema de diseño
 @use '../../../styles/variables' as *;
 @use '../../../styles/mixins' as *;
+@use 'sass:color';
 
 .tournament-matches {
   padding: 1.5rem;
@@ -18,13 +19,39 @@
   margin-bottom: 2rem;
 }
 
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: $color-blue-alt;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $color-blue-alt-dark;
+    text-decoration: underline;
+  }
+}
+
 .header-content {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 1.5rem;
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: flex-start;
+  }
 }
 
 .header-text h1 {
@@ -40,6 +67,41 @@
   margin: 0;
   max-width: 37.5rem;
   line-height: 1.5;
+}
+
+/* Header actions */
+.header-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-start;
+  margin-top: 1rem;
+
+  @media (min-width: 768px) {
+    margin-top: 0;
+  }
+}
+
+.btn-view-ranking {
+  background: linear-gradient(135deg, #137FEC, #0f5aa8);
+  color: white;
+  border: none;
+  padding: 0.875rem 2rem;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+
+  &:hover {
+    background: linear-gradient(135deg, #1068c9, #0d4d8f);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(19, 127, 236, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 /* Organizer badge */
@@ -464,5 +526,92 @@
   &::before {
     content: '🚫 ';
     margin-right: 0.25rem;
+  }
+}
+
+/* Next Round Section - Diseño mejorado */
+.next-round-section {
+  margin-top: 3rem;
+  padding: 2rem;
+  background: linear-gradient(135deg, rgba($color-primary, 0.05) 0%, rgba($color-secondary, 0.05) 100%);
+  border: 2px dashed $color-primary;
+  border-radius: $border-radius-xl;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+
+  @include mobile {
+    padding: 1.5rem 1rem;
+    gap: 1rem;
+  }
+}
+
+.completion-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1.5rem;
+  background: white;
+  border: 2px solid #10b981;
+  border-radius: $border-radius-full;
+  color: #10b981;
+  font-weight: $font-weight-semibold;
+  font-size: $font-size-lg;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  @include mobile {
+    font-size: $font-size-base;
+    padding: 0.5rem 1rem;
+  }
+}
+
+.btn-generate-next-round {
+  @include button-primary;
+  padding: 1rem 2.5rem;
+  font-size: $font-size-xl;
+  font-weight: $font-weight-bold;
+  border-radius: $border-radius-lg;
+  box-shadow: 0 8px 24px rgba($color-primary, 0.3);
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba($color-primary, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  @include mobile {
+    width: 100%;
+    justify-content: center;
+    padding: 0.875rem 1.5rem;
+    font-size: $font-size-lg;
+  }
+}
+
+.round-info {
+  color: $color-text-secondary;
+  font-size: $font-size-base;
+  max-width: 500px;
+  margin: 0;
+  line-height: 1.5;
+
+  @include mobile {
+    font-size: $font-size-sm;
   }
 }

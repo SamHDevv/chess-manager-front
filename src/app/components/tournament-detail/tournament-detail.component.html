@@ -141,19 +141,11 @@
                 </div>
               }
             }
-          } @else if (tournament()!.status === 'ongoing') {
-            <button class="btn btn-secondary btn-large" (click)="onViewMatches()">
-              Ver partidas y clasificación
-            </button>
-          } @else if (tournament()!.status === 'finished') {
-            <button class="btn btn-outline btn-large" (click)="onViewMatches()">
-              Ver resultados finales
-            </button>
           }
         </div>
 
         <!-- Organizer/Admin Actions -->
-        @if (canEdit() || canDelete() || canManageMatches()) {
+        @if (canEdit() || canDelete()) {
           <div class="organizer-actions">
             <h3>Gestión del torneo</h3>
             <div class="organizer-buttons">
@@ -172,21 +164,9 @@
                   🗑️ Eliminar torneo
                 </button>
               }
-
-              @if (canManageMatches()) {
-                <button 
-                  class="btn btn-success" 
-                  (click)="onViewMatches()">
-                  ⚔️ Registrar resultados
-                </button>
-              }
             </div>
             
-            @if (isOrganizer() && tournament()?.status === 'ongoing') {
-              <div class="organizer-badge info-badge">
-                ℹ️ El torneo está en progreso. Usa "Registrar resultados" para ingresar los resultados de las partidas.
-              </div>
-            } @else if (isOrganizer()) {
+            @if (isOrganizer()) {
               <div class="organizer-badge">
                 👑 Eres el organizador de este torneo
               </div>
@@ -206,7 +186,7 @@
               <button 
                 class="btn btn-outline" 
                 (click)="onViewMatches()">
-                ⚔️ Ver partidas
+                ⚔️ {{ canManageMatches() ? 'Ver partidas y registrar resultados' : 'Ver partidas' }}
               </button>
               <button 
                 class="btn btn-outline" 
