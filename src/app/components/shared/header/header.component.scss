@@ -1,9 +1,9 @@
+// Importar sistema de diseño (debe ir PRIMERO)
+@use '../../../../styles/variables' as *;
+@use '../../../../styles/mixins' as *;
+
 // Import Google Font Work Sans
 @import url('https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700&display=swap');
-
-// Importar sistema de diseño
-@import '../../../../styles/variables';
-@import '../../../../styles/mixins';
 
 .app-header {
   background: $color-bg-primary;

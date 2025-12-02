@@ -1,6 +1,6 @@
 // Importar sistema de diseño
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .admin-panel {
   min-height: calc(100vh - 4rem);
