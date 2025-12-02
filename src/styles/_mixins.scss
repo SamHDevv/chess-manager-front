@@ -3,7 +3,7 @@
  * Mixins reutilizables para estilos comunes
  */
 
-@import './variables';
+@use './variables' as *;
 
 // ============================================
 // MIXINS DE TIPOGRAFÍA

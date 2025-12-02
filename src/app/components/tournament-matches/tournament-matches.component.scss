@@ -1,6 +1,6 @@
 // Importar sistema de diseño
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
 
 .tournament-matches {
   padding: 1.5rem;

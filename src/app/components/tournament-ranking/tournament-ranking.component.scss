@@ -1,9 +1,9 @@
+// Importar sistema de diseño (debe ir PRIMERO)
+@use '../../../styles/variables' as *;
+@use '../../../styles/mixins' as *;
+
 // Import Inter font
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-
-// Importar sistema de diseño
-@import '../../../styles/variables';
-@import '../../../styles/mixins';
 
 .ranking-container {
   width: 100%;
