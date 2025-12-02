@@ -14,7 +14,7 @@
     align-items: center;
     margin-bottom: 2.5rem;
     padding-bottom: 1.5rem;
-    border-bottom: 1px solid #e5e5e5;
+    border-bottom: 0.0625rem solid #e5e5e5;
   }
 
   .avatar-section {
@@ -216,7 +216,7 @@
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
       background: #f9fafb;
-      border-bottom: 1px solid #e5e7eb;
+      border-bottom: 0.0625rem solid #e5e7eb;
     }
 
     .header-cell {
@@ -229,7 +229,7 @@
     .table-row {
       display: grid;
       grid-template-columns: 2fr 1fr 1fr;
-      border-bottom: 1px solid #f3f4f6;
+      border-bottom: 0.0625rem solid #f3f4f6;
 
       &:last-child {
         border-bottom: none;
@@ -306,7 +306,7 @@
       .header-cell,
       .cell {
         padding: 0.75rem 1rem;
-        border-bottom: 1px solid #f3f4f6;
+        border-bottom: 0.0625rem solid #f3f4f6;
       }
 
       .header-cell {

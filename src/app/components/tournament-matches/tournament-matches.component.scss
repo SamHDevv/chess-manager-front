@@ -1,24 +1,26 @@
 .tournament-matches {
-  padding: 24px;
+  padding: 1.5rem;
   background-color: #f8fafc;
   min-height: 100vh;
 }
 
 .container {
-  max-width: 1200px;
+  max-width: 75rem;
   margin: 0 auto;
 }
 
 /* Header styles */
 .page-header {
-  margin-bottom: 32px;
+  margin-bottom: 2rem;
 }
 
 .header-content {
   display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 24px;
+  gap: 1.5rem;
 }
 
 .header-text h1 {
@@ -32,7 +34,7 @@
   font-size: 1rem;
   color: #6b7280;
   margin: 0;
-  max-width: 600px;
+  max-width: 37.5rem;
   line-height: 1.5;
 }
 
@@ -40,13 +42,13 @@
 .organizer-badge {
   background-color: #1a5298;
   color: white;
-  padding: 8px 16px;
+  padding: 0.5rem 16px;
   border-radius: 20px;
   font-size: 0.9rem;
   font-weight: 500;
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   box-shadow: 0 2px 4px rgba(26, 82, 152, 0.3);
   white-space: nowrap;
 }
@@ -60,7 +62,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  min-height: 18.75rem;
 }
 
 .loading-content {
@@ -69,10 +71,10 @@
 
 .spinner {
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #1a5298;
+  border-top: 0.1875rem solid #1a5298;
   border-radius: 50%;
-  width: 40px;
-  height: 40px;
+  width: 2.5rem;
+  height: 2.5rem;
   animation: spin 1s linear infinite;
   margin: 0 auto 16px;
 }
@@ -91,7 +93,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  min-height: 18.75rem;
 }
 
 .error-content {
@@ -101,7 +103,7 @@
 
 .error-content h3 {
   color: #ef4444;
-  margin: 16px 0 8px;
+  margin: 1rem 0 8px;
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -116,7 +118,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  min-height: 300px;
+  min-height: 18.75rem;
 }
 
 .empty-content {
@@ -125,7 +127,7 @@
 
 .empty-content h3 {
   color: #1f2937;
-  margin: 16px 0 8px;
+  margin: 1rem 0 8px;
   font-size: 1.25rem;
   font-weight: 600;
 }
@@ -139,7 +141,7 @@
 .rounds-container {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 2rem;
 }
 
 .round-section {
@@ -151,7 +153,7 @@
 }
 
 .round-header {
-  padding: 24px 24px 16px;
+  padding: 1.5rem 24px 16px;
   background: linear-gradient(135deg, #1a5298 0%, #2563eb 100%);
   color: white;
 }
@@ -177,11 +179,11 @@
 
 .table-header {
   background-color: #f9fafb;
-  border-bottom: 2px solid #e5e7eb;
+  border-bottom: 0.125rem solid #e5e7eb;
 }
 
 .table-row {
-  border-bottom: 1px solid #f3f4f6;
+  border-bottom: 0.0625rem solid #f3f4f6;
   transition: background-color 0.15s ease;
 }
 
@@ -195,7 +197,7 @@
 
 .header-cell,
 .cell {
-  padding: 16px 20px;
+  padding: 1rem 20px;
   display: flex;
   align-items: center;
 }
@@ -224,7 +226,7 @@
 .player-info {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 0.25rem;
 }
 
 .player-name {
@@ -244,7 +246,7 @@
 }
 
 .result-select {
-  padding: 8px 12px;
+  padding: 0.5rem 12px;
   border: 1.5px solid #d1d5db;
   border-radius: 8px;
   background-color: white;
@@ -253,7 +255,7 @@
   color: #374151;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 100px;
+  width: 6.25rem;
   text-align: center;
 }
 
@@ -280,7 +282,7 @@
   color: #1f2937;
   font-size: 1rem;
   text-align: center;
-  width: 100px;
+  width: 6.25rem;
 }
 
 /* Estado column */
@@ -290,7 +292,7 @@
 
 /* Status badges */
 .status-badge {
-  padding: 6px 12px;
+  padding: 0.375rem 12px;
   border-radius: 20px;
   font-size: 0.75rem;
   font-weight: 600;
@@ -299,7 +301,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 80px;
+  min-width: 5rem;
 }
 
 .status-pending {
@@ -322,13 +324,13 @@
   .header-content {
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
+    gap: 1rem;
   }
 }
 
 @media (max-width: 768px) {
   .tournament-matches {
-    padding: 16px;
+    padding: 1rem;
   }
 
   .header-text h1 {
@@ -360,7 +362,7 @@
 
   .header-cell,
   .cell {
-    padding: 12px 16px;
+    padding: 0.75rem 16px;
     font-size: 0.875rem;
   }
 
@@ -370,7 +372,7 @@
   }
 
   .round-header {
-    padding: 20px 20px 12px;
+    padding: 1.25rem 20px 12px;
   }
 
   .round-title {
@@ -378,15 +380,15 @@
   }
 
   .result-select {
-    width: 80px;
-    padding: 6px 8px;
+    width: 5rem;
+    padding: 0.375rem 8px;
     font-size: 0.75rem;
   }
 
   .status-badge {
     font-size: 0.7rem;
-    padding: 4px 8px;
-    min-width: 70px;
+    padding: 0.25rem 8px;
+    min-width: 4.375rem;
   }
 }
 
@@ -402,22 +404,22 @@
 
   .header-cell,
   .cell {
-    padding: 10px 12px;
+    padding: 0.625rem 12px;
   }
 
   .result-select {
-    width: 70px;
+    width: 4.375rem;
     font-size: 0.7rem;
   }
 
   .status-badge {
     font-size: 0.65rem;
-    padding: 3px 6px;
-    min-width: 60px;
+    padding: 0.1875rem 6px;
+    min-width: 3.75rem;
   }
 
   .round-header {
-    padding: 16px 16px 10px;
+    padding: 1rem 16px 10px;
   }
 
   .round-title {

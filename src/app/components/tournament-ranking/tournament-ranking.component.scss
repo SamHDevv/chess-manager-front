@@ -138,7 +138,7 @@
 
 .table-body {
   background: #FFFFFF;
-  border-top: 1px solid #E5E7EB;
+  border-top: 0.0625rem solid #E5E7EB;
   width: 100%;
   max-height: 60vh;
   overflow-y: auto;
@@ -152,7 +152,7 @@
     minmax(6rem, 8rem)    /* Victorias */
     minmax(6rem, 8rem);   /* Derrotas */
   align-items: center;
-  border-top: 1px solid #E5E7EB;
+  border-top: 0.0625rem solid #E5E7EB;
   
   &:first-child {
     border-top: none;
