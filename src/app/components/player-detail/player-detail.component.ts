@@ -192,4 +192,13 @@ export class PlayerDetailComponent {
 
     return won ? 'result-win' : 'result-loss';
   }
+
+  /**
+   * Get tournament name without status suffix
+   */
+  protected getTournamentName(tournament: any): string {
+    if (!tournament?.name) return '';
+    // Remove status suffix like " - En Curso", " - Finalizado", etc.
+    return tournament.name.replace(/\s*-\s*(En Curso|Finalizado|Próximamente|Cancelado)\s*$/i, '').trim();
+  }
 }

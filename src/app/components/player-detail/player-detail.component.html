@@ -36,7 +36,6 @@
           </div>
           <div class="player-main-info">
             <h1>{{ player()!.name }}</h1>
-            <p class="player-id">Jugador #{{ player()!.id }}</p>
             <span [class]="'role-badge ' + getRoleClass(player()!.role)">
               {{ getRoleLabel(player()!.role) }}
             </span>
@@ -141,7 +140,7 @@
               <div class="match-info">
                 <span class="match-round">Ronda {{ match.round }}</span>
                 <span class="match-tournament">
-                  Torneo #{{ match.tournamentId }}
+                  {{ match.tournament ? getTournamentName(match.tournament) : 'Torneo #' + match.tournamentId }}
                 </span>
               </div>
               <div [class]="'match-result ' + getMatchResultClass(match)">
@@ -176,7 +175,7 @@
               <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
                 <path d="M3 2a1 1 0 011-1h8a1 1 0 011 1v12l-5-3-5 3V2z"/>
               </svg>
-              <span>Torneo #{{ inscription.tournamentId }}</span>
+              <span>{{ inscription.tournament ? getTournamentName(inscription.tournament) : 'Torneo #' + inscription.tournamentId }}</span>
             </div>
           }
         </div>
