@@ -11,7 +11,7 @@
         />
       </div>
 
-      <!-- Navigation -->
+      <!-- Navigation (Desktop) -->
       <nav class="nav">
         <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">Inicio</a>
         <a routerLink="/tournaments" routerLinkActive="active" class="nav-link">Torneos</a>
@@ -21,7 +21,14 @@
 
     <!-- Right Section: User Actions -->
     <div class="header-right">
-      <!-- User Actions -->
+      <!-- Hamburger Menu Button (Mobile) -->
+      <button class="hamburger-btn" (click)="toggleMobileMenu()" aria-label="Menu">
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+        <span class="hamburger-line"></span>
+      </button>
+
+      <!-- User Actions (Desktop) -->
       <div class="user-actions">
         @if (authService.isAuthenticated()) {
           <!-- Authenticated User -->
@@ -74,5 +81,94 @@
         }
       </div>
     </div>
+  </div>
+
+  <!-- Mobile Menu Overlay -->
+  @if (showMobileMenu()) {
+    <div class="mobile-overlay" (click)="closeMobileMenu()"></div>
+  }
+
+  <!-- Mobile Menu Sidebar -->
+  <div class="mobile-menu" [class.open]="showMobileMenu()">
+    <div class="mobile-menu-header">
+      <img 
+        src="assets/images/logo-chessmanager-completo.svg" 
+        alt="Chess Manager" 
+        class="mobile-logo"
+      />
+      <button class="close-btn" (click)="closeMobileMenu()" aria-label="Cerrar menú">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <path d="M18 6L6 18M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+
+    <nav class="mobile-nav">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Inicio
+      </a>
+      <a routerLink="/tournaments" routerLinkActive="active" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Torneos
+      </a>
+      <a routerLink="/players" routerLinkActive="active" class="mobile-nav-link" (click)="closeMobileMenu()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+          <circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+          <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Jugadores
+      </a>
+    </nav>
+
+    @if (authService.isAuthenticated()) {
+      <div class="mobile-user-section">
+        <div class="mobile-user-info">
+          <div class="user-avatar">
+            <span class="avatar-initials">{{ getUserInitials() }}</span>
+          </div>
+          <div class="user-details">
+            <p class="user-name">{{ authService.currentUser()?.firstName || 'Usuario' }}</p>
+            <p class="user-email">{{ authService.currentUser()?.email }}</p>
+          </div>
+        </div>
+        <div class="mobile-user-actions">
+          <button class="mobile-action-btn" (click)="navigateToProfile(); closeMobileMenu()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2"/>
+              <circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Mi Perfil
+          </button>
+          @if (isAdmin()) {
+            <button class="mobile-action-btn admin-btn" (click)="navigateToAdminPanel(); closeMobileMenu()">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z" stroke="currentColor" stroke-width="2"/>
+                <path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2"/>
+              </svg>
+              Panel de Admin
+            </button>
+          }
+          <button class="mobile-action-btn logout-btn" (click)="logout(); closeMobileMenu()">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1-2-2h4" stroke="currentColor" stroke-width="2"/>
+              <polyline points="16,17 21,12 16,7" stroke="currentColor" stroke-width="2"/>
+              <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" stroke-width="2"/>
+            </svg>
+            Cerrar Sesión
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="mobile-auth-actions">
+        <a routerLink="/login" class="mobile-auth-btn login-btn" (click)="closeMobileMenu()">Iniciar Sesión</a>
+        <a routerLink="/register" class="mobile-auth-btn register-btn" (click)="closeMobileMenu()">Registro</a>
+      </div>
+    }
   </div>
 </header>

@@ -22,6 +22,7 @@ export class HeaderComponent {
   
   // Component state
   protected readonly showUserMenu = signal<boolean>(false);
+  protected readonly showMobileMenu = signal<boolean>(false);
   
   // Computed properties
   protected readonly isAdmin = computed(() => {
@@ -31,6 +32,14 @@ export class HeaderComponent {
 
   protected toggleUserMenu(): void {
     this.showUserMenu.set(!this.showUserMenu());
+  }
+
+  protected toggleMobileMenu(): void {
+    this.showMobileMenu.set(!this.showMobileMenu());
+  }
+
+  protected closeMobileMenu(): void {
+    this.showMobileMenu.set(false);
   }
 
   protected getUserInitials(): string {
