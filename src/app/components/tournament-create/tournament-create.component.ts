@@ -45,12 +45,6 @@ export class TournamentCreateComponent {
     this.isEditMode() ? 'Modifica los detalles de tu torneo' : 'Organiza tu propio torneo de ajedrez'
   );
 
-  // Opciones para selects
-  protected readonly tournamentStatuses = [
-    { value: TournamentStatus.UPCOMING, label: 'Próximo' },
-    { value: TournamentStatus.ONGOING, label: 'En curso' }
-  ];
-
   constructor() {
     // Inicializar formulario
     this.initializeForm();
@@ -103,8 +97,7 @@ export class TournamentCreateComponent {
         Validators.required,
         Validators.min(4),
         Validators.max(128)
-      ]],
-      status: [TournamentStatus.UPCOMING, [Validators.required]]
+      ]]
     }, {
       validators: this.dateValidator
     });
@@ -148,8 +141,7 @@ export class TournamentCreateComponent {
             ? this.formatDateForInput(new Date(tournament.registrationDeadline))
             : '',
           location: tournament.location,
-          maxParticipants: tournament.maxParticipants,
-          status: tournament.status
+          maxParticipants: tournament.maxParticipants
         });
       } else {
         this.error.set('No se pudo cargar el torneo');
@@ -222,15 +214,23 @@ export class TournamentCreateComponent {
 
     const formValue = this.tournamentForm.value;
     
+    // Ajustar fechas para que terminen a las 23:59:59
+    // Crear las fechas en hora local para evitar problemas de zona horaria
+    const endDateParts = formValue.endDate.split('-');
+    const endDateTime = `${formValue.endDate}T23:59:59`;
+    
+    const regDeadlineParts = formValue.registrationDeadline.split('-');
+    const registrationDeadlineTime = `${formValue.registrationDeadline}T23:59:59`;
+    
     const tournamentData: CreateTournamentRequest = {
       name: formValue.name.trim(),
       description: formValue.description?.trim() || '',
-      startDate: formValue.startDate,
-      endDate: formValue.endDate,
-      registrationDeadline: formValue.registrationDeadline,
+      startDate: `${formValue.startDate}T00:00:00`,
+      endDate: endDateTime,
+      registrationDeadline: registrationDeadlineTime,
       location: formValue.location.trim(),
       maxParticipants: formValue.maxParticipants,
-      status: formValue.status
+      status: TournamentStatus.UPCOMING // Siempre crear como "Próximo"
     };
 
     const operation$ = this.isEditMode() && this.tournamentId()

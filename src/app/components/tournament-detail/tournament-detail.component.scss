@@ -363,6 +363,50 @@
   }
 }
 
+.state-control-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+
+  .btn {
+    flex: 1;
+    min-width: 10rem;
+    padding: 0.875rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    border: none;
+    transition: all 0.3s ease;
+    
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
+    &.btn-start {
+      background: linear-gradient(135deg, #4caf50, #388e3c);
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #66bb6a, #4caf50);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+      }
+    }
+    
+    &.btn-finish {
+      background: linear-gradient(135deg, #ff9800, #f57c00);
+      color: white;
+      
+      &:hover:not(:disabled) {
+        background: linear-gradient(135deg, #ffa726, #ff9800);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(255, 152, 0, 0.4);
+      }
+    }
+  }
+}
+
 .organizer-buttons {
   display: flex;
   gap: 0.75rem;

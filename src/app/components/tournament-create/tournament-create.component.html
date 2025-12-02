@@ -241,22 +241,6 @@
                 </div>
               }
             </div>
-
-            <!-- Status -->
-            <div class="form-group">
-              <label for="status" class="form-label">
-                Estado Inicial *
-              </label>
-              <select
-                id="status"
-                formControlName="status"
-                class="form-control"
-              >
-                @for (status of tournamentStatuses; track status.value) {
-                  <option [value]="status.value">{{ status.label }}</option>
-                }
-              </select>
-            </div>
           </div>
         </div>
 

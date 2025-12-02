@@ -45,6 +45,20 @@ export class TournamentService {
   }
 
   /**
+   * Start tournament manually (admin/organizer only)
+   */
+  startTournament(id: number): Observable<ApiResponse<Tournament>> {
+    return this.http.post<ApiResponse<Tournament>>(`${this.baseUrl}/${id}/start`, {});
+  }
+
+  /**
+   * Finish tournament manually (admin/organizer only)
+   */
+  finishTournament(id: number): Observable<ApiResponse<Tournament>> {
+    return this.http.post<ApiResponse<Tournament>>(`${this.baseUrl}/${id}/finish`, {});
+  }
+
+  /**
    * Calculate tournament status based on current date
    */
   calculateTournamentStatus(tournament: Tournament): TournamentStatus {

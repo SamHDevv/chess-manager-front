@@ -145,9 +145,34 @@
         </div>
 
         <!-- Organizer/Admin Actions -->
-        @if (canEdit() || canDelete()) {
+        @if (canEdit() || canDelete() || canStartTournament() || canFinishTournament()) {
           <div class="organizer-actions">
             <h3>Gestión del torneo</h3>
+            
+            <!-- Tournament State Control Buttons -->
+            @if (canStartTournament() || canFinishTournament()) {
+              <div class="state-control-buttons">
+                @if (canStartTournament()) {
+                  <button 
+                    class="btn btn-start" 
+                    (click)="startTournament()"
+                    [disabled]="loading()">
+                    🏁 Iniciar torneo ahora
+                  </button>
+                }
+                
+                @if (canFinishTournament()) {
+                  <button 
+                    class="btn btn-finish" 
+                    (click)="finishTournament()"
+                    [disabled]="loading()">
+                    🏆 Finalizar torneo ahora
+                  </button>
+                }
+              </div>
+            }
+            
+            <!-- Edit/Delete Buttons -->
             <div class="organizer-buttons">
               @if (canEdit()) {
                 <button 

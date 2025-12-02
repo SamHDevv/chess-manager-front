@@ -80,6 +80,23 @@ export class TournamentDetailComponent {
     return isAuthorized && isOngoing;
   });
 
+  // Can start tournament: organizer/admin, status=upcoming, has >=2 participants
+  protected readonly canStartTournament = computed(() => {
+    const tournament = this.tournament();
+    const isAuthorized = this.isOrganizer() || this.isAdmin();
+    const isUpcoming = tournament?.status === 'upcoming';
+    const hasEnoughParticipants = this.participants().length >= 2;
+    return isAuthorized && isUpcoming && hasEnoughParticipants;
+  });
+
+  // Can finish tournament: organizer/admin, status=ongoing
+  protected readonly canFinishTournament = computed(() => {
+    const tournament = this.tournament();
+    const isAuthorized = this.isOrganizer() || this.isAdmin();
+    const isOngoing = tournament?.status === 'ongoing';
+    return isAuthorized && isOngoing;
+  });
+
   protected readonly spotsLeft = computed(() => {
     const tournament = this.tournament();
     if (!tournament || !tournament.maxParticipants) return null;
@@ -345,6 +362,63 @@ export class TournamentDetailComponent {
         error?.message || 
         'Error al conectar con el servidor'
       );
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  // Tournament state control methods
+  protected async startTournament(): Promise<void> {
+    const tournament = this.tournament();
+    if (!tournament || !this.canStartTournament()) return;
+
+    if (!confirm('¿Estás seguro de que quieres iniciar este torneo ahora? Esta acción generará las partidas automáticamente.')) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.tournamentService.startTournament(tournament.id)
+      );
+
+      if (response.success && response.data) {
+        this.tournament.set(response.data);
+        alert('¡Torneo iniciado exitosamente! Las partidas han sido generadas.');
+      }
+    } catch (error: any) {
+      console.error('Error starting tournament:', error);
+      this.error.set(error.error?.message || 'Error al iniciar el torneo');
+    } finally {
+      this.loading.set(false);
+    }
+  }
+
+  protected async finishTournament(): Promise<void> {
+    const tournament = this.tournament();
+    if (!tournament || !this.canFinishTournament()) return;
+
+    if (!confirm('¿Estás seguro de que quieres finalizar este torneo ahora? No se podrán registrar más resultados.')) {
+      return;
+    }
+
+    this.loading.set(true);
+    this.error.set(null);
+
+    try {
+      const response = await firstValueFrom(
+        this.tournamentService.finishTournament(tournament.id)
+      );
+
+      if (response.success && response.data) {
+        this.tournament.set(response.data);
+        alert('¡Torneo finalizado exitosamente!');
+      }
+    } catch (error: any) {
+      console.error('Error finishing tournament:', error);
+      this.error.set(error.error?.message || 'Error al finalizar el torneo');
     } finally {
       this.loading.set(false);
     }
