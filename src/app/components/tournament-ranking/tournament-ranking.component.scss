@@ -41,6 +41,23 @@
   margin-bottom: 2rem;
 }
 
+.back-button {
+  background: none;
+  border: none;
+  color: $color-blue-alt;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.5rem 0;
+  margin-bottom: 1rem;
+  transition: color 0.3s ease;
+  align-self: flex-start;
+
+  &:hover {
+    color: $color-blue-alt-dark;
+    text-decoration: underline;
+  }
+}
+
 .page-title {
   font-family: 'Inter', sans-serif;
   font-weight: 700;

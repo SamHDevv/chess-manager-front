@@ -1,7 +1,7 @@
 import { Component, inject, input, signal, computed, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { MatchService } from '../../services/match.service';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
@@ -33,6 +33,7 @@ export interface RoundData {
 })
 export class TournamentMatchesComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly matchService = inject(MatchService);
   private readonly tournamentService = inject(TournamentService);
   protected readonly authService = inject(AuthService);
@@ -263,6 +264,67 @@ export class TournamentMatchesComponent implements OnInit {
         this.loading.set(false);
       }
     });
+  }
+
+  /**
+   * Navigate to tournament ranking
+   */
+  onViewRanking(): void {
+    const tournament = this.tournament();
+    if (!tournament) return;
+    
+    this.router.navigate(['/tournaments', tournament.id, 'ranking']);
+  }
+
+  /**
+   * Navigate back to tournament detail
+   */
+  onBackToTournament(): void {
+    const tournament = this.tournament();
+    if (!tournament) return;
+    
+    this.router.navigate(['/tournaments', tournament.id]);
+  }
+
+  /**
+   * Check if all results in the current (last) round are complete
+   */
+  protected allResultsComplete(): boolean {
+    const rounds = this.roundsData();
+    if (rounds.length === 0) return false;
+    
+    const lastRound = rounds[rounds.length - 1];
+    return lastRound.matches.every(match => match.result !== null && match.result !== undefined);
+  }
+
+  /**
+   * Check if we can generate the next round
+   * - All results from current round must be complete
+   * - Tournament must be ongoing
+   */
+  protected canGenerateNextRound(): boolean {
+    const tournament = this.tournament();
+    if (!tournament) return false;
+    
+    // Only allow generating rounds for ongoing tournaments
+    if (tournament.status !== 'ongoing') return false;
+    
+    return this.allResultsComplete();
+  }
+
+  /**
+   * Get the current (last) round number
+   */
+  protected getCurrentRoundNumber(): number {
+    const rounds = this.roundsData();
+    return rounds.length > 0 ? rounds[rounds.length - 1].roundNumber : 0;
+  }
+
+  /**
+   * Get the next round number to be generated
+   */
+  protected getNextRoundNumber(): number {
+    return this.getCurrentRoundNumber() + 1;
   }
 
   onResultChange(event: Event, match: SimpleMatch): void {
