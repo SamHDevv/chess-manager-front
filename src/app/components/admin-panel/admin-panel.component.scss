@@ -437,24 +437,30 @@
 }
 
 .tournament-status {
-  padding: 0.25rem 0.75rem;
-  border-radius: 1rem;
+  padding: 0.375rem 0.875rem;
+  border-radius: 20px;
   font-size: 0.75rem;
-  font-weight: 500;
+  font-weight: 600;
+  text-transform: uppercase;
   
-  &.planificado {
-    background: #fef3c7;
-    color: $color-text-amber-800;
+  &[data-status="upcoming"] {
+    background: $color-success-bg;
+    color: $color-success;
   }
   
-  &.en-curso, &.en_curso {
-    background: $color-success-emerald-bg;
-    color: $color-text-emerald-900;
+  &[data-status="ongoing"] {
+    background: $color-warning-light;
+    color: $color-warning-text;
   }
   
-  &.finalizado {
-    background: $color-border-light;
-    color: $color-text-tertiary;
+  &[data-status="finished"] {
+    background: $color-error-bg;
+    color: $color-error-text;
+  }
+
+  &[data-status="cancelled"] {
+    background: $color-info-light;
+    color: $color-info-text;
   }
 }
 

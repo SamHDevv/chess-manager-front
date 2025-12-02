@@ -158,7 +158,7 @@
           <div class="tournament-card">
             <div class="tournament-header">
               <h3>{{ tournament.name }}</h3>
-              <span class="tournament-status" [class]="tournament.status.toLowerCase()">
+              <span class="tournament-status" [attr.data-status]="tournament.status">
                 {{ getStatusLabel(tournament.status) }}
               </span>
             </div>

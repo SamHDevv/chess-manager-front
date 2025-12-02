@@ -306,10 +306,32 @@
       }
 
       .tournament-status {
-        @include badge-info;
+        padding: 0.375rem 0.875rem;
+        border-radius: 20px;
         font-size: $font-size-xs;
+        font-weight: $font-weight-semibold;
         text-transform: uppercase;
         flex-shrink: 0;
+
+        &[data-status="upcoming"] {
+          background: $color-success-bg;
+          color: $color-success;
+        }
+
+        &[data-status="ongoing"] {
+          background: $color-warning-light;
+          color: $color-warning-text;
+        }
+
+        &[data-status="finished"] {
+          background: $color-error-bg;
+          color: $color-error-text;
+        }
+
+        &[data-status="cancelled"] {
+          background: $color-info-light;
+          color: $color-info-text;
+        }
       }
     }
 

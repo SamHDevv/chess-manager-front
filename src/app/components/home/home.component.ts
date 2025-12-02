@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { Tournament } from '../../models/tournament.model';
+import { Tournament, TournamentStatus } from '../../models/tournament.model';
 
 @Component({
   selector: 'app-home',
@@ -71,5 +71,15 @@ export class HomeComponent {
       matches: 'M9 11l3 3L22 4M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11'
     };
     return icons[icon] || icons['tournament'];
+  }
+
+  protected getStatusLabel(status: TournamentStatus): string {
+    const labels = {
+      [TournamentStatus.UPCOMING]: 'PRÓXIMO',
+      [TournamentStatus.ONGOING]: 'EN CURSO',
+      [TournamentStatus.FINISHED]: 'FINALIZADO',
+      [TournamentStatus.CANCELLED]: 'CANCELADO'
+    };
+    return labels[status] || status;
   }
 }

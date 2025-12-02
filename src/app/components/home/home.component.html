@@ -73,7 +73,9 @@
           <div class="tournament-card">
             <div class="tournament-header">
               <h3>{{ tournament.name }}</h3>
-              <span class="tournament-status">{{ tournament.status }}</span>
+              <span class="tournament-status" [attr.data-status]="tournament.status">
+                {{ getStatusLabel(tournament.status) }}
+              </span>
             </div>
             <div class="tournament-info">
               <div class="info-item">
