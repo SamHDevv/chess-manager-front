@@ -40,39 +40,22 @@
 .logo-section {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-}
-
-.logo-icon {
-  width: 2rem; 
-  height: 2rem; 
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  
-  @include mobile {
-    width: 1.75rem;
-    height: 1.75rem;
-  }
-}
-
-.app-title {
-  margin: 0;
-  font-family: $font-family-work-sans;
-  font-weight: 700;
-  font-size: 1.25rem;
-  line-height: 1.4;
-  color: $color-text-dark;
-  text-decoration: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.2s ease;
 
   &:hover {
-    color: $color-primary;
+    opacity: 0.85;
+    transform: translateY(-1px);
   }
+}
+
+.logo-complete {
+  height: 2.5rem;
+  width: auto;
+  object-fit: contain;
   
   @include mobile {
-    font-size: 1.125rem;
+    height: 2rem;
   }
 }
 

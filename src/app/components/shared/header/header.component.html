@@ -3,14 +3,12 @@
     <!-- Left Section: Logo + Navigation -->
     <div class="header-left">
       <!-- Logo Section -->
-      <div class="logo-section">
-        <div class="logo-icon">
-          <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
-            <circle cx="16" cy="16" r="13.33" fill="#137FEC"/>
-            <path d="M12 10h8l-2 4h-4l-2-4zM10 16h12l-1 6h-10l-1-6z" fill="white"/>
-          </svg>
-        </div>
-        <h1 class="app-title" routerLink="/">{{ title() }}</h1>
+      <div class="logo-section" routerLink="/">
+        <img 
+          src="assets/images/logo-chessmanager-completo.svg" 
+          alt="Chess Manager" 
+          class="logo-complete"
+        />
       </div>
 
       <!-- Navigation -->

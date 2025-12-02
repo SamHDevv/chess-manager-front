@@ -100,10 +100,14 @@
       display: none;
     }
 
-    .chess-illustration {
+    img {
       width: 100%;
-      max-width: 400px;
+      max-width: 500px;
       height: auto;
+      
+      @include tablet {
+        max-width: 400px;
+      }
     }
   }
 }
