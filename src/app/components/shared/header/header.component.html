@@ -33,13 +33,13 @@
         @if (authService.isAuthenticated()) {
           <!-- Authenticated User -->
           <!-- User Menu -->
-          <div class="user-menu" [class.open]="showUserMenu()" (click)="toggleUserMenu()">
-            <div class="user-avatar">
+          <div class="user-menu" [class.open]="showUserMenu()">
+            <div class="user-avatar" (click)="toggleUserMenu()">
               <span class="avatar-initials">{{ getUserInitials() }}</span>
             </div>
             
             @if (showUserMenu()) {
-              <div class="user-dropdown">
+              <div class="user-dropdown" (click)="$event.stopPropagation()">
                 <div class="user-info">
                   <p class="user-name">{{ authService.currentUser()?.firstName || 'Usuario' }}</p>
                   <p class="user-email">{{ authService.currentUser()?.email }}</p>

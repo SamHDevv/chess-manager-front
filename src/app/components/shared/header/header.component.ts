@@ -1,4 +1,4 @@
-import { Component, input, inject, signal, computed } from '@angular/core';
+import { Component, input, inject, signal, computed, HostListener, ElementRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink, RouterLinkActive, Router } from '@angular/router';
 import { AuthService } from '../../../services/auth.service';
@@ -16,6 +16,7 @@ export class HeaderComponent {
   protected readonly authService = inject(AuthService);
   protected readonly rolePermissionService = inject(RolePermissionService);
   private readonly router = inject(Router);
+  private readonly elementRef = inject(ElementRef);
 
   // Props usando signals
   title = input<string>('Chess Manager');
@@ -29,6 +30,14 @@ export class HeaderComponent {
     const user = this.authService.currentUser();
     return user ? this.rolePermissionService.isAdmin(user.role as UserRole) : false;
   });
+
+  @HostListener('document:click', ['$event'])
+  onDocumentClick(event: MouseEvent): void {
+    const clickedInside = this.elementRef.nativeElement.querySelector('.user-menu')?.contains(event.target);
+    if (!clickedInside && this.showUserMenu()) {
+      this.showUserMenu.set(false);
+    }
+  }
 
   protected toggleUserMenu(): void {
     this.showUserMenu.set(!this.showUserMenu());
