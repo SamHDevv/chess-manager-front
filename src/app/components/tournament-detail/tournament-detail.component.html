@@ -71,6 +71,13 @@
                 }
               </div>
 
+              <div class="detail-row">
+                <div class="detail-item">
+                  <span class="label">🏆 Formato:</span>
+                  <span class="value">{{ getTournamentFormatLabel(tournament()!.tournamentFormat) }}</span>
+                </div>
+              </div>
+
               @if (tournament()!.registrationDeadline) {
                 <div class="detail-row">
                   <div class="detail-item">

@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { CreateTournamentRequest, TournamentStatus, Tournament } from '../../models/tournament.model';
+import { CreateTournamentRequest, TournamentStatus, Tournament, TournamentFormat, calculateEstimatedRounds } from '../../models/tournament.model';
 import { firstValueFrom } from 'rxjs';
 
 @Component({
@@ -44,6 +44,16 @@ export class TournamentCreateComponent {
   protected readonly pageSubtitle = computed(() => 
     this.isEditMode() ? 'Modifica los detalles de tu torneo' : 'Organiza tu propio torneo de ajedrez'
   );
+
+  // Formatos de torneo disponibles
+  protected readonly tournamentFormats = [
+    { value: TournamentFormat.SWISS, label: 'Sistema Suizo', description: 'Jugadores enfrentan oponentes con puntuación similar' },
+    { value: TournamentFormat.ROUND_ROBIN, label: 'Todos contra todos', description: 'Cada jugador enfrenta a todos los demás' },
+    { value: TournamentFormat.ELIMINATION, label: 'Eliminación directa', description: 'Los perdedores son eliminados del torneo' }
+  ];
+
+  // Signal para rondas estimadas que se actualiza manualmente
+  protected readonly estimatedRounds = signal<number | null>(null);
 
   constructor() {
     // Inicializar formulario
@@ -97,10 +107,38 @@ export class TournamentCreateComponent {
         Validators.required,
         Validators.min(4),
         Validators.max(128)
-      ]]
+      ]],
+      tournamentFormat: [TournamentFormat.SWISS, [Validators.required]]
     }, {
       validators: this.dateValidator
     });
+
+    // Calcular rondas iniciales
+    this.updateEstimatedRounds();
+
+    // Suscribirse a cambios en los campos relevantes
+    this.maxParticipantsControl?.valueChanges.subscribe(() => {
+      this.updateEstimatedRounds();
+    });
+
+    this.tournamentFormatControl?.valueChanges.subscribe(() => {
+      this.updateEstimatedRounds();
+    });
+  }
+
+  // Método para actualizar las rondas estimadas
+  private updateEstimatedRounds(): void {
+    const maxParticipants = this.maxParticipantsControl?.value;
+    const format = this.tournamentFormatControl?.value || TournamentFormat.SWISS;
+    
+    if (!maxParticipants || maxParticipants < 2) {
+      this.estimatedRounds.set(null);
+      return;
+    }
+    
+    const rounds = calculateEstimatedRounds(format, maxParticipants);
+    this.estimatedRounds.set(rounds);
+    console.log('🔄 Rondas actualizadas:', { format, maxParticipants, rounds });
   }
 
   private formatDateForInput(date: Date): string {
@@ -141,7 +179,8 @@ export class TournamentCreateComponent {
             ? this.formatDateForInput(new Date(tournament.registrationDeadline))
             : '',
           location: tournament.location,
-          maxParticipants: tournament.maxParticipants
+          maxParticipants: tournament.maxParticipants,
+          tournamentFormat: tournament.tournamentFormat || TournamentFormat.SWISS
         });
       } else {
         this.error.set('No se pudo cargar el torneo');
@@ -185,6 +224,7 @@ export class TournamentCreateComponent {
   get registrationDeadlineControl() { return this.tournamentForm.get('registrationDeadline'); }
   get locationControl() { return this.tournamentForm.get('location'); }
   get maxParticipantsControl() { return this.tournamentForm.get('maxParticipants'); }
+  get tournamentFormatControl() { return this.tournamentForm.get('tournamentFormat'); }
 
   // Métodos para validación de errores específicos
   protected hasDateError(): boolean {
@@ -230,8 +270,11 @@ export class TournamentCreateComponent {
       registrationDeadline: registrationDeadlineTime,
       location: formValue.location.trim(),
       maxParticipants: formValue.maxParticipants,
+      tournamentFormat: formValue.tournamentFormat || TournamentFormat.SWISS,
       status: TournamentStatus.UPCOMING // Siempre crear como "Próximo"
     };
+
+    console.log('📤 Enviando datos del torneo:', tournamentData);
 
     const operation$ = this.isEditMode() && this.tournamentId()
       ? this.tournamentService.updateTournament(this.tournamentId()!, tournamentData)

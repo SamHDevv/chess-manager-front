@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { InscriptionService } from '../../services/inscription.service';
 import { AuthService } from '../../services/auth.service';
-import { Tournament, TournamentStatus } from '../../models/tournament.model';
+import { Tournament, TournamentStatus, TournamentFormat } from '../../models/tournament.model';
 import { User } from '../../models/user.model';
 import { firstValueFrom } from 'rxjs';
 
@@ -434,6 +434,20 @@ export class TournamentDetailComponent {
       hour: '2-digit',
       minute: '2-digit'
     });
+  }
+
+  getTournamentFormatLabel(format?: TournamentFormat): string {
+    if (!format) return 'Suizo';
+    switch (format) {
+      case TournamentFormat.SWISS:
+        return 'Suizo';
+      case TournamentFormat.ROUND_ROBIN:
+        return 'Todos contra todos';
+      case TournamentFormat.ELIMINATION:
+        return 'Eliminación directa';
+      default:
+        return 'Suizo';
+    }
   }
 
   getStatusLabel(status: TournamentStatus): string {

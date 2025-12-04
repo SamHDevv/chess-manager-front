@@ -108,6 +108,10 @@
                 <span class="label">📍 Lugar:</span>
                 <span>{{ tournament.location }}</span>
               </div>
+              <div class="detail-item">
+                <span class="label">🏆 Formato:</span>
+                <span>{{ getTournamentFormatLabel(tournament.tournamentFormat) }}</span>
+              </div>
               @if (tournament.maxParticipants) {
                 <div class="detail-item">
                   <span class="label">👥 Máximo:</span>

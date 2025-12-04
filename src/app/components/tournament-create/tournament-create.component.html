@@ -241,7 +241,55 @@
                 </div>
               }
             </div>
+
+            <!-- Tournament Format -->
+            <div class="form-group">
+              <label for="tournamentFormat" class="form-label">
+                Formato del Torneo *
+              </label>
+              <select
+                id="tournamentFormat"
+                formControlName="tournamentFormat"
+                class="form-control"
+                [class.error]="tournamentFormatControl?.invalid && tournamentFormatControl?.touched"
+              >
+                @for (format of tournamentFormats; track format.value) {
+                  <option [value]="format.value">{{ format.label }}</option>
+                }
+              </select>
+              @if (tournamentFormatControl?.value) {
+                <div class="format-description">
+                  @for (format of tournamentFormats; track format.value) {
+                    @if (tournamentFormatControl?.value === format.value) {
+                      <span class="description-text">{{ format.description }}</span>
+                    }
+                  }
+                </div>
+              }
+              @if (tournamentFormatControl?.invalid && tournamentFormatControl?.touched) {
+                <div class="error-text">
+                  El formato del torneo es requerido
+                </div>
+              }
+            </div>
           </div>
+
+          <!-- Estimated Rounds Display -->
+          @if (estimatedRounds() !== null) {
+            <div class="info-box">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                <circle cx="12" cy="12" r="10" stroke="#3b82f6" stroke-width="2"/>
+                <path d="M12 16v-4M12 8h.01" stroke="#3b82f6" stroke-width="2" stroke-linecap="round"/>
+              </svg>
+              <span>
+                Rondas estimadas: <strong>{{ estimatedRounds() }}</strong>
+                @if (tournamentFormatControl?.value === 'round_robin') {
+                  (cada jugador enfrentará a todos los demás)
+                }
+                <!-- Debug: Formato actual = {{ tournamentFormatControl?.value }} -->
+              </span>
+            </div>
+          }
         </div>
 
         <!-- Form Actions -->

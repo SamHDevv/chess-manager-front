@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { Tournament, TournamentStatus } from '../../models/tournament.model';
+import { Tournament, TournamentStatus, TournamentFormat } from '../../models/tournament.model';
 
 @Component({
   selector: 'app-tournament-list',
@@ -147,6 +147,20 @@ export class TournamentListComponent {
       month: '2-digit',
       year: 'numeric'
     });
+  }
+
+  protected getTournamentFormatLabel(format?: TournamentFormat): string {
+    if (!format) return 'Suizo';
+    switch (format) {
+      case TournamentFormat.SWISS:
+        return 'Suizo';
+      case TournamentFormat.ROUND_ROBIN:
+        return 'Todos contra todos';
+      case TournamentFormat.ELIMINATION:
+        return 'Eliminación directa';
+      default:
+        return 'Suizo';
+    }
   }
 
   protected getStatusLabel(status: TournamentStatus): string {

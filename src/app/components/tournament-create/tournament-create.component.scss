@@ -320,6 +320,48 @@
     }
   }
 
+  // Format Description
+  .format-description {
+    margin-top: 0.5rem;
+    padding: 0.75rem;
+    background: $color-bg-slate-50;
+    border-radius: 0.375rem;
+    border-left: 3px solid $color-primary;
+    
+    .description-text {
+      font-size: 0.875rem;
+      color: $color-text-slate-600;
+      line-height: 1.5;
+    }
+  }
+
+  // Info Box for Estimated Rounds
+  .info-box {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    background: #dbeafe;
+    border: 1px solid #93c5fd;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #1e40af;
+
+    svg {
+      flex-shrink: 0;
+      margin-top: 0.125rem;
+    }
+
+    span {
+      line-height: 1.5;
+      
+      strong {
+        font-weight: 600;
+      }
+    }
+  }
+
   // Responsive adjustments
   @include responsive($breakpoint-sm) {
     .tournament-form {
@@ -338,3 +380,4 @@
 
 // Removed dark mode to maintain consistent light theme across the app
 // Dark mode can be added later as a user preference feature
+
