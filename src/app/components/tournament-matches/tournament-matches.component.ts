@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MatchService } from '../../services/match.service';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { Match, Tournament, MatchResult, isDeletedUser, isUserDeleted, getUserDisplayName } from '../../models';
+import { Match, Tournament, MatchResult, isDeletedUser, isUserDeleted, getUserDisplayName, calculateEstimatedRounds } from '../../models';
 
 export interface SimpleMatch {
   id: number;
@@ -93,6 +93,22 @@ export class TournamentMatchesComponent implements OnInit {
         matches: matches.sort((a, b) => a.id - b.id)
       }))
       .sort((a, b) => a.roundNumber - b.roundNumber);
+  });
+
+  readonly maxRoundsAllowed = computed(() => {
+    const tournament = this.tournament();
+    if (!tournament || !tournament.tournamentFormat) return null;
+    
+    const participantCount = tournament.inscriptions?.length || tournament.maxParticipants || 0;
+    if (participantCount < 2) return null;
+    
+    return calculateEstimatedRounds(tournament.tournamentFormat, participantCount);
+  });
+
+  readonly hasReachedMaxRounds = computed(() => {
+    const maxRounds = this.maxRoundsAllowed();
+    const currentRound = this.getCurrentRoundNumber();
+    return maxRounds !== null && currentRound >= maxRounds;
   });
 
 
@@ -231,7 +247,18 @@ export class TournamentMatchesComponent implements OnInit {
     const tournament = this.tournament();
     if (!tournament) return;
 
-    if (!confirm(`¿Generar partidas para el torneo "${tournament.name}"?\n\nSe utilizará el sistema suizo para emparejar a los participantes.`)) {
+    // Check if max rounds reached
+    if (this.hasReachedMaxRounds()) {
+      const maxRounds = this.maxRoundsAllowed();
+      alert(`❌ No se pueden generar más rondas.\n\nEste torneo en formato ${this.getFormatName(tournament.tournamentFormat)} permite un máximo de ${maxRounds} rondas con ${tournament.inscriptions?.length || 0} participantes.`);
+      return;
+    }
+
+    const nextRound = this.getNextRoundNumber();
+    const maxRounds = this.maxRoundsAllowed();
+    const roundInfo = maxRounds ? ` (${nextRound}/${maxRounds})` : '';
+    
+    if (!confirm(`¿Generar partidas para el torneo "${tournament.name}"?\n\nSe generará la Ronda ${nextRound}${roundInfo} utilizando el sistema ${this.getFormatName(tournament.tournamentFormat)}.`)) {
       return;
     }
 
@@ -301,6 +328,7 @@ export class TournamentMatchesComponent implements OnInit {
    * Check if we can generate the next round
    * - All results from current round must be complete
    * - Tournament must be ongoing
+   * - Must not have reached max rounds for the format
    */
   protected canGenerateNextRound(): boolean {
     const tournament = this.tournament();
@@ -308,6 +336,9 @@ export class TournamentMatchesComponent implements OnInit {
     
     // Only allow generating rounds for ongoing tournaments
     if (tournament.status !== 'ongoing') return false;
+    
+    // Check if max rounds reached
+    if (this.hasReachedMaxRounds()) return false;
     
     return this.allResultsComplete();
   }
@@ -402,5 +433,14 @@ export class TournamentMatchesComponent implements OnInit {
 
   canEditMatch(match: SimpleMatch): boolean {
     return !!this.isOrganizer() && !this.savingResult();
+  }
+
+  private getFormatName(format?: string): string {
+    switch (format) {
+      case 'swiss': return 'Suizo';
+      case 'round_robin': return 'Todos contra todos';
+      case 'elimination': return 'Eliminación directa';
+      default: return 'Suizo';
+    }
   }
 }

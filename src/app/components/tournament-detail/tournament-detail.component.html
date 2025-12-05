@@ -152,9 +152,24 @@
         </div>
 
         <!-- Organizer/Admin Actions -->
-        @if (canEdit() || canDelete() || canStartTournament() || canFinishTournament()) {
+        @if (canEdit() || canDelete() || canStartTournament() || canFinishTournament() || (isOrganizer() && isTournamentCompleted())) {
           <div class="organizer-actions">
             <h3>Gestión del torneo</h3>
+            
+            <!-- Tournament Completed Message -->
+            @if (isOrganizer() && isTournamentCompleted() && tournament()!.status === 'ongoing') {
+              <div class="tournament-completed-info">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none">
+                  <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" 
+                        stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                        fill="#10b981" fill-opacity="0.1"/>
+                </svg>
+                <div class="completed-text">
+                  <h4>🏆 Todas las rondas completadas</h4>
+                  <p>El torneo ha completado todas sus rondas según el formato elegido. Los resultados están disponibles en la clasificación.</p>
+                </div>
+              </div>
+            }
             
             <!-- Tournament State Control Buttons -->
             @if (canStartTournament() || canFinishTournament()) {

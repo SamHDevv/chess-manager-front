@@ -4,7 +4,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { InscriptionService } from '../../services/inscription.service';
 import { AuthService } from '../../services/auth.service';
-import { Tournament, TournamentStatus, TournamentFormat } from '../../models/tournament.model';
+import { Tournament, TournamentStatus, TournamentFormat, calculateEstimatedRounds } from '../../models/tournament.model';
 import { User } from '../../models/user.model';
 import { firstValueFrom } from 'rxjs';
 
@@ -72,12 +72,14 @@ export class TournamentDetailComponent {
     return isAuthorized && canBeDeleted;
   });
 
-  // User can manage matches if they are organizer or admin AND tournament is ongoing
+  // User can manage matches if they are organizer or admin AND tournament is ongoing AND not completed
   protected readonly canManageMatches = computed(() => {
     const tournament = this.tournament();
     const isAuthorized = this.isOrganizer() || this.isAdmin();
     const isOngoing = tournament?.status === 'ongoing';
-    return isAuthorized && isOngoing;
+    const isCompleted = this.isTournamentCompleted();
+    // Solo puede registrar resultados si está ongoing y NO ha completado todas las rondas
+    return isAuthorized && isOngoing && !isCompleted;
   });
 
   // Can start tournament: organizer/admin, status=upcoming, has >=2 participants
@@ -94,7 +96,27 @@ export class TournamentDetailComponent {
     const tournament = this.tournament();
     const isAuthorized = this.isOrganizer() || this.isAdmin();
     const isOngoing = tournament?.status === 'ongoing';
-    return isAuthorized && isOngoing;
+    const isCompleted = this.isTournamentCompleted();
+    // No mostrar el botón si el torneo ya está completado (todas las rondas jugadas)
+    return isAuthorized && isOngoing && !isCompleted;
+  });
+
+  // Check if tournament has completed all rounds based on format
+  protected readonly isTournamentCompleted = computed(() => {
+    const tournament = this.tournament();
+    if (!tournament || !tournament.matches || !tournament.tournamentFormat) return false;
+    
+    const participantCount = this.participants().length;
+    if (participantCount < 2) return false;
+    
+    // Calculate max rounds based on format
+    const maxRounds = calculateEstimatedRounds(tournament.tournamentFormat, participantCount);
+    
+    // Get current round from matches
+    const rounds = tournament.matches.map((m: any) => m.round || 0);
+    const currentRound = rounds.length > 0 ? Math.max(...rounds) : 0;
+    
+    return currentRound >= maxRounds;
   });
 
   protected readonly spotsLeft = computed(() => {
