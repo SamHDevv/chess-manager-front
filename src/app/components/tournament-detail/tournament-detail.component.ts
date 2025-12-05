@@ -131,6 +131,19 @@ export class TournamentDetailComponent {
     return new Date(tournament.registrationDeadline) <= new Date();
   });
 
+  // Get the effective status of the tournament (considering if all rounds are completed)
+  protected readonly effectiveStatus = computed((): TournamentStatus | null => {
+    const tournament = this.tournament();
+    if (!tournament) return null;
+    
+    // Si el torneo está ongoing pero ya completó todas las rondas, considerarlo como finished
+    if (tournament.status === 'ongoing' && this.isTournamentCompleted()) {
+      return TournamentStatus.FINISHED;
+    }
+    
+    return tournament.status;
+  });
+
   constructor() {
     // Effect para cargar datos del torneo cuando cambia la ruta
     effect(() => {

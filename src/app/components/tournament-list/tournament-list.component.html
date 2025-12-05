@@ -83,8 +83,8 @@
         <div class="tournament-card">
           <div class="tournament-image">
             <div class="placeholder-image">♔</div>
-            <div class="tournament-status" [attr.data-status]="tournament.status">
-              {{ getStatusLabel(tournament.status) }}
+            <div class="tournament-status" [attr.data-status]="getEffectiveStatus(tournament)">
+              {{ getStatusLabel(getEffectiveStatus(tournament)) }}
             </div>
           </div>
           
@@ -121,11 +121,11 @@
             </div>
 
             <div class="tournament-actions">
-              @if (tournament.status === 'upcoming') {
+              @if (getEffectiveStatus(tournament) === 'upcoming') {
                 <button class="btn btn-primary" [routerLink]="['/tournaments', tournament.id]">
                   Ver detalles
                 </button>
-              } @else if (tournament.status === 'ongoing') {
+              } @else if (getEffectiveStatus(tournament) === 'ongoing') {
                 <button class="btn btn-secondary" [routerLink]="['/tournaments', tournament.id]">
                   Ver partidas
                 </button>

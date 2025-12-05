@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { TournamentService } from '../../services/tournament.service';
 import { AuthService } from '../../services/auth.service';
-import { Tournament, TournamentStatus, TournamentFormat } from '../../models/tournament.model';
+import { Tournament, TournamentStatus, TournamentFormat, calculateEstimatedRounds } from '../../models/tournament.model';
 
 @Component({
   selector: 'app-tournament-list',
@@ -161,6 +161,25 @@ export class TournamentListComponent {
       default:
         return 'Suizo';
     }
+  }
+
+  protected getEffectiveStatus(tournament: Tournament): TournamentStatus {
+    // Si el torneo está ongoing, verificar si ya completó todas las rondas
+    if (tournament.status === TournamentStatus.ONGOING && tournament.matches && tournament.tournamentFormat) {
+      const participantCount = tournament.inscriptions?.length || tournament.maxParticipants || 0;
+      
+      if (participantCount >= 2) {
+        const maxRounds = calculateEstimatedRounds(tournament.tournamentFormat, participantCount);
+        const rounds = tournament.matches.map((m: any) => m.round || 0);
+        const currentRound = rounds.length > 0 ? Math.max(...rounds) : 0;
+        
+        if (currentRound >= maxRounds) {
+          return TournamentStatus.FINISHED;
+        }
+      }
+    }
+    
+    return tournament.status;
   }
 
   protected getStatusLabel(status: TournamentStatus): string {

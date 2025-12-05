@@ -26,8 +26,8 @@
         ← Volver a torneos
       </button>
       
-      <div class="tournament-status-badge" [class]="getStatusClass(tournament()!.status)">
-        {{ getStatusLabel(tournament()!.status) }}
+      <div class="tournament-status-badge" [class]="getStatusClass(effectiveStatus() ?? tournament()!.status)">
+        {{ getStatusLabel(effectiveStatus() ?? tournament()!.status) }}
       </div>
     </div>
 
@@ -297,14 +297,14 @@
           <div class="tournament-info-section">
             <h3>Información del torneo</h3>
             <div class="info-stats">
-              @if (tournament()!.status === 'ongoing') {
+              @if (effectiveStatus() === 'ongoing') {
                 <div class="stat-item">
                   <span class="stat-label">Estado:</span>
                   <span class="stat-value ongoing">En progreso</span>
                 </div>
               }
               
-              @if (tournament()!.status === 'finished') {
+              @if (effectiveStatus() === 'finished') {
                 <div class="stat-item">
                   <span class="stat-label">Estado:</span>
                   <span class="stat-value finished">Finalizado</span>
