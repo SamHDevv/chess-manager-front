@@ -293,9 +293,8 @@ export class TournamentDetailComponent {
       return;
     }
 
-    const currentUser = this.authService.currentUser();
-    if (!currentUser) {
-      this.error.set('Error de autenticación. Por favor, inicia sesión nuevamente.');
+    // Confirmation dialog
+    if (!confirm('¿Estás seguro de que deseas cancelar tu inscripción en este torneo?')) {
       return;
     }
 
@@ -304,10 +303,7 @@ export class TournamentDetailComponent {
 
     try {
       const response = await firstValueFrom(
-        this.inscriptionService.cancelInscriptionByUserAndTournament(
-          currentUser.userId, 
-          tournament.id
-        )
+        this.inscriptionService.cancelMyInscription(tournament.id)
       );
       
       if (response?.success) {
@@ -319,11 +315,8 @@ export class TournamentDetailComponent {
       }
     } catch (error: any) {
       console.error('Error canceling inscription:', error);
-      this.error.set(
-        error?.error?.message || 
-        error?.message || 
-        'Error al conectar con el servidor'
-      );
+      const errorMessage = error?.error?.message || error?.message || 'Error al conectar con el servidor';
+      this.error.set(errorMessage);
     } finally {
       this.inscriptionLoading.set(false);
     }

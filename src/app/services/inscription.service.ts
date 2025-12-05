@@ -36,9 +36,8 @@ export class InscriptionService {
     return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/${id}`);
   }
 
-  cancelInscriptionByUserAndTournament(userId: number, tournamentId: number): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/cancel`, {
-      body: { userId, tournamentId }
-    });
+  // Cancelar la inscripción del usuario actual en un torneo específico
+  cancelMyInscription(tournamentId: number): Observable<ApiResponse<void>> {
+    return this.http.delete<ApiResponse<void>>(`${this.baseUrl}/tournament/${tournamentId}/cancel`);
   }
 }

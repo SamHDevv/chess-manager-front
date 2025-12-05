@@ -102,35 +102,35 @@
               <div class="info-message">
                 ℹ️ Debes iniciar sesión para inscribirte en este torneo
               </div>
-            } @else if (canInscribe()) {
-              @if (!userInscribed()) {
-                <button 
-                  class="btn btn-primary btn-large" 
-                  (click)="onInscribe()"
-                  [disabled]="inscriptionLoading()">
-                  @if (inscriptionLoading()) {
-                    <span class="spinner-small"></span>
-                  }
-                  Inscribirse en el torneo
-                </button>
-                
-                @if (spotsLeft() !== null && spotsLeft()! <= 5) {
-                  <div class="spots-warning">
-                    ⚠️ Solo quedan {{ spotsLeft() }} plazas disponibles
-                  </div>
+            } @else if (userInscribed()) {
+              <!-- Usuario ya inscrito - Mostrar botón de cancelar -->
+              <button 
+                class="btn btn-danger btn-large" 
+                (click)="onCancelInscription()"
+                [disabled]="inscriptionLoading()">
+                @if (inscriptionLoading()) {
+                  <span class="spinner-small"></span>
                 }
-              } @else {
-                <button 
-                  class="btn btn-danger btn-large" 
-                  (click)="onCancelInscription()"
-                  [disabled]="inscriptionLoading()">
-                  @if (inscriptionLoading()) {
-                    <span class="spinner-small"></span>
-                  }
-                  Cancelar inscripción
-                </button>
-                <div class="success-message">
-                  ✅ Estás inscrito en este torneo
+                Cancelar inscripción
+              </button>
+              <div class="success-message">
+                ✅ Estás inscrito en este torneo
+              </div>
+            } @else if (canInscribe()) {
+              <!-- Usuario autenticado pero no inscrito - Mostrar botón de inscribirse -->
+              <button 
+                class="btn btn-primary btn-large" 
+                (click)="onInscribe()"
+                [disabled]="inscriptionLoading()">
+                @if (inscriptionLoading()) {
+                  <span class="spinner-small"></span>
+                }
+                Inscribirse en el torneo
+              </button>
+              
+              @if (spotsLeft() !== null && spotsLeft()! <= 5) {
+                <div class="spots-warning">
+                  ⚠️ Solo quedan {{ spotsLeft() }} plazas disponibles
                 </div>
               }
             } @else {
