@@ -60,8 +60,17 @@ export class TournamentService {
 
   /**
    * Calculate tournament status based on current date
+   * NOTE: If the backend has already marked a tournament as FINISHED 
+   * (e.g., because all matches are completed), respect that status
+   * instead of reverting it based on dates alone
    */
   calculateTournamentStatus(tournament: Tournament): TournamentStatus {
+    // If the backend already marked it as FINISHED, don't change it
+    // This happens when all matches are completed even if endDate hasn't passed
+    if (tournament.status === TournamentStatus.FINISHED) {
+      return TournamentStatus.FINISHED;
+    }
+
     const now = new Date();
     const startDate = new Date(tournament.startDate);
     const endDate = new Date(tournament.endDate);

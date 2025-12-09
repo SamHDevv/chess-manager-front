@@ -116,7 +116,15 @@ export class TournamentDetailComponent {
     const rounds = tournament.matches.map((m: any) => m.round || 0);
     const currentRound = rounds.length > 0 ? Math.max(...rounds) : 0;
     
-    return currentRound >= maxRounds;
+    // Check if we've reached the max rounds
+    if (currentRound < maxRounds) return false;
+    
+    // Verify that ALL matches are completed (have a result, not PENDING)
+    const allMatchesCompleted = tournament.matches.every((match: any) => 
+      match.result && match.result !== 'PENDING'
+    );
+    
+    return allMatchesCompleted;
   });
 
   protected readonly spotsLeft = computed(() => {
